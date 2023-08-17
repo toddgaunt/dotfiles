@@ -1,0 +1,128 @@
+snippet var "variable declaration"
+	var ${1:name} ${2:type} = ${3:value}
+snippet append "append"
+	append(${1:slice}, ${2:value})
+snippet enum "constants with iota"
+	type ${1:name} ${2:int}
+
+	const (
+		${3:first} ${1} = iota${0}
+	)
+snippet recover "defer recover"
+	defer func() {
+		if err := recover(); err != nil {
+			${0:${VISUAL}}
+		}
+	}()
+snippet interface "full interface "
+	interface ${1:name} {
+		${2:method}(${3}) ${4}
+	}
+snippet if "if condition"
+	if ${1} {
+		${2:${VISUAL}}
+	}
+snippet else "else"
+	else {
+		${1:${VISUAL}}
+	}
+snippet iferr "if error not nil, return err"
+	if err != nil {
+		return err
+	}
+snippet t "true"
+	true
+snippet f "false"
+	false
+snippet while "for loop"
+	for ${1} {
+		${0:${VISUAL}}
+	}
+snippet for "for loop with integer"
+	for ${1:i} := 0; ${1:i} < ${2:count}; ${1:i}++ {
+		${0:${VISUAL}}
+	}
+snippet range "for loop with range"
+	for k, v := range ${1:collection} {
+		${0:${VISUAL}}
+	}
+snippet func "function"
+	func ${1}(${2}) ${3:error} {
+		${4}
+	}
+snippet log "log printf"
+	log.Printf("%${1:s}", ${2:var})
+snippet make "make"
+	make(${1:[]string}, ${0:0})
+snippet map "map"
+	map[${1:string}]${0:int}
+snippet main "func main()"
+	func main() {
+		${1:${VISUAL}}
+	}
+snippet new "new"
+	new(${0:type})
+snippet print "fmt.Println()"
+	fmt.Println("${1:s}")
+snippet sl "select"
+	select {
+	case ${1:v1} := <-${2:chan1}
+		${3}
+	default:
+		${0}
+	}
+snippet struct "struct"
+	struct ${1:name} {
+		${2:/* fields */}
+	}
+snippet switch "switch"
+	switch ${1:var} {
+	case ${2:value1}:
+		${3}
+	case ${4:value2}:
+		${5}
+	default:
+		${0}
+	}
+snippet go "goroutine named function"
+	go ${1:funcName}(${0})
+snippet lambda "anonymous function"
+	func(${1} ${2:type}) {
+		${3:${VISUAL}}
+	}(${0})
+snippet test "test function"
+	func Test${1:name}(t *testing.T) {
+		${0:${VISUAL}}
+	}
+snippet fuzz "fuzz function"
+	func Fuzz${1:name}(f *testing.F) {
+		${0:${VISUAL}}
+	}
+snippet table "table test function"
+	func Test${1:name}(t *testing.T) {
+		testCases := []struct {
+			name string
+		}{
+			{
+				name: "${2:test name}",
+			},
+		}
+
+		for _, tc := range testCases {
+			tc := tc
+			t.Run(tc.name, func(t *testing.T) {
+				${0:${VISUAL}}
+			})
+		}
+	}
+snippet bench "benchmark function"
+	func Benchmark${1:name}(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			${2}
+		}
+	}
+snippet flag "commandline flag"
+	${1:variable} := flag.${2:String}("${3:name}", ${4:value}, "${5:how this flag is used}")
+snippet handler "http handler"
+	func Handler(w http.ResponseWriter, r *http.Request) {
+	}

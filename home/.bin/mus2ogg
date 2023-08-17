@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# Convert all files of extension $1 to extension $2
+
+DIR="."
+
+if [[ "$1" != "" ]]; then
+    DIR="$1"
+fi
+
+shopt -s globstar
+for i in "$DIR"/**/*.flac; do
+    OGG="${i%.*}.ogg"
+    if ! [ -f "$OGG" ]; then
+        < /dev/null ffmpeg \
+            -y \
+            -i "$i" \
+            -vn \
+            -acodec libvorbis \
+            -q 3 \
+            "$OGG"
+    fi
+done

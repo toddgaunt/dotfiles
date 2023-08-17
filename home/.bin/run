@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ "$1" == "" ]]; then
+    echo "Usage: run <path/to/executable> <args>"
+    echo "  run an executable from the directory it resides in"
+    exit 0
+fi
+cd "$(dirname "$1")" || return
+./"$(basename "$1")" "${@:2}"

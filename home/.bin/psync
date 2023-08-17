@@ -1,0 +1,18 @@
+#!/bin/bash
+
+psync() {
+	local source_dir="$1"
+	local target_dir="$2"
+	local processes=4
+
+	if [[ "$source_dir" == "" ]] || [[ "$target_dir" == "" ]]; then
+		echo "usage: psync <src> <dst>"
+		echo ""
+		echo "Synchronize two directories using parallel processes"
+		exit 1
+	fi
+
+	ls "$source_dir" | xargs -P$processes -I% rsync -azP "$source_dir/%" "$target_dir"
+}
+
+psync $@

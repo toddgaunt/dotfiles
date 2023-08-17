@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Allow prompting the user.
+exec < /dev/tty
+
+max_subject_len=70
+
+verify_commit() {
+	local subject="$1"
+	local ret=0
+
+	if [ ${#subject} -gt $max_subject_len ]; then
+		echo "error: commit subject longer than $max_subject_len characters"
+		ret=1
+	fi
+
+	if [ "$subject" == "$(echo "$subject" | grep -oe "")" ]; then
+		echo "error: commit subject begins with a period"
+		ret=1
+	fi
+
+	if [ "$subject" != "${subject%  *}" ]; then
+		echo "error: commit subject has multiple spaces between words"
+		ret=1
+	fi
+
+	if ! [ "$subject" == "$(echo "$subject" | grep -oe "[A-Z].*")" ]; then
+		echo "error: first word of commit subject is not capitalized"
+		ret=1
+	fi
+
+	return $ret
+}
+
+ret=0
+if verify_commit "$(head -n 1 "$1")"; then
+	echo -n "Confirm commit or (e)dit with ${EDITOR}? [Y/n] "
+	ret=0
+else
+	echo -n "Validation failed, force commit or (e)dit with ${EDITOR}? [y/N] "
+	ret=1
+fi
+
+read -r REPLY
+case "$REPLY" in
+Y|y)
+	exit 0
+	;;
+N|n)
+	exit 1
+	;;
+E|e)
+	"$EDITOR" "$1"
+	;;
+*)
+	exit $ret
+	;;
+esac

@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Name status
+
+usage()
+{
+	echo "usage: status <battery | wifi | ip>"
+	echo ""
+	echo "Show the status of various things"
+}
+
+# Current IP address.
+ip_stat()
+{
+	IP=$(ip addr show \
+		| grep 'state UP' -A2 \
+		| tail -n 1 | awk '{print $2}')
+			if [[ "$IP" == "" ]]; then
+				echo "No IP address found"
+			else
+				echo "$IP"
+			fi
+		}
+
+# Wifi connection status
+wifi_stat()
+{
+	quality=$(cat /proc/net/wireless \
+		| awk 'FNR == 3 {print $3}' \
+		| tr -d [:punct:])
+	if [ "$quality" == "" ]; then
+		quality=0
+	fi
+	echo "$quality%"
+}
+
+# Current battery status.
+battery_stat()
+{
+	n=0
+	charge=0
+	for i in /sys/class/power_supply/BAT*; do
+		charge=$(( charge + $(cat $i/capacity)))
+		n=$(( n + 1 ));
+	done
+	charge=$(( charge / n ))
+	echo "$charge%"
+}
+
+command=$1
+shift
+case $command in
+	"battery")
+		battery_stat
+		;;
+	"ip")
+		ip_stat
+		;;
+	"wifi")
+		wifi_stat
+		;;
+	*)
+		usage "$command"
+		echo "unknown subcommand $command" 1>&2
+		exit
+		;;
+esac
+
+# End of file

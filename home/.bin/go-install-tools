@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+source interact.sh
+
+require go
+
+tools=(
+	"gopls"
+	"cmd/goimports"
+	"cmd/callgraph"
+	"cmd/digraph"
+	"cmd/stringer"
+	"cmd/toolstash"
+)
+
+for tool in ${tools[@]}; do
+	echo "installing $tool"
+	go install golang.org/x/tools/"$tool"@latest
+done

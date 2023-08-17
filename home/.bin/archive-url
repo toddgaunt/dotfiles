@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+source interact.sh
+
+PREFIX_DIRECTORY="."
+
+archive() {
+	local url="$1"
+	local tmpdir=$(mktemp -d)
+	local timestamp=$(date +'%Y-%m-%d')
+	local domain=$(echo "$url" | sed -e 's|^[^/]*//||' -e 's|/.*$||')
+	local archive="$PREFIX_DIRECTORY/$domain@$timestamp.tar.gz"
+	log "downloading to temporary directory: $tmpdir"
+	wget \
+		-q \
+		--show-progress \
+		--progress=bar:force \
+		--directory-prefix="$tmpdir" \
+		--mirror \
+		--convert-links \
+		--adjust-extension \
+		--page-requisites \
+		--no-parent \
+		--html-extension \
+		--execute robots=off \
+		--user-agent=”” \
+		--wait 0.1 \
+		--random-wait \
+		--continue \
+		"$url" 2>&1
+
+	log "archiving $url to $archive"
+	if ! tar -cf - --directory="$tmpdir" "$domain" -P |
+		pv -s $(du -sb "$tmpdir" |
+		awk '{print $1}') |
+		pigz > "$archive"
+	then
+		log-fatal "couldn't archive $url"
+	fi
+}
+
+usage() {
+    echo "usage: $me [-h|--help] [-d|--directory <path>] <url...>"
+}
+
+# Specify command-line flags
+TEMP=$(getopt -o 'd:h' --long 'directory:,help' -n "$me" -- "$@")
+if [[ $? -ne 0 ]]; then
+	usage
+	exit 1
+fi
+
+# Note the quotes around "$TEMP": they are essential!
+eval set -- "$TEMP"
+unset TEMP
+
+while true; do
+	case "$1" in
+		'-h'|'--help')
+			usage
+			exit 0
+		;;
+		'-d'|'--directory')
+			PREFIX_DIRECTORY="$2"
+			shift 2
+			continue
+		;;
+		'--')
+			shift
+			break
+		;;
+		*)
+			log-fatal 'getopt error!' >&2
+			exit 1
+		;;
+	esac
+done
+
+for arg in $@; do
+	if [[ "$arg" == "" ]]; then
+		usage
+		exit 1
+	fi
+    archive "$arg"
+done

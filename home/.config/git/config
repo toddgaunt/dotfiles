@@ -1,0 +1,35 @@
+[init]
+	defaultBranch = master
+[user]
+	name = Todd Gaunt
+	email = todd@bastionburrow.com
+	signingkey = 966AD22E4D9088C0AB04DDF086C988D62273214B
+[alias]
+	br = branch
+	ci = commit
+	co = checkout
+	di = diff
+	dn = diff --name-only
+	st = status
+	dif = diff
+	name = shortlog -s -n
+	root = rev-parse --show-toplevel
+	hist = log \
+		--pretty=format:'%C(auto)%h %ad: %s%d %C(magenta)[%an]%C(reset)' \
+		--graph \
+		--date=short
+	sign = log \
+		--pretty=format:'%C(auto)%h %ad: %s%d %C(magenta)[%an]%C(reset)' \
+		--graph \
+		--date=short \
+		--show-signature
+[color]
+	ui = auto
+[commit]
+	gpgSign = true
+[gpg]
+	program = gpg
+[pull]
+	rebase = false
+[push]
+	default = current
