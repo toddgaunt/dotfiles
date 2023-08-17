@@ -1,0 +1,3 @@
+# Neovim plugins, just fetch from git using PlugInstall instead
+home/.config/nvim/plugged/*
+home/.config/nvim/plugin/*
