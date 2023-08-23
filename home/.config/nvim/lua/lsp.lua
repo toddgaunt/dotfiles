@@ -39,8 +39,8 @@ cmp.setup {
 	},
 
 	window = {
-		-- completion = cmp.config.window.bordered(),
-		-- documentation = cmp.config.window.bordered(),
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered(),
 	},
 
 	mapping = cmp.mapping.preset.insert({
@@ -161,19 +161,24 @@ vim.cmd('autocmd BufWritePre *.lua lua LuaFormat()')
 -- Golang LSP configuration
 --
 lspconfig.gopls.setup {
+	cmd = { "gopls", "serve" },
 	capabilities = capabilities,
 	on_attach = on_attach,
-	cmd = { "gopls", "serve" },
 	filetypes = { "go", "gomod" },
 	root_dir = util.root_pattern("go.work", "go.mod", ".git"),
 	settings = {
 		gopls = {
 			analyses = {
 				unusedparams = true,
+				fillstruct = true,
+				--shadow = true,
 			},
 			staticcheck = true,
 		},
 	},
+	init_options = {
+		usePlaceholders = true,
+	}
 }
 
 function GoFumport(wait_ms)
@@ -193,7 +198,7 @@ function GoFumport(wait_ms)
 	vim.lsp.buf.format({ async = true })
 end
 
---vim.cmd('autocmd BufWritePre *.go lua GoFumport(1000)')
+vim.cmd('autocmd BufWritePre *.go lua GoFumport(1000)')
 
 --
 -- Python LSP configuration
