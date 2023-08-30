@@ -2,7 +2,7 @@
 	defaultBranch = master
 [user]
 	name = Todd Gaunt
-	email = todd@bastionburrow.com
+	email = todd@toddgaunt.com
 	signingkey = 966AD22E4D9088C0AB04DDF086C988D62273214B
 [alias]
 	br = branch
