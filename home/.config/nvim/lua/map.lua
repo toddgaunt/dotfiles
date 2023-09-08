@@ -131,6 +131,7 @@ wk.register({
 	["S"] = { ":sort!<cr>", "Sort selection (descending)" },
 	["<C-w>"] = { 'gw', "Format the selected lines" },
 	["<C-c>"] = { '"+y', "Copy selection into OS register" },
+	["<C-x>"] = { '"+d', "Copy selection into OS register" },
 	["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 	["<C-space>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
 }, { mode = "v", noremap = true, silent = true })
@@ -174,23 +175,13 @@ local function toggle_spellcheck()
 		vim.g.syntax_on = true
 	end
 end
+
 -- bd returns a function that deletes the current buffer. If force is true, it
 -- is deleted even if there is unsaved content.
 local function bd(force)
 	return function()
 		require("mini.bufremove").delete(0, force)
 	end
-end
-
--- [[Custom Telescope functions]] --
-local function find_files_extension()
-	--TODO
-	-- add a custom picker here that prompts for the file extensions you want to search for
-end
-
-local function grep_files_extension()
-	--TODO
-	-- add a custom picker here that prompts for the file extensions you want to grep within.
 end
 
 -- [[Leader key mappings for all modes]] --
@@ -212,27 +203,23 @@ local mappings = {
 		["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
 		["v"] = { bib.print, "Print a random Bible verse" },
 		['c'] = { "<cmd>checkhealth<cr>", "Check health" },
-		-- These work on buffer contents, but aren't for managing them
-		["f"] = { format_file, "Format current buffer using the language server" },
-		["i"] = { "gg=G", "Re-indent buffer" },
-		["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
-		["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
 	},
 	b = {
-		name = "Buffers/Files",
-		["D"] = { bd(true), "Delete buffer (force)" },
+		name = "Buffers",
+		['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
 		["Q"] = { "<cmd>bdelete!<cr>", "Delete current buffer and window" },
 		["R"] = { "<cmd>edit!<cr>", "Reload buffer from file and discard changes" },
 		["["] = { "<cmd>bprev<cr>", "Previous buffer" },
 		["]"] = { "<cmd>bnext<cr>", "Next buffer" },
 		["d"] = { bd(false), "Delete buffer" },
-		["E"] = { bd(false), "Erase file" },
+		["D"] = { bd(true), "Delete buffer (force)" },
 		["l"] = { "<cmd>buffers<cr>", "List buffers" },
 		["n"] = { "<cmd>bnext<cr>", "Next buffer" },
 		["p"] = { "<cmd>bprev<cr>", "Previous buffer" },
 		["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 		["w"] = { "<cmd>write<cr>", "Write buffer to file" },
-		["f"] = { "<cmd>set ft?<cr>", "Show current filetype" },
+		-- File information
+		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
 	},
 	c = {
 		name = "Configure",
@@ -246,30 +233,22 @@ local mappings = {
 		["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
 	},
 	e = {
-		name = "Explore",
-		["C"] = { "<cmd>NvimTreeCollapse<cr>", "Collapse file tree" },
-		["e"] = { "<cmd>NvimTreeOpen<cr>", "Explore the file tree" },
-		["c"] = { "<cmd>NvimTreeCollapseKeepBuffers<cr>", "Collapse file tree except on open buffers" },
-		["f"] = { "<cmd>NvimTreeFindFile<cr>", "Explore the file tree from current file" },
+		name = "Edit",
+		["f"] = { format_file, "Format current buffer using the language server" },
+		["i"] = { "gg=G", "Re-indent buffer" },
+		["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
+		["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
 	},
 	f = {
-		name = "Find",
-		['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
+		name = "Files",
+		["e"] = { "<cmd>NvimTreeFindFile<cr>", "Explore the file tree from current file" },
+		["E"] = { "<cmd>NvimTreeOpen<cr>", "Explore the file tree" },
+		["c"] = { "<cmd>NvimTreeCollapseKeepBuffers<cr>", "Collapse file tree except on open buffers" },
+		["C"] = { "<cmd>NvimTreeCollapse<cr>", "Collapse file tree" },
 		["f"] = { "<cmd>Telescope find_files<cr>", "Search for a file by name" },
-		["F"] = { find_files_extension, "Search for a file by name" },
 		["g"] = { "<cmd>Telescope git_files<cr>", "Search for a file by name tracked by Git" },
-		["l"] = { "<cmd>Telescope oldfiles<cr>", "Find previously opened file" },
-		["p"] = { "<cmd>Telescope live_grep<cr>", "Search for a pattern in files" },
-		["P"] = { live_grep_extension, "Search for a pattern in files" },
-		-- LSP
-		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
-		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
-		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
-		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
-		["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
-		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Types of identifier" },
-		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols" },
-		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Workspace Symbols" },
+		["o"] = { "<cmd>Telescope oldfiles<cr>", "Find previously opened file" },
+		["m"] = { "<cmd>Telescope live_grep<cr>", "Search for a pattern in files" },
 	},
 	g = {
 		name = "Git",
@@ -297,13 +276,16 @@ local mappings = {
 		["o"] = { "<cmd>Telescope vim_options<cr>", "Search config options" },
 		["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
 	},
-	k = {
-		name = "Test",
-		["a"] = { "<cmd>TestFile<cr>", "Run all tests in file" },
-		["l"] = { "<cmd>TestLast<cr>", "Run last run test" },
-		["n"] = { "<cmd>TestNearest<cr>", "Run test nearest to the cursor" },
-		["s"] = { "<cmd>TestSuite<cr>", "Run test suite" },
-		["v"] = { "<cmd>TestVisit<cr>", "Visit last test file" },
+	i = {
+		name = "Identifiers",
+		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
+		["k"] = { vim.lsp.buf.hover, "Show identifier information" },
+		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
+		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
+		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
+		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
+		["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
+		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Types of identifier" },
 	},
 	l = {
 		name = "LSP",
@@ -313,7 +295,8 @@ local mappings = {
 		-- LSP actions
 		["a"] = { vim.lsp.buf.code_action, "Open action list" },
 		["f"] = { format_file, "Format current buffer using the language server" },
-		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
+		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document Symbols" },
+		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace Symbols" },
 	},
 	o = {
 		name = "Organize",
@@ -344,7 +327,7 @@ local mappings = {
 		-- For Mason.nvim
 		["l"] = { "<cmd>MasonLog<cr>", "View Mason logs" },
 		["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
-		["u"] = { "<cmd>MasonUpdate<cr>", "Update Mason packages" },
+		["u"] = { "<cmd>MasonUpdate<cr>", "Update Mason registries" },
 	},
 	q = {
 		name = "Sessions",
@@ -352,11 +335,6 @@ local mappings = {
 		["d"] = { require("persistence").stop, "Disable persistence" },
 		["l"] = { function() require("persistence").load({ last = true }) end, "Restore last session" },
 		["o"] = { require("persistence").load, "Restore session for current directory" },
-	},
-	r = {
-		name = "Refactor",
-		["a"] = { vim.lsp.buf.code_action, "Open action list" },
-		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
 	},
 	s = {
 		name = "Spellcheck",
@@ -378,6 +356,14 @@ local mappings = {
 		["O"] = { "<cmd>tabonly<cr>", "Close all other tabs" },
 		["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
 		["t"] = { "<cmd>tabnew<cr>", "Create a new tab" },
+	},
+	u = {
+		name = "Unit Test",
+		["a"] = { "<cmd>TestFile<cr>", "Run all tests in file" },
+		["l"] = { "<cmd>TestLast<cr>", "Run last run test" },
+		["n"] = { "<cmd>TestNearest<cr>", "Run test nearest to the cursor" },
+		["s"] = { "<cmd>TestSuite<cr>", "Run test suite" },
+		["v"] = { "<cmd>TestVisit<cr>", "Visit last test file" },
 	},
 	w = {
 		name = "Windows",

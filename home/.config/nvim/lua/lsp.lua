@@ -114,7 +114,7 @@ end
 -- Use a loop to conveniently call "setup" on multiple servers that don't
 -- require custom configuration and to map buffer local keybindings when the
 -- language server attaches
-local servers = { "bashls", "pyright", "tsserver", "cucumber_language_server" }
+local servers = { "bashls", "pyright", "tsserver" }
 for _, lsp in pairs(servers) do
 	lspconfig[lsp].setup {
 		capabilities = capabilities,
@@ -203,4 +203,4 @@ vim.cmd('autocmd BufWritePre *.go lua GoFumport(1000)')
 --
 -- Python LSP configuration
 --
---vim.cmd('autocmd BufWritePost *.py !black %')
+vim.cmd('autocmd BufWritePost *.py !black %')
