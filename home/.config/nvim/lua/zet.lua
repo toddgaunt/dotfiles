@@ -149,14 +149,14 @@ function M.open()
 	end)
 end
 
--- new creates a new file in M.current_path with an automatic unique filename. If M.current_path isn't set, there are three possibilities:
--- 1. If no collections are registered a message is displayed to the user and the function returns
--- 2. If one collection is registered then it is used by default.
--- 3. If there is more than one registered collection the user is prompted to select one.
+-- new creates a new file in M.current_path with an automatic unique filename.
 function M.new()
 	select_initial_collection()
 
-	vim.cmd("execute 'e " .. M.current_path .. "/'.strftime(\"%y%m%d%H%M%S\").'.md'")
+	file_name = os.date("%y%m%d%H%M%S.md")
+	formatted_date = os.date("# %Y.%m.%d %a")
+	vim.cmd("execute 'e " .. M.current_path .. "/" .. file_name .. "'")
+	vim.api.nvim_buf_set_lines(0, 0, 0, false, { formatted_date })
 end
 
 return M
