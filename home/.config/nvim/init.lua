@@ -216,11 +216,25 @@ packer.startup(function(use)
 	-- telescope is a very powerful fuzzy finder with a great UI
 	use {
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.0",
+		tag = "0.1.3",
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-fzf-native.nvim",
 		},
+		config = function()
+			require("telescope").setup({
+				defaults = {
+					wrap_results = true,
+					path_display = {
+						--tail = true
+						--shorten = 2,
+						--smart = true,
+						--truncate = 3,
+					},
+					dynamic_preview_title = true,
+				}
+			})
+		end
 	}
 
 	-- persistence enhances per-directory session management
