@@ -184,13 +184,22 @@ local function bd(force)
 	end
 end
 
+local file_shortcuts = { "~/Org/Scratch.md", "~/Org/TODO.md", "~/Org/DONE.md" }
+
+local function select_file_shortcut()
+	vim.ui.select(file_shortcuts, {
+		prompt = "Open selected file",
+	}, function(choice)
+		if choice == nil then return end
+		vim.cmd("e " .. choice)
+	end)
+end
+
 -- [[Leader key mappings for all modes]] --
 local mappings = {
-	['-'] = { "<cmd>execute 'e ~/Org/Scratch.md'<cr>", "Open the scratch notes file" },
-	['+'] = { "<cmd>execute 'e ~/Org/DONE.md'<cr>", "Open the TODO file" },
-	['='] = { "<cmd>execute 'e ~/Org/TODO.md'<cr>", "Open the DONE file" },
-	[','] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
-	['.'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
+	['+'] = { select_file_shortcut, "Open file shortcuts" },
+	['='] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
+	['-'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in file (grep)" },
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
@@ -198,11 +207,14 @@ local mappings = {
 	["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Open the file tree" },
 	a = {
 		name = "Actions",
-		["S"] = { "<cmd>SnippyRestart<cr>", "Restart the snippet cache" },
+		["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
 		["g"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 		["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
 		["v"] = { bib.print, "Print a random Bible verse" },
+		["f"] = { yank_filename, "Yank the current file's name" },
+		["p"] = { yank_filepath, "Yank the current file's path" },
 		['c'] = { "<cmd>checkhealth<cr>", "Check health" },
+		["a"] = { vim.lsp.buf.code_action, "Open action list" },
 	},
 	b = {
 		name = "Buffers",
@@ -232,9 +244,17 @@ local mappings = {
 		["t"] = { select_tab_length, "Pick tab length" },
 		["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
 	},
+	d = {
+		name = "Diagnostics",
+		["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
+		["l"] = { "<cmd>lopen<cr>", "Open location list" },
+		["n"] = { vim.diagnostic.goto_next, "Go to next error" },
+		["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
+		["q"] = { "<cmd>copen<cr>", "Open quickfix list" },
+	},
 	e = {
 		name = "Edit",
-		["f"] = { format_file, "Format current buffer using the language server" },
+		["f"] = { format_file, "Format buffer using LSP" },
 		["i"] = { "gg=G", "Re-indent buffer" },
 		["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
 		["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
@@ -278,25 +298,29 @@ local mappings = {
 	},
 	i = {
 		name = "Identifiers",
-		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
-		["k"] = { vim.lsp.buf.hover, "Show identifier information" },
 		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
 		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
 		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
+		["k"] = { vim.lsp.buf.hover, "Show identifier information" },
 		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
 		["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
-		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Types of identifier" },
+		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifiers" },
+		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
+		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace identifiers" },
+		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
 	},
 	l = {
 		name = "LSP",
 		-- LSP information and meta-control
 		["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
 		["R"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
-		-- LSP actions
-		["a"] = { vim.lsp.buf.code_action, "Open action list" },
-		["f"] = { format_file, "Format current buffer using the language server" },
-		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document Symbols" },
-		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace Symbols" },
+	},
+	m = {
+		name = "Mason",
+		-- For Mason.nvim
+		["l"] = { "<cmd>MasonLog<cr>", "View Mason logs" },
+		["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
+		["u"] = { "<cmd>MasonUpdate<cr>", "Update Mason registries" },
 	},
 	o = {
 		name = "Organize",
@@ -321,13 +345,6 @@ local mappings = {
 		["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
 		["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
 		["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
-	},
-	m = {
-		name = "Mason",
-		-- For Mason.nvim
-		["l"] = { "<cmd>MasonLog<cr>", "View Mason logs" },
-		["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
-		["u"] = { "<cmd>MasonUpdate<cr>", "Update Mason registries" },
 	},
 	q = {
 		name = "Sessions",
@@ -357,14 +374,6 @@ local mappings = {
 		["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
 		["t"] = { "<cmd>tabnew<cr>", "Create a new tab" },
 	},
-	u = {
-		name = "Unit Test",
-		["a"] = { "<cmd>TestFile<cr>", "Run all tests in file" },
-		["l"] = { "<cmd>TestLast<cr>", "Run last run test" },
-		["n"] = { "<cmd>TestNearest<cr>", "Run test nearest to the cursor" },
-		["s"] = { "<cmd>TestSuite<cr>", "Run test suite" },
-		["v"] = { "<cmd>TestVisit<cr>", "Visit last test file" },
-	},
 	w = {
 		name = "Windows",
 		["="] = { "<C-w>=", "Equalize window size" },
@@ -381,18 +390,13 @@ local mappings = {
 		["a"] = { "<C-w>|", "Max out window width" },
 		["z"] = { "<C-w>_", "Max out window height" },
 	},
-	x = {
-		name = "Diagnostics",
-		["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
-		["l"] = { "<cmd>lopen<cr>", "Open location list" },
-		["n"] = { vim.diagnostic.goto_next, "Go to next error" },
-		["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
-		["q"] = { "<cmd>copen<cr>", "Open quickfix list" },
-	},
 	y = {
-		name = "Yank",
-		["f"] = { yank_filename, "Yank the current file's name" },
-		["p"] = { yank_filepath, "Yank the current file's path" },
+		name = "Testing",
+		["a"] = { "<cmd>TestFile<cr>", "Run all tests in file" },
+		["l"] = { "<cmd>TestLast<cr>", "Run last run test" },
+		["n"] = { "<cmd>TestNearest<cr>", "Run test nearest to the cursor" },
+		["s"] = { "<cmd>TestSuite<cr>", "Run test suite" },
+		["v"] = { "<cmd>TestVisit<cr>", "Visit last test file" },
 	},
 	z = {
 		name = "Zettelkasten",

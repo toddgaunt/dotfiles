@@ -200,6 +200,20 @@ end
 
 vim.cmd('autocmd BufWritePre *.go lua GoFumport(1000)')
 
+
+--
+-- Gherkin LSP configuration
+--
+--lspconfig.cucumber_language_server.setup {
+--capabilities = capabilities,
+--on_attach = on_attach,
+--filetypes = { "cucumber" },
+--settings = {
+--features = { 'hvtest/features/*.feature' },
+--glue = { 'hvtest/steps/*.py' }
+--}
+--}
+
 --
 -- Python LSP configuration
 --
