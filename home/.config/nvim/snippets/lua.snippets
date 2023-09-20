@@ -2,3 +2,19 @@ snippet fun
 	function ${1:name}(${2:params})
 		${0:$VISUAL}
 	end
+
+snippet select
+	vim.ui.select({ ${1:selections} }, {
+		prompt = "${2:prompt}",
+	}, function(choice)
+		if choice == nil then return end
+		${0:$VISUAL}
+	end)
+
+snippet input
+	vim.ui.input({
+		prompt = "${1:prompt}",
+	}, function(input)
+		if input == nil then return end
+		${0:$VISUAL}
+	end)
