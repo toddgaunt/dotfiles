@@ -19,7 +19,12 @@ packer.startup(function(use)
 	}
 
 	-- nvim-scrollbar adds a basic scrollbar
-	use "petertriho/nvim-scrollbar"
+	use {
+		"petertriho/nvim-scrollbar",
+		config = function()
+			require("scrollbar").setup()
+		end
+	}
 
 	-- gitsigns adds git status symbols in the gutter
 	use {
@@ -123,6 +128,7 @@ packer.startup(function(use)
 				},
 				on_attach = function(bufnr)
 					local api = require('nvim-tree.api')
+					local lib = require('nvim-tree.lib')
 
 					local function opts(desc)
 						return {
@@ -133,6 +139,33 @@ packer.startup(function(use)
 							nowait = true
 						}
 					end
+
+					-- Custom mapping to allow for telescope search inside of specific directories
+					local function find_pattern_in_directory()
+						local current_node = lib.get_node_at_cursor()
+						local path = ""
+						if current_node and current_node.absolute_path then
+							path = current_node.absolute_path
+						end
+
+						local relative_path = path:sub(#vim.fn.getcwd() + 1)
+
+						local prompt_title = "Live grep"
+						if relative_path ~= "" then
+							prompt_title = prompt_title .. " in " .. relative_path
+						end
+
+						local search_opts = {
+							prompt_title = prompt_title,
+							cwd = path,
+							initial_mode = "insert",
+							selection_strategy = "reset",
+						}
+
+						-- Pass opts to find_files
+						require("telescope.builtin").live_grep(search_opts)
+					end
+					vim.keymap.set('n', '<leader>/', find_pattern_in_directory, opts('Find pattern in directory'))
 
 					-- Default mappings. Feel free to modify or remove as you wish.
 					vim.keymap.set('n', '<C-]>', api.tree.change_root_to_node, opts('CD'))
@@ -253,6 +286,7 @@ packer.startup(function(use)
 		config = function()
 			vim.cmd('let g:slime_target = "neovim"')
 		end
+
 	}
 
 	-- vim-delve gives access to the Go debugger

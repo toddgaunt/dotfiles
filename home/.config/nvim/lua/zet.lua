@@ -76,7 +76,7 @@ function M.link()
 
 	local opts = {
 		prompt_title = "Link Zettelkasten", -- Title for the picker
-		cwd = M.current_path,         -- Set path to current collection
+		cwd = M.current_path .. "/Zettelkasten", -- Set path to current collection
 		initial_mode = "insert",
 		selection_strategy = "reset",
 		attach_mappings = function(_, map)
@@ -106,13 +106,18 @@ function M.link()
 end
 
 -- find uses Telescope to find a note based on its filename inside M.current_path.
-function M.find()
+function M.find(subpath)
 	select_initial_collection()
+
+	local cwd = M.current_path
+	if subpath ~= nil then
+		cwd = cwd .. subpath
+	end
 
 	local opts = {
 		prompt_title = "Find Zettelkasten",                             -- Title for the picker
 		shorten_path = false,                                           -- Display full paths, short paths are ugly
-		cwd = M.current_path,                                           -- Set path to current collection
+		cwd = cwd,
 		file_ignore_patterns = { "TODO.md", ".git", ".jpg", ".png", "tags" }, -- Folder/files to be ignored
 		initial_mode = "insert",
 		selection_strategy = "reset",
@@ -121,19 +126,44 @@ function M.find()
 	require("telescope.builtin").find_files(opts)
 end
 
+function M.find_select()
+	vim.ui.select({ "Zettelkasten", "Diary" }, {
+		prompt = "Select directory",
+	}, function(choice)
+		if choice == nil then return end
+
+		M.find("/" .. choice)
+	end)
+end
+
 -- search uses Telescope to find a note by pattern-matching its contents inside M.current_path.
-function M.search()
+function M.search(subpath)
 	select_initial_collection()
+
+	local cwd = M.current_path
+	if subpath ~= nil then
+		cwd = cwd .. subpath
+	end
 
 	local opts = {
 		prompt_title = "Search Zettelkasten Contents", -- Title for the picker
-		cwd = M.current_path,                    -- Set path to current collection
+		cwd = cwd,
 		initial_mode = "insert",
 		selection_strategy = "reset",
 	}
 
 	-- Pass opts to find_files
 	require("telescope.builtin").live_grep(opts)
+end
+
+function M.search_select()
+	vim.ui.select({ "Zettelkasten", "Diary" }, {
+		prompt = "Select directory",
+	}, function(choice)
+		if choice == nil then return end
+
+		M.search("/" .. choice)
+	end)
 end
 
 -- open prompts the user for a name of a file and opens the file inside M.current_path.
@@ -145,7 +175,7 @@ function M.open()
 	}, function(input)
 		if input == nil then return end
 
-		vim.cmd("e " .. M.current_path .. "/" .. input .. ".md")
+		vim.cmd("e " .. M.current_path .. "/Zettelkasten/" .. input .. ".md")
 	end)
 end
 
@@ -153,10 +183,53 @@ end
 function M.new()
 	select_initial_collection()
 
-	file_name = os.date("%y%m%d%H%M%S.md")
-	formatted_date = os.date("# %Y.%m.%d %a")
-	vim.cmd("execute 'e " .. M.current_path .. "/" .. file_name .. "'")
+	local file_name = os.date("%y%m%d%H%M%S.md")
+	local formatted_date = os.date("# %Y.%m.%d %a")
+	vim.cmd("execute 'e " .. M.current_path .. "/Zettelkasten/" .. file_name .. "'")
 	vim.api.nvim_buf_set_lines(0, 0, 0, false, { formatted_date })
+end
+
+local function buf_is_empty(buf)
+	local n = vim.api.nvim_buf_line_count(buf)
+	if n == 0 then
+		return true
+	elseif n == 1 then
+		return vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1] == ""
+	else
+		return false
+	end
+end
+
+local function new_diary(file_name_format, title_format)
+	local file_name = os.date("Diary/" .. file_name_format)
+	local formatted_date = os.date(title_format)
+	local file_path = M.current_path .. "/" .. file_name
+
+	vim.cmd("execute 'e " .. file_path .. "'")
+
+	if buf_is_empty(vim.api.nvim_get_current_buf()) then
+		vim.api.nvim_buf_set_lines(0, 0, 1, false, { formatted_date })
+	end
+end
+
+-- daily creates a new diary file for the current day in M.current_path/Diary with an automatic unique filename.
+function M.daily()
+	return new_diary("%Y-%m-%d.md", "# Daily <%Y.%m.%d %a>")
+end
+
+-- weekly creates a new diary file for the current week in M.current_path/Diary with an automatic unique filename.
+function M.weekly()
+	return new_diary("%Y-%V.md", "# Weekly <%Y %V/52>")
+end
+
+-- monthly creates a new diary file for the current month in M.current_path/Diary
+function M.monthly()
+	return new_diary("%Y-%m.md", "# Monthly <%Y.%m>")
+end
+
+-- yearly creates a new diary file for the current year in M.current_path/Diary
+function M.yearly()
+	return new_diary("%Y.md", "# Yearly <%Y>")
 end
 
 return M

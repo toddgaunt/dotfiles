@@ -39,7 +39,7 @@ cmp.setup {
 	},
 
 	window = {
-		completion = cmp.config.window.bordered(),
+		--completion = cmp.config.window.bordered(),
 		documentation = cmp.config.window.bordered(),
 	},
 
@@ -48,6 +48,8 @@ cmp.setup {
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
 		['<C-e>'] = cmp.mapping.abort(),
 		['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+		-- Unbind C-Space since it conflicts with SLIME
+		['<C-Space>'] = nil,
 	}),
 
 	sources = cmp.config.sources({
@@ -70,7 +72,9 @@ cmp.setup.filetype('gitcommit', {
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline('/', {
-	mapping = cmp.mapping.preset.cmdline(),
+	mapping = cmp.mapping.preset.cmdline({
+
+	}),
 	sources = {
 		{ name = 'buffer' }
 	}
@@ -151,6 +155,7 @@ lspconfig.lua_ls.setup {
 	}
 }
 
+-- LuaFormat formats a lua file according to the LSP formatter
 function LuaFormat()
 	vim.lsp.buf.format({ async = true })
 end
@@ -181,6 +186,7 @@ lspconfig.gopls.setup {
 	}
 }
 
+-- GoFumport automatically imports missing packages and then formats the file according to the LSP formatter
 function GoFumport(wait_ms)
 	local params = vim.lsp.util.make_range_params()
 	params.context = { only = { "source.organizeImports" } }
@@ -199,7 +205,6 @@ function GoFumport(wait_ms)
 end
 
 vim.cmd('autocmd BufWritePre *.go lua GoFumport(1000)')
-
 
 --
 -- Gherkin LSP configuration

@@ -7,9 +7,16 @@ local bib = require("bib")
 local wk = require("which-key")
 
 -- Notetaking workspaces.
-zet.register("Personal", os.getenv("HOME") .. "/" .. "Notes/Personal/Zettelkasten")
+zet.register("Personal", os.getenv("HOME") .. "/" .. "Notes/Personal")
 zet.register("Work/GlobalSign", os.getenv("HOME") .. "/" .. "Notes/Work/GlobalSign")
-zet.switch("Personal")
+
+-- Allow for env to set default notetaking directory
+local default_zet_dir = os.getenv("DEFAULT_ZET_DIR")
+if default_zet_dir ~= nil then
+	zet.switch(default_zet_dir)
+else
+	zet.switch("Personal")
+end
 
 -- Set the leader key to space.
 vim.g.mapleader = " "
@@ -195,12 +202,43 @@ local function select_file_shortcut()
 	end)
 end
 
+local function new_toggle(init, fn)
+	local toggle = init
+	return function()
+		toggle = not toggle
+		fn(toggle)
+	end
+end
+
+local function toggle_autocomplete(value)
+	print("autocomplete=" .. tostring(value))
+	require('cmp').setup.buffer { enabled = value }
+end
+
+local function find_file_in_subdir()
+	vim.ui.input({
+		prompt = "choose a directory: ",
+	}, function(input)
+		if input == nil then return end
+
+		local opts = {
+			prompt_title = "Live grep in /" .. input, -- Title for the picker
+			cwd = input,
+			initial_mode = "insert",
+			selection_strategy = "reset",
+		}
+
+		-- Pass opts to find_files
+		require("telescope.builtin").live_grep(opts)
+	end)
+end
+
 -- [[Leader key mappings for all modes]] --
 local mappings = {
 	['+'] = { select_file_shortcut, "Open file shortcuts" },
 	['='] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 	['-'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
-	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in file (grep)" },
+	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in file" },
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 	[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
@@ -232,9 +270,11 @@ local mappings = {
 		["w"] = { "<cmd>write<cr>", "Write buffer to file" },
 		-- File information
 		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
+		["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
 	},
 	c = {
 		name = "Configure",
+		["a"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
 		["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },
 		["i"] = { select_indentation, "Pick indentation style" },
 		["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
@@ -313,7 +353,9 @@ local mappings = {
 		name = "LSP",
 		-- LSP information and meta-control
 		["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
-		["R"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
+		["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
+		["s"] = { "<cmd>LspStart<cr>", "Start LSP" },
+		["q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
 	},
 	m = {
 		name = "Mason",
@@ -325,7 +367,7 @@ local mappings = {
 	o = {
 		name = "Organize",
 		["c"] = { org.cancel_task, "Cancel a task" },
-		["d"] = { 'o<Esc>"=strftime("# %Y.%m.%d %a")<cr>P', "Insert a date heading" },
+		["h"] = { 'o<Esc>"=strftime("# %Y.%m.%d %a")<cr>P', "Insert a date heading" },
 		["e"] = { org.create_deadline, "Create a deadline for a task" },
 		["p"] = { org.mark_task_in_progress, "Mark a task as in progress" },
 		["o"] = { org.mark_task_unfinished, "Mark a task as unfinished" },
@@ -400,12 +442,19 @@ local mappings = {
 	},
 	z = {
 		name = "Zettelkasten",
-		["l"] = { zet.link, "Insert a link to another note" },
-		["f"] = { zet.find, "Find a file in the notes directory" },
-		["n"] = { zet.open, "Open a named note" },
-		["p"] = { zet.search, "Search for a pattern notes directory" },
+		["l"] = { zet.link, "Insert a link to a note" },
+		["f"] = { zet.find, "Find a note" },
+		["F"] = { zet.find_select, "Find a note in the selected directory" },
+		["n"] = { zet.open, "Create a named note" },
+		["p"] = { zet.search, "Search for a pattern" },
+		["P"] = { zet.search_select, "Search in selected directory" },
 		["c"] = { zet.select, "Select collection" },
-		["z"] = { zet.new, "Open a new note" },
+		["z"] = { zet.new, "Create a new note" },
+		-- Diary
+		["d"] = { zet.daily, "Open daily entry" },
+		["w"] = { zet.weekly, "Open weekly entry" },
+		["m"] = { zet.monthly, "Open monthly entry" },
+		["y"] = { zet.yearly, "Open yearly entry" },
 	},
 }
 
