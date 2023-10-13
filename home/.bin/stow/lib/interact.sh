@@ -5,15 +5,15 @@
 me=$(basename $0)
 
 log() {
-    echo "[$me] $@"
+    echo "[$me] $*"
 }
 
 log-warn() {
-    echo "[$me] 🟡 $@"
+    echo "[$me] 🟡 $*"
 }
 
 log-fatal() {
-    echo "[$me] 🔴 $@"
+    echo "[$me] 🔴 $*"
     exit 1
 }
 
@@ -22,16 +22,15 @@ require() {
     local missing=0
     local commands=""
     for cmd in "$@"; do
-        command -v "$cmd" >/dev/null 2>&1 || { COMMANDS="$COMMANDS $cmd"; missing=1; }
+        command -v "$cmd" >/dev/null 2>&1 || { commands="$commands $cmd"; missing=1; }
     done
 
     # Even if only one pre-requisite is missing, exit since none are optional
     if [ $missing -ne 0 ]; then
-        log-fatal "required:$COMMANDS"
-        exit 1
+        log-fatal "required:$commands"
         #if yes_or_no "Would you like to install them now?"; then
             #INSTALLCMD=sudo dnf install
-            #$INSTALLCMD $COMMANDS
+            #$INSTALLCMD $commands
             #return 0
         #else
             #exit 1
@@ -43,7 +42,7 @@ require() {
 yes_or_no() {
     prompt=$1
     while true; do
-        read -p "$prompt [Y/n]" yn
+        read -rp "$prompt [Y/n]" yn
         if [[ "$yn" == "" ]]; then
             yn="Y"
         fi
@@ -60,17 +59,17 @@ yes_or_no() {
 
 # no_args is used like so: `no_args "description" $@`.
 no_args() {
-	local description="$1"
-	local arg="$2"
+    local description="$1"
+    local arg="$2"
 
-	if [[ "$arg" != "" ]] && "$arg" != "--"; then
-		echo "$me [-h]"
-		echo ""
-		echo "$description"
-		if [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
-			exit 0
-		else
-			exit 1
-		fi
-	fi
+    if [[ "$arg" != "" ]] && [[ "$arg" != "--" ]]; then
+        echo "$me [-h]"
+        echo ""
+        echo "$description"
+        if [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
+            exit 0
+        else
+            exit 1
+        fi
+    fi
 }

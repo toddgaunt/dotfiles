@@ -2,6 +2,6 @@
 
 source interact.sh
 
-no_args "Displays all 256 colors in terminals that support it" $@
+no_args "Displays all 256 colors in terminals that support it" "$@"
 
 (x=`tput op` y=`printf %76s`;for i in {0..255};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done)

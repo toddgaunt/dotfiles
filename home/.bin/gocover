@@ -1,4 +1,0 @@
-#!/bin/sh
-
-go test $@ -cover -coverprofile out.cover &&
-go tool cover -html=out.cover -o out.cover.html
