@@ -1,10 +1,10 @@
---
--- Autocomplete Config
---
+----------------
+--            --
+-- CMP CONFIG --
+--            --
+----------------
 
 local cmp = require("cmp")
-local lspconfig = require("lspconfig")
-local util = require("lspconfig/util")
 
 cmp.setup {
 	-- Don't autoselect an item or automatically insert it.
@@ -92,11 +92,17 @@ cmp.setup.cmdline(':', {
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
---
--- Neovim LSP Config
---
+----------------
+--            --
+-- LSP CONFIG --
+--            --
+----------------
 
--- Mappings.
+local lspconfig = require("lspconfig")
+local util = require("lspconfig/util")
+local cmp = require("cmp")
+
+-- Default options when creating keymaps.
 local opts = { noremap = true, silent = true }
 
 vim.api.nvim_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
@@ -125,42 +131,6 @@ for _, lsp in pairs(servers) do
 		on_attach = on_attach,
 	}
 end
-
---
--- Lua LSP configuration
---
-lspconfig.lua_ls.setup {
-	capabilities = capabilities,
-	on_attach = on_attach,
-	settings = {
-		Lua = {
-			runtime = {
-				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-				version = "LuaJIT",
-			},
-			diagnostics = {
-				-- Recognize the neovim provided 'vim' global variable.
-				globals = { "vim" },
-			},
-			workspace = {
-				-- Make the server aware of Neovim runtime files
-				library = vim.api.nvim_get_runtime_file("", true),
-				checkThirdParty = false,
-			},
-			telemetry = {
-				-- Do not send telemetry data containing a randomized but unique identifier
-				enable = false,
-			},
-		}
-	}
-}
-
--- LuaFormat formats a lua file according to the LSP formatter
-function LuaFormat()
-	vim.lsp.buf.format({ async = true })
-end
-
-vim.cmd('autocmd BufWritePre *.lua lua LuaFormat()')
 
 --
 -- Golang LSP configuration
@@ -204,22 +174,31 @@ function GoFumport(wait_ms)
 	vim.lsp.buf.format({ async = true })
 end
 
-vim.cmd('autocmd BufWritePre *.go lua GoFumport(1000)')
-
 --
--- Gherkin LSP configuration
+-- Lua LSP configuration
 --
---lspconfig.cucumber_language_server.setup {
---capabilities = capabilities,
---on_attach = on_attach,
---filetypes = { "cucumber" },
---settings = {
---features = { 'hvtest/features/*.feature' },
---glue = { 'hvtest/steps/*.py' }
---}
---}
-
---
--- Python LSP configuration
---
-vim.cmd('autocmd BufWritePost *.py !black %')
+lspconfig.lua_ls.setup {
+	capabilities = capabilities,
+	on_attach = on_attach,
+	settings = {
+		Lua = {
+			runtime = {
+				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+				version = "LuaJIT",
+			},
+			diagnostics = {
+				-- Recognize the neovim provided 'vim' global variable.
+				globals = { "vim" },
+			},
+			workspace = {
+				-- Make the server aware of Neovim runtime files
+				library = vim.api.nvim_get_runtime_file("", true),
+				checkThirdParty = false,
+			},
+			telemetry = {
+				-- Do not send telemetry data containing a randomized but unique identifier
+				enable = false,
+			},
+		}
+	}
+}

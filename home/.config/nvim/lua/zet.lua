@@ -219,7 +219,7 @@ end
 
 -- weekly creates a new diary file for the current week in M.current_path/Diary with an automatic unique filename.
 function M.weekly()
-	return new_diary("%Y-%V.md", "# Weekly <%Y %V/52>")
+	return new_diary("%Y-w%V.md", "# Weekly <%Y %V/52>")
 end
 
 -- monthly creates a new diary file for the current month in M.current_path/Diary

@@ -6,18 +6,6 @@ local bib = require("bib")
 -- Load which-key itself, the best neovim plugin.
 local wk = require("which-key")
 
--- Notetaking workspaces.
-zet.register("Personal", os.getenv("HOME") .. "/" .. "Notes/Personal")
-zet.register("Work/GlobalSign", os.getenv("HOME") .. "/" .. "Notes/Work/GlobalSign")
-
--- Allow for env to set default notetaking directory
-local default_zet_dir = os.getenv("DEFAULT_ZET_DIR")
-if default_zet_dir ~= nil then
-	zet.switch(default_zet_dir)
-else
-	zet.switch("Personal")
-end
-
 -- Set the leader key to space.
 vim.g.mapleader = " "
 
@@ -95,8 +83,9 @@ wk.register({
 	["<C-c>"] = { '"+yy', "Copy selection into OS register" },
 	["<C-v>"] = { '"+p', "Paste the OS register" },
 	["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
-	["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
+	["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 	["Y"] = { "<cmd>registers<cr>", "Show contents of registers" },
+	["<C-[>"] = { "<C-[>", "Jump back in tag stack" },
 	-- Allow easy movement between softwrapped lines
 	["j"] = { "gj", "Down" },
 	["k"] = { "gk", "Up" },
@@ -119,10 +108,10 @@ wk.register({
 	["<C-l>"] = { "<C-w>l", "Move to window on right" },
 }, { mode = "n", noremap = true, silent = true })
 
-
 -- [[Insert mode mappings]] --
 wk.register({
 	["<C-s>"] = { "<C-O>:write<cr>", "Save buffer" },
+	["<C-space>"] = { "<C-x><C-o>", "Omnicomplete" },
 	-- Pasting in insert mode causes indents to be inserted which isn't desirable.
 	--["<C-v>"] = { "<C-R>+", "Paste the OS register" },
 }, { mode = "i", noremap = true, silent = true })
@@ -140,7 +129,7 @@ wk.register({
 	["<C-c>"] = { '"+y', "Copy selection into OS register" },
 	["<C-x>"] = { '"+d', "Copy selection into OS register" },
 	["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
-	["<C-space>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
+	["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
 }, { mode = "v", noremap = true, silent = true })
 
 -- [[UI functions]] --
@@ -183,6 +172,20 @@ local function toggle_spellcheck()
 	end
 end
 
+local function new_toggle(init, fn)
+   local toggle = init
+   return function()
+           toggle = not toggle
+           fn(toggle)
+   end
+end
+
+
+local function toggle_autocomplete(value)
+   print("autocomplete=" .. tostring(value))
+   require('cmp').setup.buffer { enabled = value }
+end
+
 -- bd returns a function that deletes the current buffer. If force is true, it
 -- is deleted even if there is unsaved content.
 local function bd(force)
@@ -191,51 +194,8 @@ local function bd(force)
 	end
 end
 
-local file_shortcuts = { "~/Org/Scratch.md", "~/Org/TODO.md", "~/Org/DONE.md" }
-
-local function select_file_shortcut()
-	vim.ui.select(file_shortcuts, {
-		prompt = "Open selected file",
-	}, function(choice)
-		if choice == nil then return end
-		vim.cmd("e " .. choice)
-	end)
-end
-
-local function new_toggle(init, fn)
-	local toggle = init
-	return function()
-		toggle = not toggle
-		fn(toggle)
-	end
-end
-
-local function toggle_autocomplete(value)
-	print("autocomplete=" .. tostring(value))
-	require('cmp').setup.buffer { enabled = value }
-end
-
-local function find_file_in_subdir()
-	vim.ui.input({
-		prompt = "choose a directory: ",
-	}, function(input)
-		if input == nil then return end
-
-		local opts = {
-			prompt_title = "Live grep in /" .. input, -- Title for the picker
-			cwd = input,
-			initial_mode = "insert",
-			selection_strategy = "reset",
-		}
-
-		-- Pass opts to find_files
-		require("telescope.builtin").live_grep(opts)
-	end)
-end
-
 -- [[Leader key mappings for all modes]] --
 local mappings = {
-	['+'] = { select_file_shortcut, "Open file shortcuts" },
 	['='] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 	['-'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in file" },
@@ -249,8 +209,8 @@ local mappings = {
 		["g"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 		["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
 		["v"] = { bib.print, "Print a random Bible verse" },
-		["f"] = { yank_filename, "Yank the current file's name" },
-		["p"] = { yank_filepath, "Yank the current file's path" },
+		["f"] = { yank_filename, "Copy the current file's name" },
+		["p"] = { yank_filepath, "Copy the current file's path" },
 		['c'] = { "<cmd>checkhealth<cr>", "Check health" },
 		["a"] = { vim.lsp.buf.code_action, "Open action list" },
 	},
@@ -274,7 +234,6 @@ local mappings = {
 	},
 	c = {
 		name = "Configure",
-		["a"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
 		["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },
 		["i"] = { select_indentation, "Pick indentation style" },
 		["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
@@ -337,7 +296,7 @@ local mappings = {
 		["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
 	},
 	i = {
-		name = "Identifiers",
+		name = "Inspect",
 		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
 		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
 		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
@@ -347,15 +306,16 @@ local mappings = {
 		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifiers" },
 		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
 		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace identifiers" },
-		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
 	},
 	l = {
 		name = "LSP",
 		-- LSP information and meta-control
+		["a"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
 		["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
 		["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
 		["s"] = { "<cmd>LspStart<cr>", "Start LSP" },
 		["q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
+		["f"] = { format_file, "Format buffer using LSP" },
 	},
 	m = {
 		name = "Mason",
@@ -394,6 +354,11 @@ local mappings = {
 		["d"] = { require("persistence").stop, "Disable persistence" },
 		["l"] = { function() require("persistence").load({ last = true }) end, "Restore last session" },
 		["o"] = { require("persistence").load, "Restore session for current directory" },
+	},
+	r = {
+		name = "Refactor",
+		["a"] = { vim.lsp.buf.code_action, "Open action list" },
+		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
 	},
 	s = {
 		name = "Spellcheck",
