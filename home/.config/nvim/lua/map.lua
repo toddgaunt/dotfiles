@@ -80,7 +80,9 @@ wk.register({
 	["<F7>"] = { format_file, "Format file" },
 	["<C-q>"] = { "<cmd>bdelete!<cr>", "Close current buffer" },
 	--["<C-l>"] = { "<cmd>Telescope find_files<cr>", "Find file" },
+	-- bind both C-c and C-S-c (C-C) because linux keybindings have me swapping between both all the time :(
 	["<C-c>"] = { '"+yy', "Copy selection into OS register" },
+	["<C-C>"] = { '"+yy', "Copy selection into OS register" },
 	["<C-v>"] = { '"+p', "Paste the OS register" },
 	["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
 	["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
@@ -126,7 +128,9 @@ wk.register({
 	["s"] = { ":sort<cr>", "Sort selection (ascending)" },
 	["S"] = { ":sort!<cr>", "Sort selection (descending)" },
 	["<C-w>"] = { 'gw', "Format the selected lines" },
+	-- bind both C-c and C-S-c (C-C) because linux keybindings have me swapping between both all the time :(
 	["<C-c>"] = { '"+y', "Copy selection into OS register" },
+	["<C-C>"] = { '"+y', "Copy selection into OS register" },
 	["<C-x>"] = { '"+d', "Copy selection into OS register" },
 	["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 	["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
@@ -196,23 +200,23 @@ end
 
 -- [[Leader key mappings for all modes]] --
 local mappings = {
-	['='] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
-	['-'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
+	['+'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
+	['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in file" },
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 	[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
 	["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Open the file tree" },
+	["-"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 	a = {
 		name = "Actions",
 		["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
-		["g"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
+		["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 		["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
 		["v"] = { bib.print, "Print a random Bible verse" },
 		["f"] = { yank_filename, "Copy the current file's name" },
 		["p"] = { yank_filepath, "Copy the current file's path" },
 		['c'] = { "<cmd>checkhealth<cr>", "Check health" },
-		["a"] = { vim.lsp.buf.code_action, "Open action list" },
 	},
 	b = {
 		name = "Buffers",
@@ -228,9 +232,6 @@ local mappings = {
 		["p"] = { "<cmd>bprev<cr>", "Previous buffer" },
 		["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 		["w"] = { "<cmd>write<cr>", "Write buffer to file" },
-		-- File information
-		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
-		["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
 	},
 	c = {
 		name = "Configure",
@@ -296,7 +297,20 @@ local mappings = {
 		["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
 	},
 	i = {
-		name = "Inspect",
+		name = "Info",
+		-- File information
+		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
+		["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
+	},
+	l = {
+		name = "LSP",
+		-- LSP information and meta-control
+		["A"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
+		["R"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
+		["S"] = { "<cmd>LspStart<cr>", "Start LSP" },
+		["Q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
+		["l"] = { "<cmd>LspInfo<cr>", "Show language server information" },
+		["f"] = { format_file, "Format buffer using LSP" },
 		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
 		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
 		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
@@ -306,16 +320,6 @@ local mappings = {
 		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifiers" },
 		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
 		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace identifiers" },
-	},
-	l = {
-		name = "LSP",
-		-- LSP information and meta-control
-		["a"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
-		["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
-		["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
-		["s"] = { "<cmd>LspStart<cr>", "Start LSP" },
-		["q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
-		["f"] = { format_file, "Format buffer using LSP" },
 	},
 	m = {
 		name = "Mason",
@@ -339,14 +343,14 @@ local mappings = {
 		["V"] = { function() bib.insert({ above = true }) end, "Insert a random Bible verse above" },
 	},
 	p = {
-		name = "Plugins",
-		-- For Packer.nvim
-		["u"] = { "<cmd>PackerUpdate<cr>", "Update plugins" },
-		["i"] = { "<cmd>PackerInstall<cr>", "Install plugins" },
-		["s"] = { "<cmd>PackerSnapshot backup<cr>", "Create plugin backup snapshot" },
-		["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
-		["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
-		["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
+		name = "Workspaces",
+		["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add directory of workspaces"},
+		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces"},
+		["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace"},
+		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces"},
+		["n"] = { "<cmd>WorkspacesRename<cr>", "Rename workspace"},
+		["p"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace"},
+		["r"] = { "<cmd>WorkspacesRemove<cr>", "Remove workspace"},
 	},
 	q = {
 		name = "Sessions",
@@ -396,6 +400,16 @@ local mappings = {
 		["x"] = { "<C-w>x", "Swap with other window" },
 		["a"] = { "<C-w>|", "Max out window width" },
 		["z"] = { "<C-w>_", "Max out window height" },
+	},
+	x = {
+		name = "Extensions",
+		-- For Packer.nvim
+		["u"] = { "<cmd>PackerUpdate<cr>", "Update plugins" },
+		["i"] = { "<cmd>PackerInstall<cr>", "Install plugins" },
+		["s"] = { "<cmd>PackerSnapshot backup<cr>", "Create plugin backup snapshot" },
+		["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
+		["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
+		["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
 	},
 	y = {
 		name = "Testing",

@@ -285,6 +285,15 @@ packer.startup(function(use)
 		end
 	}
 
+	-- workspaces allows for easily changing between projects
+	use {
+		"natecraddock/workspaces.nvim",
+		config = function()
+			require("workspaces").setup({})
+			require("telescope").load_extension("workspaces")
+		end
+	}
+
 	-- vim-slime makes REPL development possible.
 	use {
 		"jpalardy/vim-slime",
