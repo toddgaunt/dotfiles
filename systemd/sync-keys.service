@@ -1,0 +1,8 @@
+[Unit]
+Description=Synchronize ~/Annex/Keys with Keys USB Drive
+
+[Service]
+ExecStart="/usr/bin/sync-keys.sh"
+
+[Install]
+WantedBy=default.target
