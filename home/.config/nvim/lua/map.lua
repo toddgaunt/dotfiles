@@ -251,6 +251,9 @@ local mappings = {
 		["n"] = { vim.diagnostic.goto_next, "Go to next error" },
 		["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
 		["q"] = { "<cmd>copen<cr>", "Open quickfix list" },
+		-- File information
+		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
+		["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
 	},
 	e = {
 		name = "Edit",
@@ -297,10 +300,16 @@ local mappings = {
 		["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
 	},
 	i = {
-		name = "Info",
-		-- File information
-		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
-		["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
+		name = "Identifiers",
+		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
+		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
+		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
+		["k"] = { vim.lsp.buf.hover, "Show identifier information" },
+		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
+		["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
+		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifiers" },
+		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
+		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace identifiers" },
 	},
 	l = {
 		name = "LSP",
@@ -311,15 +320,6 @@ local mappings = {
 		["Q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
 		["l"] = { "<cmd>LspInfo<cr>", "Show language server information" },
 		["f"] = { format_file, "Format buffer using LSP" },
-		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
-		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
-		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
-		["k"] = { vim.lsp.buf.hover, "Show identifier information" },
-		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
-		["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
-		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifiers" },
-		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
-		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace identifiers" },
 	},
 	m = {
 		name = "Mason",

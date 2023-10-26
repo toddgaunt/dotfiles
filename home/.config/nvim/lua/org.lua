@@ -1,6 +1,7 @@
 local M = {}
 
 local taskPattern = "(%s*)%- %[.]"
+local fullTaskPattern = taskPattern .."%s*~?([^~]+)~?%s*"
 --local topTaskPattern = taskPattern .. "[^:]*:"
 local topTaskPattern = taskPattern .. ".-:\n"
 
@@ -49,10 +50,36 @@ function M.create_task(opts)
 	vim.api.nvim_set_current_line(task)
 end
 
+-- create_task inserts a task intelligently
+function M.create_note(opts)
+	local line = vim.api.nvim_get_current_line()
+	-- case1 is for any task that ends with a ':' character.
+	-- This indicates that any indented following subtasks.
+	--
+	-- Newlines are appended to line to ensure that the patterns
+	-- can match until the end of the line.
+	local _, _, case1 = string.find(line .. "\n", topTaskPattern)
+	local _, _, case2 = string.find(line .. "\n", taskPattern)
+	local task = vim.api.nvim_eval('strftime("- %m.%d")')
+
+	if case1 ~= nil then
+		task = case1 .. "\t" .. task
+	elseif case2 ~= nil then
+		task = case2 .. task
+	end
+
+	if opts and opts.above then
+		vim.cmd("normal O")
+	else
+		vim.cmd("normal o")
+	end
+	vim.api.nvim_set_current_line(task)
+end
+
 -- cancel_task inserts a deadline on the current task.
 function M.cancel_task()
 	local line = vim.api.nvim_get_current_line()
-	local sub, count = string.gsub(line, taskPattern .. "%s*~?([^~]+)~?%s*", "%1- [~] ~%2~", 1)
+	local sub, count = string.gsub(line, fullTaskPattern, "%1- [~] ~%2~", 1)
 	if count == 1 then
 		vim.api.nvim_set_current_line(sub)
 	end
@@ -61,7 +88,7 @@ end
 -- MarkTaskUnfinished marks a task as unfinished.
 function M.mark_task_unfinished()
 	local line = vim.api.nvim_get_current_line()
-	local sub, count = string.gsub(line, taskPattern, "%1- [ ]", 1)
+	local sub, count = string.gsub(line, fullTaskPattern, "%1- [ ] %2", 1)
 	if count == 1 then
 		vim.api.nvim_set_current_line(sub)
 	end
