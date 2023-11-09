@@ -60,8 +60,8 @@ snippet main "func main()"
 	func main() {
 		${1:${VISUAL}}
 	}
-snippet new "new"
-	new(${0:type})
+snippet new "New"
+	new() ${0:type}
 snippet print "fmt.Println()"
 	fmt.Println("${1:s}")
 snippet sl "select"
@@ -124,5 +124,5 @@ snippet bench "benchmark function"
 snippet flag "commandline flag"
 	${1:variable} := flag.${2:String}("${3:name}", ${4:value}, "${5:how this flag is used}")
 snippet handler "http handler"
-	func Handler(w http.ResponseWriter, r *http.Request) {
+	func ${0:${VISUAL}}(w http.ResponseWriter, r *http.Request) {
 	}

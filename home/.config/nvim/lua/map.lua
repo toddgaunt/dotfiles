@@ -114,8 +114,8 @@ wk.register({
 wk.register({
 	["<C-s>"] = { "<C-O>:write<cr>", "Save buffer" },
 	["<C-space>"] = { "<C-x><C-o>", "Omnicomplete" },
-	-- Pasting in insert mode causes indents to be inserted which isn't desirable.
-	--["<C-v>"] = { "<C-R>+", "Paste the OS register" },
+	-- Note: Pasting in insert mode causes indents to be inserted which isn't usually desirable.
+	["<C-v>"] = { "<C-R>+", "Paste the OS register" },
 }, { mode = "i", noremap = true, silent = true })
 
 
@@ -198,11 +198,35 @@ local function bd(force)
 	end
 end
 
+-- Custom mapping to allow for telescope search inside of directories relative to the current buffer.
+local function find_buffer_relative_pattern()
+	local cwd = require("telescope.utils").buffer_dir()
+
+	local reldir = cwd:sub(#vim.fn.getcwd() + 1):match("[/]?(.*)")
+	local prompt_title = ""
+	if reldir == "" then
+		prompt_title = "Live grep"
+	else
+		prompt_title = "Live grep in " .. reldir
+	end
+
+	local search_opts = {
+		prompt_title = prompt_title,
+		cwd = cwd,
+		initial_mode = "insert",
+		selection_strategy = "reset",
+	}
+
+	-- Pass opts to find_files
+	require("telescope.builtin").live_grep(search_opts)
+end
+
 -- [[Leader key mappings for all modes]] --
 local mappings = {
 	['+'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 	['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
-	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in file" },
+	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
+	['?'] = { find_buffer_relative_pattern, "Find pattern relative to buffer" },
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 	[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
