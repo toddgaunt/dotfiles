@@ -8,7 +8,7 @@ XDG_STATE_HOME="$HOME/.local/state"
 export VISUAL="nvim"
 export EDITOR="nvim"
 #export LESS="-irX"
-export PAGER="most"
+export PAGER="less"
 
 #[History]#
 mkdir -p "$XDG_DATA_HOME/zsh/"
