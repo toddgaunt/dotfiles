@@ -26,12 +26,12 @@ local function select_initial_collection()
 	end
 end
 
--- register associates a name with a collection path.
-function M.register(name, path)
+-- register associates a name with a fullpath to a collection.
+function M.register(name, fullpath)
 	if M.collections[name] == nil then
 		M.collections_len = M.collections_len + 1
 	end
-	M.collections[name] = path
+	M.collections[name] = fullpath
 end
 
 -- switch changes the collection.
@@ -41,6 +41,11 @@ function M.switch(name)
 	else
 		print('collection "' .. name .. '" must first be registered with zet.register("' .. name .. '")')
 	end
+end
+
+-- chdir changes the editor's directory to the c
+function M.chdir()
+	vim.cmd("cd " .. M.current_path)
 end
 
 -- select prompts the user to select a collection.
@@ -90,7 +95,7 @@ function M.link()
 				require("telescope.actions").close(prompt_bufnr)
 
 				local filename = string.gsub(result, '([^%.]*)%.md.*', '%1', 1)
-				local filepath = string.gsub(result, '([^%.]*%.md).*', '%1', 1)
+				local filepath = "Zettelkasten/" .. string.gsub(result, '([^%.]*%.md).*', '%1', 1)
 
 				-- Insert filename in current cursor position
 				vim.cmd('normal i' .. '[' .. filename .. ']' .. '(' .. filepath .. ')')

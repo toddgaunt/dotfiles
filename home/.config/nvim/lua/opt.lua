@@ -1,5 +1,8 @@
 -- opt.lua contains all built-in neovim option configuration
 
+-- British
+vim.opt.spelllang = 'en_gb'
+
 -- Record the git branch name in a buffer local variable
 vim.cmd('let b:git_status = "unknown"')
 
@@ -14,13 +17,14 @@ vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%(
 -- Enable the mouse in all modes
 vim.opt.mouse = "a"
 vim.opt.guicursor = "n:block-blinkwait500-blinkoff500-blinkon500,v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
-vim.opt.cmdheight = 2
+vim.opt.cmdheight = 1
 vim.opt.lazyredraw = true
 vim.opt.number = true
 vim.opt.ruler = true
 vim.opt.scrolloff = 0
 vim.opt.syntax = "on"
-vim.opt.timeoutlen = 0 -- Instantly show which-key when pressing a keybinding
+-- vim.opt.timeout = true -- Allow timeout
+-- vim.opt.timeoutlen = 0 -- Instantly show which-key when pressing a keybinding
 vim.opt.wrap = true
 vim.opt.listchars = "tab:>·,trail:+"
 vim.opt.list = true

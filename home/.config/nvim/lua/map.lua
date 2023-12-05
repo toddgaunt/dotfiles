@@ -3,8 +3,8 @@ local zet = require("zet")
 local org = require("org")
 local bib = require("bib")
 
--- Load which-key itself, the best neovim plugin.
-local wk = require("which-key")
+-- Load which-key, the best neovim plugin.
+local wk = require('which-key')
 
 -- Set the leader key to space.
 vim.g.mapleader = " "
@@ -54,10 +54,10 @@ local function yank_filepath()
 	print("yanked file path")
 end
 
-local function yank_fullpath()
-	vim.cmd('let @" = expand("%:p")')
-	print("yanked full path")
-end
+--local function yank_fullpath()
+	--vim.cmd('let @" = expand("%:p")')
+	--print("yanked full path")
+--end
 
 -- [[Command mode mappings]] --
 -- I just want to be able to use consistent key bindings to move characters when typing characters! Is that too much to ask?
@@ -65,9 +65,20 @@ vim.cmd("cnoremap <C-a> <C-b>")
 vim.cmd("cnoremap <C-b> <Left>")
 vim.cmd("cnoremap <C-f> <Right>")
 
+local function copy_relative_filepath()
+	local path = vim.api.nvim_buf_get_name(0)
+	local cwd = vim.fn.getcwd()
+	local loc = vim.api.nvim_win_get_cursor(0)
+
+	local relpath = path.sub(path, #cwd + 1) .. ":" ..  tostring(loc[1])
+
+	vim.fn.setreg("", relpath)
+	vim.fn.setreg("+", relpath)
+end
 
 -- [[Normal mode mappings]] --
 wk.register({
+	['y@'] = { copy_relative_filepath, "Relative file path"},
 	["+"] = { "<C-a>", "Increment number" },
 	["-"] = { "<C-x>", "Decrement number" },
 	["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
@@ -223,15 +234,15 @@ end
 
 -- [[Leader key mappings for all modes]] --
 local mappings = {
-	['+'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
+	['.'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 	['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
+	['+'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
 	['?'] = { find_buffer_relative_pattern, "Find pattern relative to buffer" },
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 	[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
 	["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Open the file tree" },
-	["-"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 	a = {
 		name = "Actions",
 		["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
@@ -264,12 +275,12 @@ local mappings = {
 		["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
 		["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
 		["p"] = { "<cmd>set paste!<cr>", "Toggle paste mode" },
-		["s"] = { "<cmd>ScrollbarToggle<cr>", "Toggle scrollbar" },
 		["t"] = { select_tab_length, "Pick tab length" },
 		["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
 	},
 	d = {
 		name = "Diagnostics",
+		["d"] = { "<cmd>cwindow<cr>", "Open quickfix list" },
 		["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
 		["l"] = { "<cmd>lopen<cr>", "Open location list" },
 		["n"] = { vim.diagnostic.goto_next, "Go to next error" },
@@ -287,30 +298,31 @@ local mappings = {
 		["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
 	},
 	f = {
-		name = "Files",
-		["e"] = { "<cmd>NvimTreeFindFile<cr>", "Explore the file tree from current file" },
-		["E"] = { "<cmd>NvimTreeOpen<cr>", "Explore the file tree" },
-		["c"] = { "<cmd>NvimTreeCollapseKeepBuffers<cr>", "Collapse file tree except on open buffers" },
-		["C"] = { "<cmd>NvimTreeCollapse<cr>", "Collapse file tree" },
-		["f"] = { "<cmd>Telescope find_files<cr>", "Search for a file by name" },
-		["g"] = { "<cmd>Telescope git_files<cr>", "Search for a file by name tracked by Git" },
-		["o"] = { "<cmd>Telescope oldfiles<cr>", "Find previously opened file" },
-		["m"] = { "<cmd>Telescope live_grep<cr>", "Search for a pattern in files" },
+		name = "Find",
+		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Find Incoming calls of symbol" },
+		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Find Definitions of symbol" },
+		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Find Implementations of symbol" },
+		["k"] = { vim.lsp.buf.hover, "Show symbol information" },
+		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Find Outgoing calls of symbol" },
+		["r"] = { "<cmd>Telescope lsp_references<cr>", "Find References to the symbol" },
+		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document symbols" },
+		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of symbol" },
+		["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Find workspace symbols" },
 	},
 	g = {
 		name = "Git",
-		["C"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
+		["A"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
+		["P"] = { "<cmd>Git push<cr>", "Push changes" },
+		["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
+		["C"] = { "<cmd>Git commit<cr>", "Commit changes" },
 		["a"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
 		["b"] = { "<cmd>Telescope git_branches<cr>", "Switch to branch" },
-		["c"] = { "<cmd>Git commit<cr>", "Commit changes" },
 		["d"] = { "<cmd>Gdiff<cr>", "Diff view" },
-		["f"] = { "<cmd>Git fetch<cr>", "Fetch updates" },
+		["F"] = { "<cmd>Git fetch<cr>", "Fetch updates" },
 		["g"] = { "<cmd>Telescope git_commits<cr>", "Switch to commit" },
 		["l"] = { "<cmd>Git log<cr>", "View commit log" },
 		["m"] = { "<cmd>Git mergetool<cr>", "Open the merge tool" },
-		["p"] = { "<cmd>Git push<cr>", "Push changes" },
 		["s"] = { "<cmd>Git<cr>", "Show status" },
-		["u"] = { "<cmd>Git pull<cr>", "Pull changes" },
 		["w"] = { "<cmd>Gwrite<cr>", "Write changes in buffer" },
 	},
 	h = {
@@ -323,34 +335,14 @@ local mappings = {
 		["o"] = { "<cmd>Telescope vim_options<cr>", "Search config options" },
 		["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
 	},
-	i = {
-		name = "Identifiers",
-		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
-		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
-		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
-		["k"] = { vim.lsp.buf.hover, "Show identifier information" },
-		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
-		["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
-		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifiers" },
-		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
-		["w"] = { "<cmd>Telescope lsp_workspace_symbols<cr>", "Find workspace identifiers" },
-	},
 	l = {
 		name = "LSP",
 		-- LSP information and meta-control
-		["A"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
-		["R"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
-		["S"] = { "<cmd>LspStart<cr>", "Start LSP" },
-		["Q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
+		["a"] = { new_toggle(true, toggle_autocomplete), "Toggle autocomplete" },
+		["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
+		["s"] = { "<cmd>LspStart<cr>", "Start LSP" },
+		["q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
 		["l"] = { "<cmd>LspInfo<cr>", "Show language server information" },
-		["f"] = { format_file, "Format buffer using LSP" },
-	},
-	m = {
-		name = "Mason",
-		-- For Mason.nvim
-		["l"] = { "<cmd>MasonLog<cr>", "View Mason logs" },
-		["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
-		["u"] = { "<cmd>MasonUpdate<cr>", "Update Mason registries" },
 	},
 	o = {
 		name = "Organize",
@@ -367,14 +359,17 @@ local mappings = {
 		["V"] = { function() bib.insert({ above = true }) end, "Insert a random Bible verse above" },
 	},
 	p = {
-		name = "Workspaces",
-		["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add directory of workspaces"},
-		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces"},
-		["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace"},
-		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces"},
-		["n"] = { "<cmd>WorkspacesRename<cr>", "Rename workspace"},
-		["p"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace"},
-		["r"] = { "<cmd>WorkspacesRemove<cr>", "Remove workspace"},
+		name = "Plugins",
+		-- For Packer.nvim
+		["u"] = { "<cmd>PackerUpdate<cr>", "Update plugins" },
+		["i"] = { "<cmd>PackerInstall<cr>", "Install plugins" },
+		["s"] = { "<cmd>PackerSnapshot backup<cr>", "Create plugin backup snapshot" },
+		["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
+		["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
+		["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
+		-- For Mason.nvim
+		["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
+		["M"] = { "<cmd>MasonUpdate<cr>", "Update Mason registries" },
 	},
 	q = {
 		name = "Sessions",
@@ -386,7 +381,8 @@ local mappings = {
 	r = {
 		name = "Refactor",
 		["a"] = { vim.lsp.buf.code_action, "Open action list" },
-		["n"] = { vim.lsp.buf.rename, "Rename identifier" },
+		["n"] = { vim.lsp.buf.rename, "Rename symbol" },
+		['c'] = { "<cmd>Copilot<cr>", "Synthesize Github Copilot suggestions" },
 	},
 	s = {
 		name = "Spellcheck",
@@ -426,14 +422,14 @@ local mappings = {
 		["z"] = { "<C-w>_", "Max out window height" },
 	},
 	x = {
-		name = "Extensions",
-		-- For Packer.nvim
-		["u"] = { "<cmd>PackerUpdate<cr>", "Update plugins" },
-		["i"] = { "<cmd>PackerInstall<cr>", "Install plugins" },
-		["s"] = { "<cmd>PackerSnapshot backup<cr>", "Create plugin backup snapshot" },
-		["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
-		["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
-		["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
+		name = "Workspaces",
+		["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add directory of workspaces"},
+		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces"},
+		["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace"},
+		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces"},
+		["n"] = { "<cmd>WorkspacesRename<cr>", "Rename workspace"},
+		["p"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace"},
+		["r"] = { "<cmd>WorkspacesRemove<cr>", "Remove workspace"},
 	},
 	y = {
 		name = "Testing",
@@ -445,19 +441,21 @@ local mappings = {
 	},
 	z = {
 		name = "Zettelkasten",
-		["l"] = { zet.link, "Insert a link to a note" },
-		["f"] = { zet.find, "Find a note" },
-		["F"] = { zet.find_select, "Find a note in the selected directory" },
-		["n"] = { zet.open, "Create a named note" },
+		["C"] = { zet.chdir, "Change directory to collection" },
 		["p"] = { zet.search, "Search for a pattern" },
 		["P"] = { zet.search_select, "Search in selected directory" },
+		["F"] = { zet.find_select, "Find a note in the selected directory" },
 		["c"] = { zet.select, "Select collection" },
-		["z"] = { zet.new, "Create a new note" },
-		-- Diary
-		["d"] = { zet.daily, "Open daily entry" },
-		["w"] = { zet.weekly, "Open weekly entry" },
-		["m"] = { zet.monthly, "Open monthly entry" },
-		["y"] = { zet.yearly, "Open yearly entry" },
+		["f"] = { zet.find, "Find a note or diary entry" },
+		-- Zettelkasten specific bindings
+		["l"] = { zet.link, "Zet: Insert a link to a note" },
+		["n"] = { zet.open, "Zet: Open a named note" },
+		["z"] = { zet.new, "Zet: Create a new note" },
+		-- Diary specific bindings
+		["d"] = { zet.daily, "Diary: Open daily entry" },
+		["w"] = { zet.weekly, "Diary: Open weekly entry" },
+		["m"] = { zet.monthly, "Diary: Open monthly entry" },
+		["y"] = { zet.yearly, "Diary: Open yearly entry" },
 	},
 }
 

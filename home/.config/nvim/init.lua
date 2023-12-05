@@ -1,10 +1,24 @@
 local packer = require("packer")
 packer.startup(function(use)
-	-- Package manager
+	-- Package manager for installing all other packages
 	use "wbthomason/packer.nvim"
 
+	-- Mason makes installing language server tools dead-easy
+	use {
+		"williamboman/mason.nvim",
+		config = function()
+			require('mason').setup()
+		end,
+	}
+
 	-- which-key is the best keybinding plugin ever
-	use "folke/which-key.nvim"
+	use {
+		"folke/which-key.nvim",
+		config = function()
+			vim.opt.timeout = true
+			vim.opt.timeoutlen = 0
+		end
+	}
 
 	-- vim-lastplace remembers my last cursor position in files
 	use "farmergreg/vim-lastplace"
@@ -15,14 +29,6 @@ packer.startup(function(use)
 		requires = "kyazdani42/nvim-web-devicons",
 		config = function()
 			require("luatab").setup()
-		end
-	}
-
-	-- nvim-scrollbar adds a basic scrollbar
-	use {
-		"petertriho/nvim-scrollbar",
-		config = function()
-			require("scrollbar").setup()
 		end
 	}
 
@@ -214,7 +220,7 @@ packer.startup(function(use)
 							-- Any windows which contain excluded type won't be available to pick from nvim-tree.
 							exclude = {
 								filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame", },
-								buftype  = { "help", "terminal" },
+								buftype  = { "help", "terminal", "minimap"},
 							},
 						},
 					},
@@ -344,17 +350,12 @@ packer.startup(function(use)
 	use {
 		"ggandor/leap.nvim",
 		config = function()
-			require('leap')
+			require("leap")
 		end,
 	}
 
-	-- mason makes installing language server tools dead-easy
-	use {
-		"williamboman/mason.nvim",
-		config = function()
-			require('mason').setup()
-		end,
-	}
+	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
+	use "github/copilot.vim"
 end)
 
 -- Include other config files after plugins are loaded and configured.
