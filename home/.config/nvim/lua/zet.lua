@@ -43,7 +43,7 @@ function M.switch(name)
 	end
 end
 
--- chdir changes the editor's directory to the c
+-- chdir changes the editor's directory to the current collection
 function M.chdir()
 	vim.cmd("cd " .. M.current_path)
 end

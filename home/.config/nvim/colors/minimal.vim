@@ -102,6 +102,9 @@ hi WhichKeyValue     cterm=NONE      ctermfg=NONE    ctermbg=NONE
 " Standard vim colors
 "
 
+" Since leap needs cursor to be defined, and vim doesn't by default
+hi Cusor        term=NONE cterm=reverse ctermfg=NONE ctermbg=NONE gui=NONE guifg=NONE guibg=NONE
+
 " Code diffing
 hi DiffAdd       cterm=NONE ctermfg=NONE ctermbg=10
 hi DiffChange    cterm=NONE ctermfg=NONE ctermbg=11
