@@ -7,7 +7,7 @@ XDG_STATE_HOME="$HOME/.local/state"
 #[Default Programs]#
 export VISUAL="nvim"
 export EDITOR="nvim"
-#export LESS="-irX"
+export LESS="-irX"
 export PAGER="less"
 
 #[History]#

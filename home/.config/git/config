@@ -24,9 +24,9 @@
 		--date=short \
 		--show-signature
 [pager]
-	branch=true
-	diff=true
-	log=true
+	branch=false
+	diff=false
+	log=false
 [color]
 	ui = auto
 [commit]
