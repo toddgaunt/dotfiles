@@ -114,7 +114,7 @@ hi DiffText      cterm=bold ctermfg=NONE ctermbg=11
 " Editor UI groups
 hi LineNr        cterm=NONE ctermfg=6 ctermbg=NONE
 hi IncSearch     cterm=NONE ctermfg=0 ctermbg=11
-hi Pmenu         cterm=NONE ctermfg=0 ctermbg=7
+hi Pmenu         cterm=NONE ctermfg=0 ctermbg=15
 hi PmenuSel      cterm=NONE ctermfg=0 ctermbg=14
 hi Visual        cterm=NONE ctermfg=0 ctermbg=7
 hi Search        cterm=NONE ctermfg=0 ctermbg=14

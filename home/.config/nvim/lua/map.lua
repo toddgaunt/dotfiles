@@ -91,9 +91,7 @@ wk.register({
 	["<F7>"] = { format_file, "Format file" },
 	["<C-q>"] = { "<cmd>bdelete!<cr>", "Close current buffer" },
 	--["<C-l>"] = { "<cmd>Telescope find_files<cr>", "Find file" },
-	-- bind both C-c and C-S-c (C-C) because linux keybindings have me swapping between both all the time :(
 	["<C-c>"] = { '"+yy', "Copy selection into OS register" },
-	["<C-C>"] = { '"+yy', "Copy selection into OS register" },
 	["<C-v>"] = { '"+p', "Paste the OS register" },
 	["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
 	["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
@@ -139,9 +137,7 @@ wk.register({
 	["s"] = { ":sort<cr>", "Sort selection (ascending)" },
 	["S"] = { ":sort!<cr>", "Sort selection (descending)" },
 	["<C-w>"] = { 'gw', "Format the selected lines" },
-	-- bind both C-c and C-S-c (C-C) because linux keybindings have me swapping between both all the time :(
 	["<C-c>"] = { '"+y', "Copy selection into OS register" },
-	["<C-C>"] = { '"+y', "Copy selection into OS register" },
 	["<C-x>"] = { '"+d', "Copy selection into OS register" },
 	["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 	["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
@@ -242,7 +238,7 @@ local mappings = {
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 	[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
-	["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Open the file tree" },
+	["<tab>"] = { "<cmd>NvimTreeFindFile!<cr>", "Open the file tree" },
 	a = {
 		name = "Actions",
 		["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
@@ -252,7 +248,6 @@ local mappings = {
 		["p"] = { yank_filepath, "Copy the current file's path" },
 		["v"] = { bib.print, "Print a random Bible verse" },
 		['H'] = { "<cmd>checkhealth<cr>", "Check health" },
-		['c'] = { "<cmd>Copilot<cr>", "Synthesize Github Copilot suggestions" },
 	},
 	b = {
 		name = "Buffers",

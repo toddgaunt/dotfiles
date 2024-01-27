@@ -17,6 +17,9 @@ packer.startup(function(use)
 		config = function()
 			vim.opt.timeout = true
 			vim.opt.timeoutlen = 0
+			require('which-key').setup {
+				sort_by_description=true,
+			}
 		end
 	}
 
@@ -125,12 +128,17 @@ packer.startup(function(use)
 		},
 		config = function()
 			require("nvim-tree").setup({
-				sync_root_with_cwd = true,
+				sync_root_with_cwd = false,
+				respect_buf_cwd = true,
 				update_focused_file = {
 					enable = false,
 				},
 				view = {
 					preserve_window_proportions = true,
+					signcolumn = "no",
+					float = {
+						enable = false,
+					},
 				},
 				on_attach = function(bufnr)
 					local api = require('nvim-tree.api')
@@ -302,17 +310,7 @@ packer.startup(function(use)
 	use {
 		"dcampos/nvim-snippy",
 		config = function()
-			require('snippy').setup({
-				mappings = {
-					is = {
-						['<Tab>'] = 'expand_or_advance',
-						['<S-Tab>'] = 'previous',
-					},
-					--nx = {
-					--['<leader>x'] = 'cut_text',
-					--},
-				},
-			})
+			require('snippy').setup({})
 		end,
 	}
 
@@ -355,7 +353,17 @@ packer.startup(function(use)
 	}
 
 	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
-	use "github/copilot.vim"
+	use {
+		"github/copilot.vim",
+
+		config = function()
+			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
+				expr = true,
+				replace_keycodes = false
+			})
+			vim.g.copilot_no_tab_map = false
+		end,
+	}
 end)
 
 -- Include other config files after plugins are loaded and configured.
