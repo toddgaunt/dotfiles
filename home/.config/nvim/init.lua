@@ -128,10 +128,10 @@ packer.startup(function(use)
 		},
 		config = function()
 			require("nvim-tree").setup({
-				sync_root_with_cwd = false,
+				sync_root_with_cwd = true,
 				respect_buf_cwd = true,
 				update_focused_file = {
-					enable = false,
+					enable = true,
 				},
 				view = {
 					preserve_window_proportions = true,

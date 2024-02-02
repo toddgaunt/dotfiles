@@ -65,20 +65,23 @@ vim.cmd("cnoremap <C-a> <C-b>")
 vim.cmd("cnoremap <C-b> <Left>")
 vim.cmd("cnoremap <C-f> <Right>")
 
-local function copy_relative_filepath()
+local function get_loc()
 	local path = vim.api.nvim_buf_get_name(0)
-	local cwd = vim.fn.getcwd()
 	local loc = vim.api.nvim_win_get_cursor(0)
 
-	local relpath = path.sub(path, #cwd + 1) .. ":" ..  tostring(loc[1])
+	-- Note: this only works as expected when the file you are copying is inside the cwd.
+	--local relpath = path.sub(path, #cwd + 1) .. ":" ..  tostring(loc[1])
 
-	vim.fn.setreg("", relpath)
-	vim.fn.setreg("+", relpath)
+	-- Instead this is used since only fullpath yanking behaves as expected.
+	local pathloc = path .. ":" ..  tostring(loc[1])
+
+	vim.fn.setreg("", pathloc)
+	vim.fn.setreg("+", pathloc)
 end
 
 -- [[Normal mode mappings]] --
 wk.register({
-	['y@'] = { copy_relative_filepath, "Relative file path"},
+	['y@'] = { get_loc, "Relative file path"},
 	["+"] = { "<C-a>", "Increment number" },
 	["-"] = { "<C-x>", "Decrement number" },
 	["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
@@ -228,9 +231,14 @@ local function find_buffer_relative_pattern()
 	require("telescope.builtin").live_grep(search_opts)
 end
 
+local function cd_to_buf()
+	vim.cmd("cd " .. vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+end
+
 -- [[Leader key mappings for all modes]] --
 local mappings = {
-	['.'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
+	["."] = { cd_to_buf, "Change directory to that of the current buffer" },
+	[','] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 	['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 	['+'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
@@ -437,7 +445,6 @@ local mappings = {
 	},
 	z = {
 		name = "Zettelkasten",
-		["C"] = { zet.chdir, "Change directory to collection" },
 		["p"] = { zet.search, "Search for a pattern" },
 		["P"] = { zet.search_select, "Search in selected directory" },
 		["F"] = { zet.find_select, "Find a note in the selected directory" },

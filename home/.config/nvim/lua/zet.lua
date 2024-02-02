@@ -43,11 +43,6 @@ function M.switch(name)
 	end
 end
 
--- chdir changes the editor's directory to the current collection
-function M.chdir()
-	vim.cmd("cd " .. M.current_path)
-end
-
 -- select prompts the user to select a collection.
 function M.select()
 	local names = {}
