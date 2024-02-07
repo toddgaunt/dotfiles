@@ -23,10 +23,14 @@
 		--graph \
 		--date=short \
 		--show-signature
+	undo = reset --soft HEAD^
+
+
 [pager]
+	log=true
+	diff=true
 	branch=false
-	diff=false
-	log=false
+	status=false
 [color]
 	ui = auto
 [commit]
