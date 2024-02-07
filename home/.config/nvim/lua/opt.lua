@@ -13,7 +13,7 @@ vim.cmd("colorscheme minimal")
 --vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=master%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, without git branch info
 vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
 -- Keep the gutter always open
-vim.opt.signcolumn = "no"
+--vim.opt.signcolumn = "yes"
 -- Enable the mouse in all modes
 vim.opt.mouse = "a"
 vim.opt.guicursor = "n:block-blinkwait500-blinkoff500-blinkon500,v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
