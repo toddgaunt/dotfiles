@@ -18,7 +18,7 @@ packer.startup(function(use)
 			vim.opt.timeout = true
 			vim.opt.timeoutlen = 0
 			require('which-key').setup {
-				sort_by_description=true,
+				sort_by_description = true,
 			}
 		end
 	}
@@ -228,7 +228,7 @@ packer.startup(function(use)
 							-- Any windows which contain excluded type won't be available to pick from nvim-tree.
 							exclude = {
 								filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame", },
-								buftype  = { "help", "terminal", "minimap"},
+								buftype  = { "help", "terminal", "minimap" },
 							},
 						},
 					},
@@ -248,6 +248,12 @@ packer.startup(function(use)
 		config = function()
 			require("telescope").setup({
 				defaults = {
+					mappings = {
+						i = {
+							["<tab>"] = require("telescope.actions.layout").toggle_preview,
+							["<S-tab>"] = require("telescope.actions.layout").cycle_layout_next,
+						}
+					},
 					wrap_results = true,
 					path_display = {
 						--tail = true
@@ -256,7 +262,10 @@ packer.startup(function(use)
 						--truncate = 3,
 					},
 					dynamic_preview_title = true,
-				}
+					preview = {
+						hide_on_startup = true,
+					}
+				},
 			})
 		end
 	}

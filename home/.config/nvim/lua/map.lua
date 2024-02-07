@@ -1,4 +1,6 @@
 -- map.lua contains all custom keybindings
+
+-- Load local modules
 local zet = require("zet")
 local org = require("org")
 local bib = require("bib")
@@ -18,6 +20,39 @@ local function map(mode, lhs, rhs, opts)
 		options = vim.tbl_extend("force", options, opts)
 	end
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+end
+
+-- The function to set the ignore patterns can be bound
+-- to allow this to be changed by user input. A default
+-- table of ignore patterns may be passed in as the argument.
+local function set_file_ignore_patterns(file_ignore_patterns)
+	require("telescope").setup({
+		defaults = {
+			file_ignore_patterns = file_ignore_patterns,
+		},
+	})
+
+	return function()
+		vim.ui.input({
+			prompt = "Set pattern to use for ignore files when searching: ",
+			default = table.concat(file_ignore_patterns, ",")
+		}, function(input)
+			if input == nil then return end
+
+			if input ~= "" then
+				file_ignore_patterns = vim.split(input, ",")
+				print("Ignore patterns set to: " .. table.concat(file_ignore_patterns, ","))
+			else
+				file_ignore_patterns = {}
+				print("Ignore patterns cleared")
+			end
+			require("telescope").setup({
+				defaults = {
+					file_ignore_patterns = file_ignore_patterns,
+				},
+			})
+		end)
+	end
 end
 
 -- Unmap unused bindings to free up keys
@@ -55,8 +90,8 @@ local function yank_filepath()
 end
 
 --local function yank_fullpath()
-	--vim.cmd('let @" = expand("%:p")')
-	--print("yanked full path")
+--vim.cmd('let @" = expand("%:p")')
+--print("yanked full path")
 --end
 
 -- [[Command mode mappings]] --
@@ -73,15 +108,28 @@ local function get_loc()
 	--local relpath = path.sub(path, #cwd + 1) .. ":" ..  tostring(loc[1])
 
 	-- Instead this is used since only fullpath yanking behaves as expected.
-	local pathloc = path .. ":" ..  tostring(loc[1])
+	local pathloc = path .. ":" .. tostring(loc[1])
 
 	vim.fn.setreg("", pathloc)
 	vim.fn.setreg("+", pathloc)
 end
 
+local function getVisualSelection()
+	vim.cmd('noau normal! "vy"')
+	local text = vim.fn.getreg('v')
+	vim.fn.setreg('v', {})
+
+	text = string.gsub(text, "\n", "")
+	if #text > 0 then
+		return text
+	else
+		return ''
+	end
+end
+
 -- [[Normal mode mappings]] --
 wk.register({
-	['y@'] = { get_loc, "Relative file path"},
+	['y@'] = { get_loc, "File path" },
 	["+"] = { "<C-a>", "Increment number" },
 	["-"] = { "<C-x>", "Decrement number" },
 	["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
@@ -144,6 +192,10 @@ wk.register({
 	["<C-x>"] = { '"+d', "Copy selection into OS register" },
 	["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 	["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
+	["f"] = { function()
+		local text = getVisualSelection()
+		require("telescope.builtin").live_grep({ default_text = text })
+	end, "Search for the selected text" },
 }, { mode = "v", noremap = true, silent = true })
 
 -- [[UI functions]] --
@@ -187,17 +239,17 @@ local function toggle_spellcheck()
 end
 
 local function new_toggle(init, fn)
-   local toggle = init
-   return function()
-           toggle = not toggle
-           fn(toggle)
-   end
+	local toggle = init
+	return function()
+		toggle = not toggle
+		fn(toggle)
+	end
 end
 
 
 local function toggle_autocomplete(value)
-   print("autocomplete=" .. tostring(value))
-   require('cmp').setup.buffer { enabled = value }
+	print("autocomplete=" .. tostring(value))
+	require('cmp').setup.buffer { enabled = value }
 end
 
 -- bd returns a function that deletes the current buffer. If force is true, it
@@ -210,19 +262,24 @@ end
 
 -- Custom mapping to allow for telescope search inside of directories relative to the current buffer.
 local function find_buffer_relative_pattern()
-	local cwd = require("telescope.utils").buffer_dir()
+	local bufdir = require("telescope.utils").buffer_dir()
+	local cwd = vim.fn.getcwd()
 
-	local reldir = cwd:sub(#vim.fn.getcwd() + 1):match("[/]?(.*)")
-	local prompt_title = ""
-	if reldir == "" then
-		prompt_title = "Live grep"
-	else
-		prompt_title = "Live grep in " .. reldir
+	local prompt_title = "Live grep in " .. bufdir
+
+	local i = bufdir:find(cwd)
+	if i == 1 then
+		local reldir = bufdir:sub(#vim.fn.getcwd() + 1):match("[/]?(.*)")
+		if reldir == "" then
+			prompt_title = "Live grep"
+		else
+			prompt_title = "Live grep in " .. reldir
+		end
 	end
 
 	local search_opts = {
 		prompt_title = prompt_title,
-		cwd = cwd,
+		cwd = bufdir,
 		initial_mode = "insert",
 		selection_strategy = "reset",
 	}
@@ -237,12 +294,14 @@ end
 
 -- [[Leader key mappings for all modes]] --
 local mappings = {
-	["."] = { cd_to_buf, "Change directory to that of the current buffer" },
+	["."] = { cd_to_buf, "Change directory to buffer" },
 	[','] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 	['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 	['+'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 	['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
+	['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
 	['?'] = { find_buffer_relative_pattern, "Find pattern relative to buffer" },
+	['%'] = { set_file_ignore_patterns({ ".*_test.go", ".*.feature" }), "Set find ignore pattern" },
 	[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 	['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 	[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
@@ -284,12 +343,11 @@ local mappings = {
 	},
 	d = {
 		name = "Diagnostics",
-		["d"] = { "<cmd>cwindow<cr>", "Open quickfix list" },
+		["d"] = { "<cmd>copen<cr>", "Open quickfix list" },
 		["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
 		["l"] = { "<cmd>lopen<cr>", "Open location list" },
 		["n"] = { vim.diagnostic.goto_next, "Go to next error" },
 		["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
-		["q"] = { "<cmd>copen<cr>", "Open quickfix list" },
 		-- File information
 		["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
 		["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
@@ -303,12 +361,12 @@ local mappings = {
 	},
 	f = {
 		name = "Find",
-		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Find Incoming calls of symbol" },
-		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Find Definitions of symbol" },
-		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Find Implementations of symbol" },
+		["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of symbol" },
+		["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of symbol" },
+		["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of symbol" },
 		["k"] = { vim.lsp.buf.hover, "Show symbol information" },
-		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Find Outgoing calls of symbol" },
-		["r"] = { "<cmd>Telescope lsp_references<cr>", "Find References to the symbol" },
+		["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "outgoing calls of symbol" },
+		["r"] = { "<cmd>Telescope lsp_references<cr>", "Find references to the symbol" },
 		["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document symbols" },
 		["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of symbol" },
 		["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Find workspace symbols" },
@@ -408,6 +466,22 @@ local mappings = {
 		["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
 		["t"] = { "<cmd>tabnew<cr>", "Create a new tab" },
 	},
+	m = {
+		name = "Marks",
+		["!"] = { "<cmd>delmarks a-zA-Z<cr>", "Delete all marks" },
+
+		["A"] = { "mA", "Set mark A"},
+		["a"] = { "'A", "Goto mark A"},
+
+		["B"] = { "mB", "Set mark B"},
+		["b"] = { "'B", "Goto mark B"},
+
+		["C"] = { "mC", "Set mark C"},
+		["c"] = { "'C", "Goto mark C"},
+
+		["D"] = { "mD", "Set mark D"},
+		["d"] = { "'D", "Goto mark D"},
+	},
 	w = {
 		name = "Windows",
 		["="] = { "<C-w>=", "Equalize window size" },
@@ -426,13 +500,13 @@ local mappings = {
 	},
 	x = {
 		name = "Workspaces",
-		["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add directory of workspaces"},
-		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces"},
-		["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace"},
-		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces"},
-		["n"] = { "<cmd>WorkspacesRename<cr>", "Rename workspace"},
-		["p"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace"},
-		["r"] = { "<cmd>WorkspacesRemove<cr>", "Remove workspace"},
+		["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add directory of workspaces" },
+		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces" },
+		["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace" },
+		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces" },
+		["n"] = { "<cmd>WorkspacesRename<cr>", "Rename workspace" },
+		["p"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
+		["r"] = { "<cmd>WorkspacesRemove<cr>", "Remove workspace" },
 	},
 	y = {
 		name = "Testing",
