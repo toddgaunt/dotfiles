@@ -3,21 +3,23 @@ local M = {}
 -- current_path holds the current working directory for the zettelkasten notemap.
 M.current_path = ""
 
--- collections associates short names with paths on the filesystem that lead to zettelkasten note mappaths on the filesystem that lead to zettelkasten note maps
-M.collections = {}
-M.collections_len = 0
+-- spaces associates short names with paths on the filesystem that lead to zettelkasten note mappaths on the filesystem that lead to zettelkasten note maps
+M.spaces = {}
+M.spaces_len = 0
 
--- select_initial_collection is called at the start of most exported functions of this module to prompt the user to pick a collection if one wasn't selected already.
-local function select_initial_collection()
+local subspaces = { "Zettelkasten", "Diary", "Collections", "Reference"}
+
+-- select_initial_space is called at the start of most exported functions of this module to prompt the user to pick a collection if one wasn't selected already.
+local function select_initial_space()
 	if M.current_path == "" then
-		if M.collections_len == 0 then
-			print("a collection must be registered to create notes")
+		if M.spaces_len == 0 then
+			print("a space must be registered to create notes")
 			return
-		elseif M.collections_len == 1 then
-			M.current_path = next(M.collections)
+		elseif M.spaces_len == 1 then
+			M.current_path = next(M.spaces)
 		else
 			M.select()
-			-- If the user fails to select a collection, just return without creating a
+			-- If the user fails to select a space, just return without creating a
 			-- note since they likely just wanted to cancel the action.
 			if M.current_path == "" then
 				return
@@ -26,41 +28,41 @@ local function select_initial_collection()
 	end
 end
 
--- register associates a name with a fullpath to a collection.
+-- register associates a name with a fullpath to a space.
 function M.register(name, fullpath)
-	if M.collections[name] == nil then
-		M.collections_len = M.collections_len + 1
+	if M.spaces[name] == nil then
+		M.spaces_len = M.spaces_len + 1
 	end
-	M.collections[name] = fullpath
+	M.spaces[name] = fullpath
 end
 
--- switch changes the collection.
+-- switch changes the space.
 function M.switch(name)
-	if M.collections[name] ~= nil then
-		M.current_path = M.collections[name]
+	if M.spaces[name] ~= nil then
+		M.current_path = M.spaces[name]
 	else
-		print('collection "' .. name .. '" must first be registered with zet.register("' .. name .. '")')
+		print('space "' .. name .. '" must first be registered with zet.register("' .. name .. '")')
 	end
 end
 
--- select prompts the user to select a collection.
+-- select prompts the user to select a space.
 function M.select()
 	local names = {}
 	local n = 0
-	for k, _ in pairs(M.collections) do
+	for k, _ in pairs(M.spaces) do
 		n = n + 1
 		table.insert(names, n, k)
 	end
 
 	if n == 0 then
-		print("no collections available")
+		print("no space available")
 		return
 	end
 
 	table.sort(names)
 
 	vim.ui.select(names, {
-		prompt = "Select zettelkasten collection for this session",
+		prompt = "Select zettelkasten space for this session",
 	}, function(choice)
 		if choice == nil then return end
 
@@ -72,11 +74,11 @@ end
 
 -- link finds a note using Telescope in M.current_path and insert's its name as a markdown link.
 function M.link()
-	select_initial_collection()
+	select_initial_space()
 
 	local opts = {
 		prompt_title = "Link Zettelkasten", -- Title for the picker
-		cwd = M.current_path .. "/Zettelkasten", -- Set path to current collection
+		cwd = M.current_path .. "/Zettelkasten", -- Set path to current space
 		initial_mode = "insert",
 		selection_strategy = "reset",
 		attach_mappings = function(_, map)
@@ -107,7 +109,7 @@ end
 
 -- find uses Telescope to find a note based on its filename inside M.current_path.
 function M.find(subpath)
-	select_initial_collection()
+	select_initial_space()
 
 	local cwd = M.current_path
 	if subpath ~= nil then
@@ -126,19 +128,9 @@ function M.find(subpath)
 	require("telescope.builtin").find_files(opts)
 end
 
-function M.find_select()
-	vim.ui.select({ "Zettelkasten", "Diary" }, {
-		prompt = "Select directory",
-	}, function(choice)
-		if choice == nil then return end
-
-		M.find("/" .. choice)
-	end)
-end
-
 -- search uses Telescope to find a note by pattern-matching its contents inside M.current_path.
 function M.search(subpath)
-	select_initial_collection()
+	select_initial_space()
 
 	local cwd = M.current_path
 	if subpath ~= nil then
@@ -156,9 +148,19 @@ function M.search(subpath)
 	require("telescope.builtin").live_grep(opts)
 end
 
+function M.find_select()
+	vim.ui.select(subspaces, {
+		prompt = "Select subspace",
+	}, function(choice)
+		if choice == nil then return end
+
+		M.find("/" .. choice)
+	end)
+end
+
 function M.search_select()
-	vim.ui.select({ "Zettelkasten", "Diary" }, {
-		prompt = "Select directory",
+	vim.ui.select(subspaces, {
+		prompt = "Select subspace",
 	}, function(choice)
 		if choice == nil then return end
 
@@ -168,25 +170,37 @@ end
 
 -- open prompts the user for a name of a file and opens the file inside M.current_path.
 function M.open()
-	select_initial_collection()
+	select_initial_space()
 
 	vim.ui.input({
 		prompt = "Input the name of the note: ",
 	}, function(input)
 		if input == nil then return end
 
-		vim.cmd("e " .. M.current_path .. "/Zettelkasten/" .. input .. ".md")
+		vim.cmd("e " .. M.current_path .. "/Collections/" .. input .. ".md")
 	end)
 end
 
 -- new creates a new file in M.current_path with an automatic unique filename.
 function M.new()
-	select_initial_collection()
+	select_initial_space()
 
 	local file_name = os.date("%y%m%d%H%M%S.md")
 	local formatted_date = os.date("# %Y.%m.%d %a")
 	vim.cmd("execute 'e " .. M.current_path .. "/Zettelkasten/" .. file_name .. "'")
 	vim.api.nvim_buf_set_lines(0, 0, 0, false, { formatted_date })
+end
+
+-- prev opens the previous entry of the same type as the current buffer.
+-- If the current buffer is not a zettelkasten entry an error is displayed.
+function M.prev()
+	-- TODO
+end
+
+-- next opens the next entry of the same type as the current buffer.
+-- If the current buffer is not a zettelkasten entry an error is displayed.
+function M.next()
+	-- TODO
 end
 
 local function buf_is_empty(buf)
@@ -231,5 +245,6 @@ end
 function M.yearly()
 	return new_diary("%Y.md", "# Yearly <%Y>")
 end
+
 
 return M

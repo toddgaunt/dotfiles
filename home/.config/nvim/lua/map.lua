@@ -519,20 +519,19 @@ local mappings = {
 	},
 	z = {
 		name = "Zettelkasten",
-		["p"] = { zet.search, "Search for a pattern" },
-		["P"] = { zet.search_select, "Search in selected directory" },
-		["F"] = { zet.find_select, "Find a note in the selected directory" },
-		["c"] = { zet.select, "Select collection" },
-		["f"] = { zet.find, "Find a note or diary entry" },
-		-- Zettelkasten specific bindings
-		["l"] = { zet.link, "Zet: Insert a link to a note" },
-		["n"] = { zet.open, "Zet: Open a named note" },
-		["z"] = { zet.new, "Zet: Create a new note" },
+		["p"] = { zet.search, "Find a pattern" },
+		["P"] = { zet.search_select, "Find a pattern in selected" },
+		["f"] = { zet.find, "Find a note" },
+		["F"] = { zet.find_select, "Find a note in selected" },
+		["s"] = { zet.select, "Select space" },
+		["l"] = { zet.link, "Insert a link to a note" },
+		["n"] = { zet.open, "Open a named note" },
+		["z"] = { zet.new, "Create a new note" },
 		-- Diary specific bindings
-		["d"] = { zet.daily, "Diary: Open daily entry" },
-		["w"] = { zet.weekly, "Diary: Open weekly entry" },
-		["m"] = { zet.monthly, "Diary: Open monthly entry" },
-		["y"] = { zet.yearly, "Diary: Open yearly entry" },
+		["d"] = { zet.daily, "Open daily entry" },
+		["w"] = { zet.weekly, "Open weekly entry" },
+		["m"] = { zet.monthly, "Open monthly entry" },
+		["y"] = { zet.yearly, "Open yearly entry" },
 	},
 }
 
