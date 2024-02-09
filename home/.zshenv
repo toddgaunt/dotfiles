@@ -27,10 +27,6 @@ export PATH="$HOME/.local/bin:$PATH"
 #[User Scripts]#
 export PATH="$HOME/.bin:$PATH"
 
-#[Project Namespaces]#
-export GH="$HOME/Annex/Code/github.com"
-export BB="$HOME/Annex/Code/bastionburrow.com"
-
 if [[ -f "$HOME/.env" ]]; then
 	source "$HOME/.env"
 fi
