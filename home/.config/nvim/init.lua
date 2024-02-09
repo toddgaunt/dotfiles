@@ -298,7 +298,8 @@ packer.startup(function(use)
 					end,
 
 					open = function()
-						require("sessions").load(nil, {silent=false})
+						require("sessions").load(nil, {})
+						require("sessions").save(nil, {})
 						vim.cmd("NvimTreeFindFile")
 					end,
 				}
