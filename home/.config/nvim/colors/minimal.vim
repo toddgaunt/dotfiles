@@ -1,5 +1,8 @@
 let g:colors_name = "minimal"
 
+hi clear
+colorscheme vim
+
 " These are the default syntax highlighting groups for various purposes.
 " Copy, uncomment, and then modify to colors of your choice.
 "hi ColorColumn  term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE gui=NONE guifg=NONE guibg=NONE
@@ -72,71 +75,76 @@ let g:colors_name = "minimal"
 
 " Colorscheme defined below
 
+highlight Normal term=NONE guibg=#FFFFFF guifg=#171421 cterm=NONE ctermbg=15 ctermfg=0
+
 "
 " Plugin colors
 "
 
 " NvimTree status line colors are set to hide the statusline text
-hi NvimTreeStatusLine   cterm=NONE ctermfg=11 ctermbg=11
-hi NvimTreeStatusLineNC cterm=NONE ctermfg=7 ctermbg=7
+hi NvimTreeStatusLine   term=NONE cterm=NONE ctermfg=11 ctermbg=11 gui=NONE guifg=#E9AD0C guibg=#E9AD0C
+hi NvimTreeStatusLineNC term=NONE cterm=NONE ctermfg=7 ctermbg=7   gui=NONE guifg=#D0CFCC guibg=#D0CFCC
 
 " Telescope is set to use a white box and select with the same colors as PmenuSel
-hi TelescopeNormal    cterm=NONE ctermfg=NONE ctermbg=15
-hi TelescopeSelection    cterm=NONE ctermfg=0 ctermbg=14
+hi TelescopeNormal    term=NONE cterm=NONE ctermfg=NONE ctermbg=15 gui=NONE guifg=NONE guibg=#FFFFFF
+hi TelescopeSelection term=NONE cterm=NONE ctermfg=0    ctermbg=14 gui=NONE guifg=#171421 guibg=#33C7DE
 
 " Gitsigns
-hi SignColumn        cterm=NONE ctermfg=NONE ctermbg=NONE
-hi GitSignsAdd       cterm=NONE ctermfg=2 ctermbg=NONE
-hi GitSignsChange    cterm=NONE ctermfg=3 ctermbg=NONE
-hi GitSignsDelete    cterm=NONE ctermfg=1 ctermbg=NONE
+hi SignColumn        term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE gui=NONE guifg=NONE guibg=NONE
+hi GitSignsAdd       term=NONE cterm=NONE ctermfg=2 ctermbg=NONE    gui=NONE guifg=#26A269 guibg=NONE
+hi GitSignsChange    term=NONE cterm=NONE ctermfg=3 ctermbg=NONE    gui=NONE guifg=#A2734C guibg=NONE
+hi GitSignsDelete    term=NONE cterm=NONE ctermfg=1 ctermbg=NONE    gui=NONE guifg=#C01C28 guibg=NONE
 
 " Which Key Menu (https://github.com/folke/which-key.nvim)
-hi WhichKey          cterm=bold      ctermfg=NONE    ctermbg=NONE
-hi WhichKeyDesc      cterm=NONE      ctermfg=NONE    ctermbg=NONE
-hi WhichKeyGroup     cterm=italic ctermfg=NONE    ctermbg=NONE
-hi WhichKeySeparator cterm=NONE      ctermfg=3       ctermbg=NONE
-hi WhichKeyFloat     cterm=NONE      ctermfg=NONE    ctermbg=7
-hi WhichKeyValue     cterm=NONE      ctermfg=NONE    ctermbg=NONE
+hi WhichKey          term=NONE cterm=bold      ctermfg=NONE    ctermbg=NONE gui=bold      guifg=NONE    guibg=NONE
+hi WhichKeyDesc      term=NONE cterm=NONE      ctermfg=NONE    ctermbg=NONE gui=NONE      guifg=NONE    guibg=NONE
+hi WhichKeyGroup     term=NONE cterm=italic    ctermfg=6       ctermbg=NONE gui=italic    guifg=#2AA1B3 guibg=NONE
+hi WhichKeySeparator term=NONE cterm=NONE      ctermfg=3       ctermbg=NONE gui=NONE      guifg=#A2734C guibg=NONE
+hi WhichKeyFloat     term=NONE cterm=NONE      ctermfg=NONE    ctermbg=7    gui=NONE      guifg=NONE    guibg=#EEEEEE
+hi WhichKeyValue     term=NONE cterm=NONE      ctermfg=NONE    ctermbg=NONE gui=NONE      guifg=NONE    guibg=NONE
+hi WhichKeyDesc      term=NONE cterm=NONE      ctermfg=NONE    ctermbg=NONE gui=NONE      guifg=#171421 guibg=NONE
 
 "
 " Standard vim colors
 "
 
 " Since leap needs cursor to be defined, and vim doesn't by default
-hi Cusor        term=NONE cterm=reverse ctermfg=NONE ctermbg=NONE gui=NONE guifg=NONE guibg=NONE
+"hi Cusor         term=NONE cterm=reverse ctermfg=NONE ctermbg=NONE gui=NONE guifg=NONE guibg=NONE
 
 " Code diffing
-hi DiffAdd       cterm=NONE ctermfg=NONE ctermbg=10
-hi DiffChange    cterm=NONE ctermfg=NONE ctermbg=11
-hi DiffDelete    cterm=NONE ctermfg=NONE ctermbg=9
-hi DiffText      cterm=bold ctermfg=NONE ctermbg=11
+hi DiffAdd       term=NONE cterm=NONE ctermfg=NONE ctermbg=10 gui=NONE guifg=NONE guibg=#33D17A
+hi DiffChange    term=NONE cterm=NONE ctermfg=NONE ctermbg=11 gui=NONE guifg=NONE guibg=#E9AD0C
+hi DiffDelete    term=NONE cterm=NONE ctermfg=NONE ctermbg=9  gui=NONE guifg=NONE guibg=#F66151
+hi DiffText      term=NONE cterm=bold ctermfg=NONE ctermbg=11 gui=bold guifg=NONE guibg=#E9AD0C
 
 " Editor UI groups
-hi LineNr        cterm=NONE ctermfg=6 ctermbg=NONE
-hi IncSearch     cterm=NONE ctermfg=0 ctermbg=11
-hi Pmenu         cterm=NONE ctermfg=0 ctermbg=15
-hi PmenuSel      cterm=NONE ctermfg=0 ctermbg=14
-hi Visual        cterm=NONE ctermfg=0 ctermbg=7
-hi Search        cterm=NONE ctermfg=0 ctermbg=14
-hi Directory     cterm=NONE ctermfg=6 ctermbg=NONE
-hi StatusLine    cterm=NONE ctermfg=0 ctermbg=11
-hi StatusLineNC  cterm=NONE ctermfg=0 ctermbg=7
-hi TabLine       cterm=NONE ctermfg=0 ctermbg=7
-hi TabLineFill   cterm=NONE ctermfg=0 ctermbg=7
-hi TabLineSel    cterm=bold ctermfg=0 ctermbg=15
-hi VertSplit     cterm=NONE ctermfg=NONE ctermbg=NONE
+hi LineNr        term=NONE cterm=NONE ctermfg=6 ctermbg=NONE    gui=NONE      guifg=#2AA1B3 guibg=NONE
+hi IncSearch     term=NONE cterm=NONE ctermfg=0 ctermbg=11      gui=NONE      guifg=NONE    guibg=#E9AD0C
+hi Pmenu         term=NONE cterm=NONE ctermfg=0 ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
+hi PmenuSel      term=NONE cterm=NONE ctermfg=0 ctermbg=14      gui=NONE      guifg=NONE    guibg=#33C7DE
+hi Visual        term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi Search        term=NONE cterm=NONE ctermfg=0 ctermbg=14      gui=NONE      guifg=NONE    guibg=#33C7DE
+hi Directory     term=NONE cterm=NONE ctermfg=6 ctermbg=NONE    gui=NONE      guifg=#2AA1B3 guibg=NONE
+hi StatusLine    term=NONE cterm=NONE ctermfg=0 ctermbg=11      gui=NONE      guifg=NONE    guibg=#E9AD0C
+hi StatusLineNC  term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi TabLine       term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi TabLineFill   term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi TabLineSel    term=NONE cterm=bold ctermfg=0 ctermbg=15      gui=bold      guifg=NONE    guibg=#FFFFFF
+hi VertSplit     term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE gui=NONE      guifg=NONE    guibg=NONE
+hi FloatBorder   term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi NormalFloat   term=NONE cterm=NONE ctermfg=0 ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
 
 " Code syntax
-hi Title        cterm=bold      ctermfg=1    ctermbg=NONE
-hi Character    cterm=italic    ctermfg=13   ctermbg=NONE
-hi Comment      cterm=italic    ctermfg=8    ctermbg=NONE
-hi Constant     cterm=NONE      ctermfg=4    ctermbg=NONE
-hi Identifier   cterm=NONE      ctermfg=6    ctermbg=NONE
-hi MatchParen   cterm=NONE      ctermfg=NONE ctermbg=14
-hi PreProc      cterm=NONE      ctermfg=4    ctermbg=NONE
-hi Special      cterm=NONE      ctermfg=NONE ctermbg=NONE
-hi Statement    cterm=NONE      ctermfg=2    ctermbg=NONE
-hi String       cterm=italic    ctermfg=13   ctermbg=NONE
-hi Type         cterm=NONE      ctermfg=1    ctermbg=NONE
-hi Underlined   cterm=underline ctermfg=NONE ctermbg=NONE
-hi Whitespace   cterm=NONE      ctermfg=7    ctermbg=NONE
+hi Title        term=NONE cterm=bold      ctermfg=1    ctermbg=NONE gui=bold      guifg=#C01C28 guibg=NONE
+hi Character    term=NONE cterm=italic    ctermfg=13   ctermbg=NONE gui=italic    guifg=#C061CB guibg=NONE
+hi Comment      term=NONE cterm=italic    ctermfg=8    ctermbg=NONE gui=italic    guifg=#171421 guibg=NONE
+hi Constant     term=NONE cterm=NONE      ctermfg=4    ctermbg=NONE gui=NONE      guifg=#12488B guibg=NONE
+hi Identifier   term=NONE cterm=NONE      ctermfg=6    ctermbg=NONE gui=NONE      guifg=#2AA1B3 guibg=NONE
+hi MatchParen   term=NONE cterm=NONE      ctermfg=NONE ctermbg=14   gui=NONE      guifg=NONE    guibg=#33C7DE
+hi PreProc      term=NONE cterm=NONE      ctermfg=4    ctermbg=NONE gui=NONE      guifg=#12488B guibg=NONE
+hi Special      term=NONE cterm=NONE      ctermfg=NONE ctermbg=NONE gui=NONE      guifg=NONE guibg=NONE
+hi Statement    term=NONE cterm=NONE      ctermfg=2    ctermbg=NONE gui=NONE      guifg=#26A269 guibg=NONE
+hi String       term=NONE cterm=italic    ctermfg=13   ctermbg=NONE gui=italic    guifg=#C061CB guibg=NONE
+hi Type         term=NONE cterm=NONE      ctermfg=1    ctermbg=NONE gui=NONE      guifg=#C01C28 guibg=NONE
+hi Underlined   term=NONE cterm=underline ctermfg=NONE ctermbg=NONE gui=underline guifg=NONE    guibg=NONE
+hi Whitespace   term=NONE cterm=NONE      ctermfg=7    ctermbg=NONE gui=NONE      guifg=#D0CFCC guibg=NONE

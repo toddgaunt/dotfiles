@@ -9,11 +9,13 @@ vim.cmd('let b:git_status = "unknown"')
 -- Create an autocmd to get the git branch name to display in the status line.
 vim.cmd( 'autocmd BufEnter,FocusGained,BufWritePost * let b:git_status = substitute(system("git rev-parse --abbrev-ref HEAD 2> /dev/null"), "\\n", " ", "g")')
 -- User interface
+vim.opt.termguicolors = true
 vim.cmd("colorscheme minimal")
+
 --vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=master%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, without git branch info
 vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
 -- Keep the gutter always open
---vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "auto:2"
 -- Enable the mouse in all modes
 vim.opt.mouse = "a"
 vim.opt.guicursor = "n:block-blinkwait500-blinkoff500-blinkon500,v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
