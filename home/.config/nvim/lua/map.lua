@@ -436,9 +436,9 @@ local mappings = {
 	q = {
 		name = "Sessions",
 		["Q"] = { "<cmd>qa<cr>", "Quit all" },
-		["d"] = { require("persistence").stop, "Disable persistence" },
-		["l"] = { function() require("persistence").load({ last = true }) end, "Restore last session" },
-		["o"] = { require("persistence").load, "Restore session for current directory" },
+		["d"] = { "<cmd>SessionsStop<cr>", "Stop session" },
+		["l"] = { "<cmd>SessionsLoad<cr>", "Load session" },
+		["s"] = { "<cmd>SessionsSave<cr>", "Save session" },
 	},
 	r = {
 		name = "Refactor",
@@ -470,17 +470,15 @@ local mappings = {
 		name = "Marks",
 		["!"] = { "<cmd>delmarks a-zA-Z<cr>", "Delete all marks" },
 
-		["A"] = { "mA", "Set mark A"},
-		["a"] = { "'A", "Goto mark A"},
+		["A"] = { "mA", "Set mark A" },
+		["B"] = { "mB", "Set mark B" },
+		["C"] = { "mC", "Set mark C" },
+		["D"] = { "mD", "Set mark D" },
+		["E"] = { "mE", "Set mark E" },
+		["F"] = { "mF", "Set mark F" },
 
-		["B"] = { "mB", "Set mark B"},
-		["b"] = { "'B", "Goto mark B"},
-
-		["C"] = { "mC", "Set mark C"},
-		["c"] = { "'C", "Goto mark C"},
-
-		["D"] = { "mD", "Set mark D"},
-		["d"] = { "'D", "Goto mark D"},
+		["f"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
+		["m"] = { "<cmd>marks<cr>", "Display all marks" },
 	},
 	w = {
 		name = "Windows",

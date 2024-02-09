@@ -116,6 +116,8 @@ packer.startup(function(use)
 					enable = true,
 					additional_vim_regex_highlighting = false,
 				},
+				modules = {},
+				ignore_install = {},
 			})
 		end,
 	}
@@ -129,9 +131,9 @@ packer.startup(function(use)
 		config = function()
 			require("nvim-tree").setup({
 				sync_root_with_cwd = true,
-				respect_buf_cwd = true,
+				respect_buf_cwd = false,
 				update_focused_file = {
-					enable = true,
+					enable = false,
 				},
 				view = {
 					preserve_window_proportions = true,
@@ -142,7 +144,6 @@ packer.startup(function(use)
 				},
 				on_attach = function(bufnr)
 					local api = require('nvim-tree.api')
-					local lib = require('nvim-tree.lib')
 
 					local function opts(desc)
 						return {
@@ -270,12 +271,14 @@ packer.startup(function(use)
 		end
 	}
 
-	-- persistence enhances per-directory session management
+	-- session management makes switching projects easier
 	use {
-		"folke/persistence.nvim",
+		"natecraddock/sessions.nvim",
 		config = function()
-			require("persistence").setup({
-				options = { "buffers", "curdir", "tabpages", "winsize", "localoptions", "terminal" }
+			require("sessions").setup({
+				events = { "VimLeavePre" },
+				session_filepath = vim.fn.stdpath("data") .. "/sessions",
+				absolute = true,
 			})
 		end
 	}
@@ -284,7 +287,22 @@ packer.startup(function(use)
 	use {
 		"natecraddock/workspaces.nvim",
 		config = function()
-			require("workspaces").setup({})
+			require("workspaces").setup({
+				hooks = {
+					open_pre = function()
+						-- If recording, save current session state and stop recording
+						require("sessions").stop_autosave({save=true})
+
+						-- delete all buffers (does not save changes)
+						vim.cmd("silent %bdelete!")
+					end,
+
+					open = function()
+						require("sessions").load(nil, {silent=false})
+						vim.cmd("NvimTreeFindFile")
+					end,
+				}
+			})
 			require("telescope").load_extension("workspaces")
 		end
 	}
@@ -353,18 +371,9 @@ packer.startup(function(use)
 		end,
 	}
 
-	-- leap provides a novel way of moving around anywhere in the visible window easily without needing to remember any command incantations
-	use {
-		"ggandor/leap.nvim",
-		config = function()
-			require("leap")
-		end,
-	}
-
 	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
 	use {
 		"github/copilot.vim",
-
 		config = function()
 			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
 				expr = true,
@@ -382,16 +391,6 @@ require("opt")
 
 -- Use the current time for the random seed for plugins that use math.random().
 math.randomseed(os.time())
-
--- Autosession loads the last session if no filename is provided.
-function AutoSession()
-	if vim.fn.expand("%") == "" then
-		require("persistence").load({ last = true })
-	end
-end
-
--- This autocmd works because of the `nested` argument, which allows it trigger more autocmds after it itself is executed.
---vim.cmd('autocmd VimEnter * nested lua AutoSession()')
 
 local zet = require("zet")
 
