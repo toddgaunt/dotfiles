@@ -1,4 +1,4 @@
- local M = {
+local M = {
 	indices = nil,
 	count = 0,
 }

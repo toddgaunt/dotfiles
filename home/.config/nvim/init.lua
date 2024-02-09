@@ -386,9 +386,9 @@ packer.startup(function(use)
 end)
 
 -- Include other config files after plugins are loaded and configured.
-require("lsp")
-require("map")
-require("opt")
+require("lsp").setup()
+require("map").setup()
+require("opt").setup()
 
 -- Use the current time for the random seed for plugins that use math.random().
 math.randomseed(os.time())
