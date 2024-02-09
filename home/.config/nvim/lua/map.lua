@@ -34,7 +34,7 @@ local function set_file_ignore_patterns(file_ignore_patterns)
 
 	return function()
 		vim.ui.input({
-			prompt = "Set pattern to use for ignore files when searching: ",
+			prompt = "Set find ignore pattern: ",
 			default = table.concat(file_ignore_patterns, ",")
 		}, function(input)
 			if input == nil then return end
@@ -55,6 +55,19 @@ local function set_file_ignore_patterns(file_ignore_patterns)
 	end
 end
 
+local function rename_workspace()
+	local ws = require("workspaces")
+	vim.ui.input({
+		prompt = "Rename workspace: ",
+		default = ws.name() .. " " .. ws.name()
+	}, function(input)
+		if input == nil then return end
+
+		if input ~= "" then
+			vim.cmd("WorkspacesRename " .. input)
+		end
+	end)
+end
 -- Unmap unused bindings to free up keys
 map("n", "R", "", default_opts) -- I never use this.
 map("n", "r", "", default_opts) -- I never use this.
@@ -145,6 +158,7 @@ wk.register({
 	["<C-c>"] = { '"+yy', "Copy selection into OS register" },
 	["<C-v>"] = { '"+p', "Paste the OS register" },
 	["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
+	["<C-x>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 	["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 	["Y"] = { "<cmd>registers<cr>", "Show contents of registers" },
 	["<C-[>"] = { "<C-[>", "Jump back in tag stack" },
@@ -315,6 +329,7 @@ local mappings = {
 		["p"] = { yank_filepath, "Copy the current file's path" },
 		["v"] = { bib.print, "Print a random Bible verse" },
 		['H'] = { "<cmd>checkhealth<cr>", "Check health" },
+		["x"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 	},
 	b = {
 		name = "Buffers",
@@ -376,6 +391,7 @@ local mappings = {
 		["A"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
 		["P"] = { "<cmd>Git push<cr>", "Push changes" },
 		["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
+		["c"] = { "<cmd>G diff --staged<cr>", "Show staged diff" },
 		["C"] = { "<cmd>Git commit<cr>", "Commit changes" },
 		["a"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
 		["b"] = { "<cmd>Telescope git_branches<cr>", "Switch to branch" },
@@ -499,12 +515,12 @@ local mappings = {
 	x = {
 		name = "Workspaces",
 		["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add directory of workspaces" },
-		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces" },
 		["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace" },
-		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces" },
-		["n"] = { "<cmd>WorkspacesRename<cr>", "Rename workspace" },
-		["p"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
+		["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove directory of workspaces" },
 		["r"] = { "<cmd>WorkspacesRemove<cr>", "Remove workspace" },
+		["l"] = { "<cmd>WorkspacesList<cr>", "List workspaces" },
+		["n"] = { rename_workspace, "Rename workspace" },
+		["s"] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 	},
 	y = {
 		name = "Testing",

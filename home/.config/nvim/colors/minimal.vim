@@ -90,10 +90,13 @@ hi TelescopeNormal    term=NONE cterm=NONE ctermfg=NONE ctermbg=15 gui=NONE guif
 hi TelescopeSelection term=NONE cterm=NONE ctermfg=0    ctermbg=14 gui=NONE guifg=#171421 guibg=#33C7DE
 
 " Gitsigns
-hi SignColumn        term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE gui=NONE guifg=NONE guibg=NONE
 hi GitSignsAdd       term=NONE cterm=NONE ctermfg=2 ctermbg=NONE    gui=NONE guifg=#26A269 guibg=NONE
 hi GitSignsChange    term=NONE cterm=NONE ctermfg=3 ctermbg=NONE    gui=NONE guifg=#A2734C guibg=NONE
 hi GitSignsDelete    term=NONE cterm=NONE ctermfg=1 ctermbg=NONE    gui=NONE guifg=#C01C28 guibg=NONE
+
+" Git diff
+hi diffAdded         term=NONE cterm=NONE ctermfg=2 ctermbg=NONE    gui=NONE guifg=#26A269 guibg=NONE
+hi diffRemoved       term=NONE cterm=NONE ctermfg=1 ctermbg=NONE    gui=NONE guifg=#C01C28 guibg=NONE
 
 " Which Key Menu (https://github.com/folke/which-key.nvim)
 hi WhichKey          term=NONE cterm=bold      ctermfg=NONE    ctermbg=NONE gui=bold      guifg=NONE    guibg=NONE
@@ -118,21 +121,22 @@ hi DiffDelete    term=NONE cterm=NONE ctermfg=NONE ctermbg=9  gui=NONE guifg=NON
 hi DiffText      term=NONE cterm=bold ctermfg=NONE ctermbg=11 gui=bold guifg=NONE guibg=#E9AD0C
 
 " Editor UI groups
-hi LineNr        term=NONE cterm=NONE ctermfg=6 ctermbg=NONE    gui=NONE      guifg=#2AA1B3 guibg=NONE
-hi IncSearch     term=NONE cterm=NONE ctermfg=0 ctermbg=11      gui=NONE      guifg=NONE    guibg=#E9AD0C
-hi Pmenu         term=NONE cterm=NONE ctermfg=0 ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
-hi PmenuSel      term=NONE cterm=NONE ctermfg=0 ctermbg=14      gui=NONE      guifg=NONE    guibg=#33C7DE
-hi Visual        term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
-hi Search        term=NONE cterm=NONE ctermfg=0 ctermbg=14      gui=NONE      guifg=NONE    guibg=#33C7DE
-hi Directory     term=NONE cterm=NONE ctermfg=6 ctermbg=NONE    gui=NONE      guifg=#2AA1B3 guibg=NONE
-hi StatusLine    term=NONE cterm=NONE ctermfg=0 ctermbg=11      gui=NONE      guifg=NONE    guibg=#E9AD0C
-hi StatusLineNC  term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
-hi TabLine       term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
-hi TabLineFill   term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
-hi TabLineSel    term=NONE cterm=bold ctermfg=0 ctermbg=15      gui=bold      guifg=NONE    guibg=#FFFFFF
+hi SignColumn    term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE    gui=NONE      guifg=NONE guibg=NONE
+hi LineNr        term=NONE cterm=NONE ctermfg=6    ctermbg=NONE    gui=NONE      guifg=#2AA1B3 guibg=NONE
+hi IncSearch     term=NONE cterm=NONE ctermfg=0    ctermbg=11      gui=NONE      guifg=NONE    guibg=#E9AD0C
+hi Pmenu         term=NONE cterm=NONE ctermfg=0    ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
+hi PmenuSel      term=NONE cterm=NONE ctermfg=0    ctermbg=14      gui=NONE      guifg=NONE    guibg=#33C7DE
+hi Visual        term=NONE cterm=NONE ctermfg=0    ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi Search        term=NONE cterm=NONE ctermfg=0    ctermbg=14      gui=NONE      guifg=NONE    guibg=#33C7DE
+hi Directory     term=NONE cterm=NONE ctermfg=6    ctermbg=NONE    gui=NONE      guifg=#2AA1B3 guibg=NONE
+hi StatusLine    term=NONE cterm=NONE ctermfg=0    ctermbg=11      gui=NONE      guifg=NONE    guibg=#E9AD0C
+hi StatusLineNC  term=NONE cterm=NONE ctermfg=0    ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi TabLine       term=NONE cterm=NONE ctermfg=0    ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi TabLineFill   term=NONE cterm=NONE ctermfg=0    ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi TabLineSel    term=NONE cterm=bold ctermfg=0    ctermbg=15      gui=bold      guifg=NONE    guibg=#FFFFFF
 hi VertSplit     term=NONE cterm=NONE ctermfg=NONE ctermbg=NONE gui=NONE      guifg=NONE    guibg=NONE
-hi FloatBorder   term=NONE cterm=NONE ctermfg=0 ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
-hi NormalFloat   term=NONE cterm=NONE ctermfg=0 ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
+hi FloatBorder   term=NONE cterm=NONE ctermfg=0    ctermbg=7       gui=NONE      guifg=NONE    guibg=#D0CFCC
+hi NormalFloat   term=NONE cterm=NONE ctermfg=0    ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
 
 " Code syntax
 hi Title        term=NONE cterm=bold      ctermfg=1    ctermbg=NONE gui=bold      guifg=#C01C28 guibg=NONE
