@@ -4,7 +4,7 @@ local M = {}
 
 function M.setup()
 	-- British
-	vim.opt.spelllang = 'en_gb'
+	vim.opt.spelllang = 'en_us'
 
 	-- Record the git branch name in a buffer local variable
 	vim.cmd('let b:git_status = "unknown"')
@@ -19,7 +19,7 @@ function M.setup()
 	--vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=master%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, without git branch info
 	vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
 	-- Keep the gutter always open
-	vim.opt.signcolumn = "auto:2"
+	vim.opt.signcolumn = "auto:1"
 	-- Enable the mouse in all modes
 	vim.opt.mouse = "a"
 	vim.opt.guicursor = "n:block-blinkwait500-blinkoff500-blinkon500,v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"

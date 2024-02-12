@@ -101,7 +101,6 @@ function M.setup()
 
 	local lspconfig = require("lspconfig")
 	local util = require("lspconfig/util")
-	local cmp = require("cmp")
 
 	-- Default options when creating keymaps.
 	local opts = { noremap = true, silent = true }

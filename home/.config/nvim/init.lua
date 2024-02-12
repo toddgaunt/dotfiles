@@ -389,6 +389,7 @@ end)
 require("lsp").setup()
 require("map").setup()
 require("opt").setup()
+require("gui").setup()
 
 -- Use the current time for the random seed for plugins that use math.random().
 math.randomseed(os.time())
