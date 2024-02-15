@@ -207,4 +207,69 @@ function M.cd_to_buf()
 	vim.cmd("cd " .. vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
 end
 
+function M.git_open_changed_files()
+	vim.ui.input({
+		prompt = "Input branch name: ",
+		default = ""
+	}, function(input)
+		if input == nil then return end
+
+		if input ~= "" then
+			vim.cmd("args `git diff --name-only " .. input .. "`")
+		else
+			print("a branch name is expected")
+		end
+	end)
+end
+
+function M.close_all_but_current_buffer()
+	local exclude_patterns = { '.*term:.*', '.*NvimTree.*' }
+
+	local current_buffer = vim.api.nvim_get_current_buf()
+	local buffers = vim.api.nvim_list_bufs()
+	for _, buf in ipairs(buffers) do
+		if buf == current_buffer then
+			goto continue
+		end
+
+		local name = vim.api.nvim_buf_get_name(buf)
+		local exclude = false
+		for _, pattern in ipairs(exclude_patterns) do
+			if name:find(pattern) then
+				exclude = true
+				break
+			end
+		end
+
+		if exclude then
+			goto continue
+		end
+
+		vim.api.nvim_buf_delete(buf, { force = true })
+
+		::continue::
+	end
+end
+
+function M.close_all_invisible_buffers()
+	local buffers_in_windows = {}
+
+	for _, winid in ipairs(vim.api.nvim_list_wins()) do
+		local bufnr = vim.api.nvim_win_get_buf(winid)
+		buffers_in_windows[bufnr] = true
+	end
+
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		if not buffers_in_windows[bufnr] then
+			vim.api.nvim_buf_delete(bufnr, { force = true })
+		end
+	end
+end
+
+function M.print_buf_name()
+	local buf = vim.api.nvim_get_current_buf()
+	local name = vim.api.nvim_buf_get_name(buf)
+	print(name)
+end
+
 return M

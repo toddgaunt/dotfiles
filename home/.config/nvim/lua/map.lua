@@ -44,6 +44,9 @@ function M.setup()
 	map("t", "<Esc>", "<C-\\><C-N>", default_opts)
 	map("t", "<S-Space>", "<Space>", default_opts)
 	map("t", "<S-BS>", "<BS>", default_opts)
+	map("t", "<C-S-C>", '<C-\\><C-N>"+yi', default_opts)
+	map("t", "<C-S-V>", '<C-\\><C-N>"+pi', default_opts)
+	map("t", "<C-V>", '<C-\\><C-N>"+pi', default_opts)
 
 	-- [[Command mode mappings]] --
 	-- I just want to be able to use consistent key bindings to move characters when typing characters! Is that too much to ask?
@@ -117,10 +120,24 @@ function M.setup()
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 		["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["f"] = { function()
-			local text = util.get_visual_selection()
-			require("telescope.builtin").live_grep({ default_text = text })
-		end, "Search for the selected text" },
+		["<leader>"] = {
+			['/'] = { function()
+				local text = util.get_visual_selection()
+				require("telescope.builtin").live_grep({ default_text = text })
+			end, "Search for selected text" },
+			[' '] = { function()
+				local text = util.get_visual_selection()
+				require("telescope.builtin").find_files({ default_text = text })
+			end, "Search for selected file" },
+			[':'] = { function()
+				local text = util.get_visual_selection()
+				require("telescope.builtin").command_history({ default_text = text })
+			end, "Search for selected command" },
+			['*'] = { function()
+				local text = util.get_visual_selection()
+				require("telescope.builtin").current_buffer_fuzzy_find({ default_text = text })
+			end, "Search buffer for selected text" },
+		}
 	}, { mode = "v", noremap = true, silent = true })
 
 	-- [[Leader key mappings for all modes]] --
@@ -132,7 +149,7 @@ function M.setup()
 		['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
 		['?'] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
-		['%'] = { util.set_file_ignore_patterns({ ".*_test.go", ".*.feature" }), "Set find ignore pattern" },
+		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 		[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
@@ -146,7 +163,6 @@ function M.setup()
 			["p"] = { util.yank_filepath, "Copy the current file's path" },
 			["v"] = { bib.print, "Print a random Bible verse" },
 			['H'] = { "<cmd>checkhealth<cr>", "Check health" },
-			["x"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 		},
 		b = {
 			name = "Buffers",
@@ -162,6 +178,8 @@ function M.setup()
 			["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 			["w"] = { "<cmd>write<cr>", "Write buffer to file" },
 			['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
+			['o'] = { util.close_all_invisible_buffers, "Close all invisible buffers"},
+			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
 		},
 		c = {
 			name = "Configure",
@@ -180,9 +198,6 @@ function M.setup()
 			["l"] = { "<cmd>lopen<cr>", "Open location list" },
 			["n"] = { vim.diagnostic.goto_next, "Go to next error" },
 			["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
-			-- File information
-			["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
-			["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
 		},
 		e = {
 			name = "Edit",
@@ -208,7 +223,7 @@ function M.setup()
 			["A"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
 			["P"] = { "<cmd>Git push<cr>", "Push changes" },
 			["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
-			["c"] = { "<cmd>G diff --staged<cr>", "Show staged diff" },
+			["c"] = { "<cmd>Git diff --staged<cr>", "Show staged diff" },
 			["C"] = { "<cmd>Git commit<cr>", "Commit changes" },
 			["a"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
 			["b"] = { "<cmd>Telescope git_branches<cr>", "Switch to branch" },
@@ -219,6 +234,7 @@ function M.setup()
 			["m"] = { "<cmd>Git mergetool<cr>", "Open the merge tool" },
 			["s"] = { "<cmd>Git<cr>", "Show status" },
 			["w"] = { "<cmd>Gwrite<cr>", "Write changes in buffer" },
+			["o"] = { util.git_open_changed_files, "Open buffers for all changed files" },
 		},
 		h = {
 			name = "Help",
@@ -229,6 +245,13 @@ function M.setup()
 			["m"] = { "<cmd>Telescope man_pages<cr>", "Search man pages" },
 			["o"] = { "<cmd>Telescope vim_options<cr>", "Search config options" },
 			["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
+		},
+		i = {
+			name = "Inspect",
+			["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
+			["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
+			["b"] = { util.print_buf_name, "Show current buffer name" },
+			["i"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 		},
 		l = {
 			name = "LSP",
@@ -301,17 +324,16 @@ function M.setup()
 		},
 		m = {
 			name = "Marks",
+			[" "] = { "<cmd>Telescope marks<cr>", "Find a mark" },
 			["!"] = { "<cmd>delmarks a-zA-Z<cr>", "Delete all marks" },
+			["?"] = { "<cmd>marks<cr>", "Display all marks" },
 
-			["A"] = { "mA", "Set mark A" },
-			["B"] = { "mB", "Set mark B" },
-			["C"] = { "mC", "Set mark C" },
-			["D"] = { "mD", "Set mark D" },
-			["E"] = { "mE", "Set mark E" },
-			["F"] = { "mF", "Set mark F" },
-
-			["f"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
-			["m"] = { "<cmd>marks<cr>", "Display all marks" },
+			["a"] = { "mA", "Set global mark A" },
+			["b"] = { "mB", "Set global mark B" },
+			["c"] = { "mC", "Set global mark C" },
+			["d"] = { "mD", "Set global mark D" },
+			["e"] = { "mE", "Set global mark E" },
+			["f"] = { "mF", "Set global mark F" },
 		},
 		w = {
 			name = "Windows",
