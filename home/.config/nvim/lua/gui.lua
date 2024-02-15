@@ -8,6 +8,7 @@ function M.setup()
 
 	vim.o.guifont = "GoMono Nerd Font:h12"
 	vim.g.neovide_remember_window_size = true
+	vim.g.neovide_scroll_animation_length = 0.0
 	--vim.g.neovide_cursor_vfx_mode = "railgun"
 end
 
