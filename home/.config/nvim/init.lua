@@ -264,7 +264,7 @@ packer.startup(function(use)
 					},
 					dynamic_preview_title = true,
 					preview = {
-						hide_on_startup = true,
+						hide_on_startup = false,
 					}
 				},
 			})
@@ -407,3 +407,6 @@ if default_zet_dir ~= nil then
 else
 	zet.switch("Personal")
 end
+
+-- Automatically enter insert mode in terminal buffers
+--vim.cmd('autocmd BufEnter,BufNew,TermOpen term://* startinsert')
