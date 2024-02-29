@@ -1,32 +1,26 @@
-----------------
---            --
--- CMP CONFIG --
---            --
-----------------
-
 local M = {}
 
-function M.setup()
+local function cmp_capabilities()
 	local cmp = require("cmp")
 
 	cmp.setup {
 		-- Don't autoselect an item or automatically insert it.
 		preselect = 'none',
+
 		completion = {
 			completeopt = 'menu,menuone,noselect',
 			cmp.config.compare.length
 		},
 
-		-- Sort alphabetically, then by length (shortest first!).
 		sorting = {
 			comparators = {
-				cmp.config.compare.offset,
-				cmp.config.compare.exact,
-				cmp.config.compare.score,
-				cmp.config.compare.kind,
-				cmp.config.compare.sort_text,
-				cmp.config.compare.length,
-				cmp.config.compare.order,
+				--cmp.config.compare.offset,
+				--cmp.config.compare.exact,
+				--cmp.config.compare.score,
+				--cmp.config.compare.kind,
+				--cmp.config.compare.sort_text,
+				--cmp.config.compare.length,
+				--cmp.config.compare.order,
 				--cmp.config.compare.locality,
 				--cmp.config.compare.recently_used,
 			},
@@ -56,6 +50,7 @@ function M.setup()
 		sources = cmp.config.sources({
 			{ name = 'nvim_lsp' },
 			{ name = 'snippy' },
+			{ name = 'emoji' },
 		}, {
 			{ name = 'buffer' },
 			{ name = 'emoji' },
@@ -91,13 +86,37 @@ function M.setup()
 		})
 	})
 
-	local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+	return require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+end
 
-	----------------
-	--            --
-	-- LSP CONFIG --
-	--            --
-	----------------
+-- go_fumport automatically imports missing packages and then formats the file according to the LSP formatter
+local function go_fumport(wait_ms)
+	local params = vim.lsp.util.make_range_params()
+	params.context = { only = { "source.organizeImports" } }
+	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+	for cid, res in pairs(result or {}) do
+		for _, r in pairs(res.result or {}) do
+			if r.edit then
+				local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
+				vim.lsp.util.apply_workspace_edit(r.edit, enc)
+			else
+				vim.lsp.buf.execute_command(r.command)
+			end
+		end
+	end
+	vim.lsp.buf.format({ async = true })
+end
+
+function M.format_file()
+	if vim.bo.filetype == "go" then
+		go_fumport(1000)
+	else
+		vim.lsp.buf.format({ async = true })
+	end
+end
+
+function M.setup()
+	local capabilities = cmp_capabilities()
 
 	local lspconfig = require("lspconfig")
 	local util = require("lspconfig/util")
@@ -184,36 +203,6 @@ function M.setup()
 			}
 		}
 	}
-end
-
---
--- LSP utility functions
---
-
--- go_fumport automatically imports missing packages and then formats the file according to the LSP formatter
-local function go_fumport(wait_ms)
-	local params = vim.lsp.util.make_range_params()
-	params.context = { only = { "source.organizeImports" } }
-	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
-	for cid, res in pairs(result or {}) do
-		for _, r in pairs(res.result or {}) do
-			if r.edit then
-				local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or "utf-16"
-				vim.lsp.util.apply_workspace_edit(r.edit, enc)
-			else
-				vim.lsp.buf.execute_command(r.command)
-			end
-		end
-	end
-	vim.lsp.buf.format({ async = true })
-end
-
-function M.format_file()
-	if vim.bo.filetype == "go" then
-		go_fumport(1000)
-	else
-		vim.lsp.buf.format({ async = true })
-	end
 end
 
 return M

@@ -249,12 +249,13 @@ packer.startup(function(use)
 		config = function()
 			require("telescope").setup({
 				defaults = {
-					mappings = {
-						i = {
-							["<tab>"] = require("telescope.actions.layout").toggle_preview,
-							["<S-tab>"] = require("telescope.actions.layout").cycle_layout_next,
-						}
-					},
+					--mappings = {
+						--i = {
+							--["<tab>"] = require("telescope.actions.layout").toggle_preview,
+							--["<S-tab>"] = require("telescope.actions.layout").cycle_layout_next,
+							--["<C-q>"] = require("telescope.actions").smart_send_to_qflist(),
+						--}
+					--},
 					wrap_results = true,
 					path_display = {
 						--tail = true

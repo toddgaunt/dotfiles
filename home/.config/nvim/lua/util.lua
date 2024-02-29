@@ -1,4 +1,6 @@
-local M = {}
+local M = {
+	diff_branch = "master"
+}
 
 function M.yank_filename()
 	vim.cmd('let @" = expand("%:t")')
@@ -207,19 +209,125 @@ function M.cd_to_buf()
 	vim.cmd("cd " .. vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
 end
 
-function M.git_open_changed_files()
+function M.is_git_repo(path)
+	local git_dir = vim.fn.finddir(".git", path .. ";")
+	return git_dir ~= ""
+end
+
+function M.git_list_changed_files()
 	vim.ui.input({
 		prompt = "Input branch name: ",
-		default = ""
+		default = "master"
 	}, function(input)
 		if input == nil then return end
 
 		if input ~= "" then
-			vim.cmd("args `git diff --name-only " .. input .. "`")
+			local changed_files = vim.fn.systemlist("git diff --name-only " .. input)
+			local qflist = {}
+			for _, name in ipairs(changed_files) do
+				table.insert(qflist, { filename = name, lnum = 0, col = 0, text = input })
+			end
+
+			vim.cmd("copen")
+			vim.fn.setqflist(qflist)
 		else
 			print("a branch name is expected")
 		end
 	end)
+end
+
+function M.git_list_changed_files_select_branch()
+	local cwd = vim.fn.getcwd()
+	if M.is_git_repo(cwd) == false then
+		print("fatal: not a git repository (or any parent up to the mount point /)")
+		return
+	end
+
+	-- Use Telescope to prompt user for input
+	require("telescope.builtin").git_branches({
+		prompt_title = 'Select a branch',
+		cwd = cwd,
+		attach_mappings = function(prompt_bufnr, map)
+			-- Map Enter key to perform custom action
+			map('i', '<CR>', function()
+				local selection = require('telescope.actions.state').get_selected_entry()
+				require("telescope.actions").close(prompt_bufnr)
+
+				local changed_files = vim.fn.systemlist("git diff --name-only " .. selection.refname)
+				local qflist = {}
+				for _, name in ipairs(changed_files) do
+					table.insert(qflist, { filename = name, lnum = 0, col = 0, text = selection.refname })
+				end
+
+				vim.cmd("copen")
+				vim.fn.setqflist(qflist)
+			end)
+			return true
+		end
+	})
+end
+
+function M.git_list_diff_files()
+	local cwd = vim.fn.getcwd()
+	if M.is_git_repo(cwd) == false then
+		print("fatal: not a git repository (or any parent up to the mount point /)")
+		return
+	end
+
+	local branch = M.diff_branch
+	if branch == nil then
+		print("fatal: must select a branch to diff against first")
+		return
+	end
+
+	local changed_files = vim.fn.systemlist("git diff --name-only " .. M.diff_branch)
+	local qflist = {}
+	for _, name in ipairs(changed_files) do
+		table.insert(qflist, { filename = name, lnum = 0, col = 0, text = M.diff_branch })
+	end
+
+	vim.cmd("copen")
+	vim.fn.setqflist(qflist)
+end
+
+function M.git_diff_select_branch()
+	local cwd = vim.fn.getcwd()
+	if M.is_git_repo(cwd) == false then
+		print("fatal: not a git repository (or any parent up to the mount point /)")
+		return
+	end
+
+	-- Use Telescope to prompt user for input
+	require("telescope.builtin").git_branches({
+		prompt_title = 'Select a branch',
+		cwd = cwd,
+		attach_mappings = function(prompt_bufnr, map)
+			-- Map Enter key to perform custom action
+			map('i', '<CR>', function()
+				local selection = require('telescope.actions.state').get_selected_entry()
+				require("telescope.actions").close(prompt_bufnr)
+
+				M.diff_branch = selection.refname
+			end)
+			return true
+		end
+	})
+end
+
+function M.git_diff( cmd)
+	local cwd = vim.fn.getcwd()
+	if M.is_git_repo(cwd) == false then
+		print("fatal: not a git repository (or any parent up to the mount point /)")
+		return
+	end
+
+	local branch = M.diff_branch
+	if branch == nil then
+		print("fatal: must select a branch to diff against first")
+		return
+	end
+
+	vim.cmd(cmd .. " " .. branch)
 end
 
 function M.close_all_but_current_buffer()
