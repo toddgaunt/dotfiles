@@ -42,18 +42,19 @@ local function cmp_capabilities()
 			['<C-b>'] = cmp.mapping.scroll_docs(-4),
 			['<C-f>'] = cmp.mapping.scroll_docs(4),
 			['<C-e>'] = cmp.mapping.abort(),
-			--['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+			['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 			-- Unbind C-Space since it conflicts with SLIME
 			['<C-Space>'] = nil,
 		}),
 
 		sources = cmp.config.sources({
 			{ name = 'nvim_lsp' },
+		}, {
 			{ name = 'snippy' },
+		}, {
 			{ name = 'emoji' },
 		}, {
 			{ name = 'buffer' },
-			{ name = 'emoji' },
 		}),
 	}
 

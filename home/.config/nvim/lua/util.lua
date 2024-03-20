@@ -3,19 +3,21 @@ local M = {
 }
 
 function M.yank_filename()
-	vim.cmd('let @" = expand("%:t")')
+	local path = vim.api.nvim_buf_get_name(0)
+	local name = path:match("[^/\\]+$")
+
+	vim.fn.setreg("", name)
+	vim.fn.setreg("+", name)
 	print("yanked file name")
 end
 
 function M.yank_filepath()
-	vim.cmd('let @" = expand("%")')
+	local path = vim.api.nvim_buf_get_name(0)
+
+	vim.fn.setreg("", path)
+	vim.fn.setreg("+", path)
 	print("yanked file path")
 end
-
---function M.yank_fullpath()
---vim.cmd('let @" = expand("%:p")')
---print("yanked full path")
---end
 
 function M.workspace_rename()
 	local ws = require("workspaces")
@@ -67,6 +69,8 @@ function M.get_loc()
 
 	vim.fn.setreg("", pathloc)
 	vim.fn.setreg("+", pathloc)
+
+	print("yanked loc")
 end
 
 function M.get_visual_selection()

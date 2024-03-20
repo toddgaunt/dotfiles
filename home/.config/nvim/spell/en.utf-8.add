@@ -15,3 +15,11 @@ config
 SCT
 SCTs
 redis
+zsh
+postgres
+HSM
+HVCA
+pprof
+Jira
+README
+GOPATH

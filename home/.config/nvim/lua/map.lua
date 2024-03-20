@@ -44,6 +44,7 @@ function M.setup()
 	map("t", "<Esc>", "<C-\\><C-N>", default_opts)
 	map("t", "<S-Space>", "<Space>", default_opts)
 	map("t", "<S-BS>", "<BS>", default_opts)
+	map("t", "<S-CR>", "<CR>", default_opts)
 	map("t", "<C-S-C>", '<C-\\><C-N>"+yi', default_opts)
 	map("t", "<C-S-V>", '<C-\\><C-N>"+pi', default_opts)
 	map("t", "<C-V>", '<C-\\><C-N>"+pi', default_opts)
@@ -56,7 +57,8 @@ function M.setup()
 
 	-- [[Normal mode mappings]] --
 	wk.register({
-		['y@'] = { util.get_loc, "File path" },
+		['y@'] = { util.get_loc, "Line of code" },
+		['y#'] = { util.yank_filename, "File name" },
 		["+"] = { "<C-a>", "Increment number" },
 		["-"] = { "<C-x>", "Decrement number" },
 		["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
@@ -74,6 +76,7 @@ function M.setup()
 		["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
 		["<C-x>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<C-cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["Y"] = { "<cmd>registers<cr>", "Show contents of registers" },
 		["<C-[>"] = { "<C-[>", "Jump back in tag stack" },
 		-- Allow easy movement between softwrapped lines
@@ -119,7 +122,8 @@ function M.setup()
 		["<C-c>"] = { '"+y', "Copy selection into OS register" },
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
-		["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<C-cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
 			['/'] = { function()
 				local text = util.get_visual_selection()
@@ -155,14 +159,12 @@ function M.setup()
 		["<tab>"] = { "<cmd>NvimTreeFindFile!<cr>", "Open the file tree" },
 		a = {
 			name = "Actions",
-			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
-			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
-			["f"] = { util.yank_filename, "Copy the current file's name" },
+			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
 			["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
-			["p"] = { util.yank_filepath, "Copy the current file's path" },
-			['H'] = { "<cmd>checkhealth<cr>", "Check health" },
 			["v"] = { bib.insert, "Insert a random Bible verse below" },
 			["V"] = { function() bib.insert({ above = true }) end, "Insert a random Bible verse above" },
+			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
+			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
 		},
 		b = {
 			name = "Buffers",
@@ -190,6 +192,7 @@ function M.setup()
 			["p"] = { "<cmd>set paste!<cr>", "Toggle paste mode" },
 			["t"] = { util.select_tab_length, "Pick tab length" },
 			["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
+			["h"] = { "<cmd>TSBufToggle highlight", "Toggle syntax highlighting for the buffer" },
 		},
 		d = {
 			name = "Diagnostics",
@@ -208,10 +211,11 @@ function M.setup()
 		},
 		f = {
 			name = "Files",
-			['f'] = { "<cmd>Telescope find_files<cr>", "Find a file" },
-			['o'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
-			['p'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
-			['r'] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
+			["f"] = { "<cmd>Telescope find_files<cr>", "Find a file" },
+			["o"] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
+			["p"] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
+			["r"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
+			["t"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
 		},
 		g = {
 			name = "Git",
@@ -266,9 +270,8 @@ function M.setup()
 			-- LSP information and meta-control
 			["a"] = { util.toggle_autocomplete, "Toggle autocomplete" },
 			["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
-			["s"] = { "<cmd>LspStart<cr>", "Start LSP" },
-			["q"] = { "<cmd>LspStop<cr>", "Stop LSP" },
-			["l"] = { "<cmd>LspInfo<cr>", "Show language server information" },
+			["s"] = { "<cmd>LspStop<cr>", "Stop LSP" },
+			["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
 		},
 		m = {
 			name = "Mason",
@@ -368,6 +371,7 @@ function M.setup()
 		},
 		z = {
 			name = "Zettelkasten",
+			["c"] = { zet.select, "Select a note-space" },
 			["p"] = { zet.search, "Find a pattern" },
 			["P"] = { zet.search_select, "Find a pattern in selected" },
 			["f"] = { zet.find, "Find a note" },
