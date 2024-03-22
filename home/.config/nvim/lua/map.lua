@@ -165,6 +165,7 @@ function M.setup()
 			["V"] = { function() bib.insert({ above = true }) end, "Insert a random Bible verse above" },
 			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
+			["r"] = { "<cmd>luafile $MYVIMRC<cr>", "Reload config"},
 		},
 		b = {
 			name = "Buffers",
@@ -252,7 +253,7 @@ function M.setup()
 			["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifer" },
 			["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifer" },
 			["k"] = { vim.lsp.buf.hover, "Show identifer information" },
-			["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "outgoing calls of identifer" },
+			["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifer" },
 			["r"] = { "<cmd>Telescope lsp_references<cr>", "Find references to the identifer" },
 			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifers" },
 			["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },

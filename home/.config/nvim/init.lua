@@ -14,6 +14,7 @@ packer.startup(function(use)
 	-- which-key is the best keybinding plugin ever
 	use {
 		"folke/which-key.nvim",
+		tag = "v1.6.0",
 		config = function()
 			vim.opt.timeout = true
 			vim.opt.timeoutlen = 0
@@ -83,6 +84,7 @@ packer.startup(function(use)
 	-- treesitter provides better syntax highlighting based on parsing the code instead of regex
 	use {
 		"nvim-treesitter/nvim-treesitter",
+		tag = "v0.9.2",
 		run = ":TSUpdate",
 		config = function()
 			require("nvim-treesitter.configs").setup({
@@ -125,6 +127,7 @@ packer.startup(function(use)
 	-- nvim-tree provides a file-explorer tree with icon support
 	use {
 		"nvim-tree/nvim-tree.lua",
+		tag = "nvim-tree-v1.1.1",
 		requires = {
 			"nvim-tree/nvim-web-devicons"
 		},
@@ -241,7 +244,7 @@ packer.startup(function(use)
 	-- telescope is a very powerful fuzzy finder with a great UI
 	use {
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.3",
+		tag = "0.1.6",
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-fzf-native.nvim",
@@ -343,6 +346,23 @@ packer.startup(function(use)
 		end,
 	}
 
+	-- formatter lets me integrate formatters from mason
+	use {
+		"mhartington/formatter.nvim"
+	}
+
+	-- nvim-lint lets me integrate linters from mason
+	use {
+		"mfussenegger/nvim-lint",
+		config = function()
+			require("lint").linters_by_ft = {
+				--markdown = {'vale'},
+				--go = {'golangcilint'},
+				--python = { "mypy" },
+			}
+		end
+	}
+
 	-- lsp-config allows Neovim's native LSP to be setup
 	use "neovim/nvim-lspconfig"
 
@@ -408,6 +428,8 @@ if default_zet_dir ~= nil then
 else
 	zet.switch("Personal")
 end
+
+vim.cmd('autocmd BufWritePost * lua require("lint").try_lint()')
 
 -- Automatically enter insert mode in terminal buffers
 --vim.cmd('autocmd BufEnter,BufNew,TermOpen term://* startinsert')

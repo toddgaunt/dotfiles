@@ -318,7 +318,7 @@ function M.git_diff_select_branch()
 	})
 end
 
-function M.git_diff( cmd)
+function M.git_diff(cmd)
 	local cwd = vim.fn.getcwd()
 	if M.is_git_repo(cwd) == false then
 		print("fatal: not a git repository (or any parent up to the mount point /)")
