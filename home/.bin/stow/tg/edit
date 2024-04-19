@@ -1,4 +1,6 @@
 #!/bin/bash
+# edit is a simple wrapper around neovim that prevents neovim from starting
+# within neovim
 
 if [[ "$NVIM" != "" ]]; then
 	echo "Starting neovim from within neovim is disabled"

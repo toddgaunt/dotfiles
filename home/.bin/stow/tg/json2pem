@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+if [ "$#" -ne 1 ]; then
+	echo "usage: $0 <path>"
+	exit 1
+fi
+
+PEM=$(cat "$1")
+# Remove first character '"'
+PEM="${PEM:1}"
+# Remove last character '"'
+PEM="${PEM%?}"
+# Convert escaped newlines to real newlines
+echo "${PEM//\\n/$'\n'}"

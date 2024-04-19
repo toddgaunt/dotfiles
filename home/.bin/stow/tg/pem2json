@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import sys
+import argparse
+
+parser = argparse.ArgumentParser(description="Convert X.509 PEM encoded certificates JSON with newlines ('\\n') escaped.")
+parser.add_argument('pem_files', metavar='PEM', type=str, nargs='*', help='a PEM file to convert to JSON')
+args = parser.parse_args()
+pem = args.pem_files
+
+def readInPEM(args):
+    pemList = []
+    # Read in PEM from stdin
+    if len(args) != 0:
+        # Read in PEM, replacing newlines with literal '\n' characters
+        for arg in sys.argv[1:]:
+            with open(arg, 'r') as f:
+                pem = ""
+                for line in f:
+                    pem += line.replace('\n', '\\n')
+                pemList.append(pem)
+    else:
+        pem = sys.stdin.read()
+        # Split up the input into individual PEM files
+        pemList = pem.split('-----BEGIN CERTIFICATE-----')[1:]
+
+        pemList = list(map(lambda pem: '-----BEGIN CERTIFICATE-----' + pem, pemList))
+
+        for i in range(len(pemList)):
+            pemList[i] = pemList[i].replace('\n', '\\n')
+    return pemList
+
+pemList = readInPEM(args.pem_files)
+
+# Output as a JSON list
+count = len(pemList)
+if count > 1:
+    print("[")
+for pem in pemList:
+    if count > 1:
+        print("\t", end='')
+    if pem == pemList[len(pemList)-1]:
+        print(f'"{pem}"')
+    else:
+        print(f'"{pem}",')
+
+if count > 1:
+    print("]")

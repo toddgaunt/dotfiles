@@ -1,0 +1,25 @@
+#!/bin/bash
+
+usage() {
+	echo "Usage: cert-key-verify <certificate> <private-key>"
+	echo "Verify that a certificate and private key match"
+}
+
+CERTIFICATE="$1"
+PRIVATE_KEY="$2"
+
+if [[ "$CERTIFICATE" == "" ]] || [[ "$PRIVATE_KEY" == "" ]]; then
+	usage
+	exit 1
+fi
+
+CERT_MD5="$(openssl x509 -noout -modulus -in "$CERTIFICATE" | openssl md5)"
+KEY_MD5="$(openssl rsa -noout -modulus -in "$PRIVATE_KEY" | openssl md5)"
+
+echo "$CERT_MD5"
+echo "$KEY_MD5"
+if [[ "$CERT_MD5" == "$KEY_MD5" ]]; then
+	echo "OK"
+else
+	echo "ERROR"
+fi

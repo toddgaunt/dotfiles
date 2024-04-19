@@ -1,19 +1,22 @@
 # interact.sh
 # Interact provides common bash script functions for scripts that
-# need user input/interactive
+# need user input or are otherwise interactive. It also provides
+# logging
 
-me=$(basename $0)
+source color.sh
+
+me="$(basename "$0")"
 
 log() {
-    echo "[$me] $*"
+    echo "$me [${BLU}info${CLR}] $*"
 }
 
 log-warn() {
-    echo "[$me] 🟡 $*"
+    echo "$me [${YLW}warn${CLR}] $*"
 }
 
 log-fatal() {
-    echo "[$me] 🔴 $*"
+    echo "$me [${RED}fatal${CLR}] $*"
     exit 1
 }
 

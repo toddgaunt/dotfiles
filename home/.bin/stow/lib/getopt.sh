@@ -1,4 +1,5 @@
 #!/bin/bash
+# getopt.sh is an example of how to use getopt in a bash script.
 
 usage() { echo "Usage: $0 [-s <45|90>] [-p <string>]" 1>&2; exit 1; }
 

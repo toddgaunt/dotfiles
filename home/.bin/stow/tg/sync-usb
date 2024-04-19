@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ -d ~/Annex ]] && [[ -d /run/media/tog/Annex ]]; then
+	rsync --delete -azvuP ~/Annex/ /run/media/tog/Annex/
+fi
+
+if [[ -d ~/Annex/Keys ]] && [[ -d /run/media/tog/Keys ]]; then
+	rsync --delete -azvuP ~/Annex/Keys/ /run/media/tog/Keys/
+fi

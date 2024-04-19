@@ -1,0 +1,33 @@
+#! /bin/bash
+
+cmd="$1"
+
+function usage() {
+	echo "govm <command> [args]"
+	echo ""
+	echo "Manage go versions"
+	echo ""
+	echo "Commands:"
+	echo "  install <version>  Install a go version"
+}
+
+if [[ "$cmd" == "" ]]; then
+	echo "Please provide a command:"
+	echo ""
+	echo "Commands:"
+	echo "  install <version>  Install a go version"
+	exit 1
+fi
+
+if [[ "$cmd" == "install" ]]; then
+	version="$2"
+
+	if [[ "$version" == "" ]]; then
+		echo "Please provide a version"
+		exit 1
+	fi
+
+	go install golang.org/dl/go"$version"@latest
+
+	go"$version" download
+fi

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ "$1" != "" ]]; then
+	# Read from file
+	openssl x509 -inform DER -outform PEM -in "$1"
+else
+	# Read from stdin
+	openssl x509 -inform DER -outform PEM
+fi
