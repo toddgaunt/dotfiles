@@ -144,7 +144,7 @@ function M.setup()
 	-- Use a loop to conveniently call "setup" on multiple servers that don't
 	-- require custom configuration and to map buffer local keybindings when the
 	-- language server attaches
-	local servers = { "bashls", "pyright", "tsserver" }
+	local servers = { "bashls", "pyright", "tsserver", "rust_analyzer" }
 	for _, lsp in pairs(servers) do
 		lspconfig[lsp].setup {
 			capabilities = capabilities,

@@ -11,7 +11,6 @@ local function map(mode, lhs, rhs, opts)
 	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
-
 function M.setup()
 	-- Load local modules
 	local zet = require("zet")
@@ -127,11 +126,11 @@ function M.setup()
 		["<leader>"] = {
 			['/'] = { function()
 				local text = util.get_visual_selection()
-				require("telescope.builtin").live_grep({ default_text = text })
+				util.live_grep({ default_text = text })
 			end, "Search for selected text" },
 			[' '] = { function()
 				local text = util.get_visual_selection()
-				require("telescope.builtin").find_files({ default_text = text })
+				util.find_files({ default_text = text })
 			end, "Search for selected file" },
 			[':'] = { function()
 				local text = util.get_visual_selection()
@@ -149,13 +148,13 @@ function M.setup()
 		["."] = { util.cd_to_buf, "Change directory to buffer" },
 		[','] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
-		['/'] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
+		['/'] = { util.live_grep, "Find pattern in files" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
 		["'"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
 		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
-		[' '] = { "<cmd>Telescope find_files<cr>", "Find a file" },
+		[' '] = { util.find_files, "Find a file" },
 		["<tab>"] = { "<cmd>NvimTreeFindFile!<cr>", "Open the file tree" },
 		a = {
 			name = "Actions",
@@ -212,9 +211,9 @@ function M.setup()
 		},
 		f = {
 			name = "Files",
-			["f"] = { "<cmd>Telescope find_files<cr>", "Find a file" },
+			["f"] = { util.find_files, "Find a file" },
 			["o"] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
-			["p"] = { "<cmd>Telescope live_grep<cr>", "Find pattern in files" },
+			["p"] = { util.live_grep, "Find pattern in files" },
 			["r"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
 			["t"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
 		},

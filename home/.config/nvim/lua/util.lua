@@ -384,4 +384,40 @@ function M.print_buf_name()
 	print(name)
 end
 
+local function add_help_text(search_opts)
+	local telescope_help_text = "(Tab to select, Alt-q to list)"
+	if search_opts.prompt_title ~= "" then
+		search_opts.prompt_title = search_opts.prompt_title .. " "
+	end
+	search_opts.prompt_title = search_opts.prompt_title .. telescope_help_text
+
+	return search_opts
+end
+
+function M.find_files(search_opts)
+	if search_opts == nil then
+		search_opts = {}
+	end
+
+	if search_opts.prompt_title == nil then
+		search_opts.prompt_title = "Find Files"
+	end
+
+	search_opts = add_help_text(search_opts)
+	require("telescope.builtin").find_files(search_opts)
+end
+
+function M.live_grep(search_opts)
+	if search_opts == nil then
+		search_opts = {}
+	end
+
+	if search_opts.prompt_title == nil then
+		search_opts.prompt_title = "Live Grep"
+	end
+
+	search_opts = add_help_text(search_opts)
+	require("telescope.builtin").live_grep(search_opts)
+end
+
 return M

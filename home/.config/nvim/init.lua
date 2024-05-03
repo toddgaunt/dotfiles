@@ -92,7 +92,6 @@ packer.startup(function(use)
 					"bash",
 					"c",
 					"go",
-					"help",
 					"html",
 					"javascript",
 					"json",
@@ -252,20 +251,7 @@ packer.startup(function(use)
 		config = function()
 			require("telescope").setup({
 				defaults = {
-					--mappings = {
-						--i = {
-							--["<tab>"] = require("telescope.actions.layout").toggle_preview,
-							--["<S-tab>"] = require("telescope.actions.layout").cycle_layout_next,
-							--["<C-q>"] = require("telescope.actions").smart_send_to_qflist(),
-						--}
-					--},
 					wrap_results = true,
-					path_display = {
-						--tail = true
-						--shorten = 2,
-						--smart = true,
-						--truncate = 3,
-					},
 					dynamic_preview_title = true,
 					preview = {
 						hide_on_startup = false,
