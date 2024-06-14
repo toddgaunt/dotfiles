@@ -7,8 +7,8 @@ packer.startup(function(use)
 	use {
 		"williamboman/mason.nvim",
 		config = function()
-			require('mason').setup()
-		end,
+			require("mason").setup()
+		end
 	}
 
 	-- which-key is the best keybinding plugin ever
@@ -337,18 +337,6 @@ packer.startup(function(use)
 		"mhartington/formatter.nvim"
 	}
 
-	-- nvim-lint lets me integrate linters from mason
-	use {
-		"mfussenegger/nvim-lint",
-		config = function()
-			require("lint").linters_by_ft = {
-				--markdown = {'vale'},
-				--go = {'golangcilint'},
-				--python = { "mypy" },
-			}
-		end
-	}
-
 	-- lsp-config allows Neovim's native LSP to be setup
 	use "neovim/nvim-lspconfig"
 
@@ -392,6 +380,8 @@ packer.startup(function(use)
 	}
 end)
 
+-- Setup Mason manually since setting up the lsp-config seperately with packer gives a warning
+
 -- Include other config files after plugins are loaded and configured.
 require("lsp").setup()
 require("map").setup()
@@ -414,8 +404,6 @@ if default_zet_dir ~= nil then
 else
 	zet.switch("Personal")
 end
-
-vim.cmd('autocmd BufWritePost * lua require("lint").try_lint()')
 
 -- Automatically enter insert mode in terminal buffers
 --vim.cmd('autocmd BufEnter,BufNew,TermOpen term://* startinsert')

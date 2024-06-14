@@ -146,7 +146,7 @@ function M.setup()
 	-- [[Leader key mappings for all modes]] --
 	local mappings = {
 		["."] = { util.cd_to_buf, "Change directory to buffer" },
-		[','] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
+		['-'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		['/'] = { util.live_grep, "Find pattern in files" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
@@ -272,6 +272,8 @@ function M.setup()
 			["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
 			["s"] = { "<cmd>LspStop<cr>", "Stop LSP" },
 			["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
+			["c"] = { util.copilot_status, "Show Github Copilot status"},
+			["C"] = { util.copilot_toggle, "Toggle Github Copilot for buffer"},
 		},
 		m = {
 			name = "Mason",

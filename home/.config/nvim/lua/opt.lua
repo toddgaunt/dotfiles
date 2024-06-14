@@ -2,16 +2,6 @@
 
 local M = {}
 
--- Lint_progress is called by the statusline to display any lints in progress
-function Lint_progress()
-	local linters = require("lint").get_running()
-	if #linters == 0 then
-		return "󰦕"
-	end
-
-	return "󱉶 " .. table.concat(linters, ", ")
-end
-
 function M.setup()
 	-- British
 	vim.opt.spelllang = 'en_us'
@@ -27,8 +17,8 @@ function M.setup()
 	vim.cmd("colorscheme minimal")
 
 	--vim.cmd("let &statusline = '%<[%P] %f %h%m%r%= no vcs %=%([%l,%c%V]%)'") -- Set the status line to the way I like it, without git branch info
-	--vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
-	vim.cmd("let &statusline = '%<[%P] %f %h%m%r %{luaeval(\"Lint_progress()\")}%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info and linting information
+	vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
+
 	-- Keep the gutter always open
 	vim.opt.signcolumn = "auto:1"
 	-- Enable the mouse in all modes
