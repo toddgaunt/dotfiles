@@ -1,8 +1,7 @@
 # Neovim plugins, just fetch from git using PlugInstall instead
 home/.config/nvim/plugged/*
 home/.config/nvim/plugin/*
-home/.config/
 
 # Bash script utilities
-home/.bin
+home/.bin/*
 !home/.bin/stow
