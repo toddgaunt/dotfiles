@@ -8,15 +8,15 @@ source color.sh
 me="$(basename "$0")"
 
 log() {
-    echo "$me [${BLU}info${CLR}] $*"
+    echo -e "$me [${BLU}info${CLR}] $*"
 }
 
 log-warn() {
-    echo "$me [${YLW}warn${CLR}] $*"
+    echo -e "$me [${YLW}warn${CLR}] $*"
 }
 
 log-fatal() {
-    echo "$me [${RED}fatal${CLR}] $*"
+    echo -e "$me [${RED}fatal${CLR}] $*"
     exit 1
 }
 
