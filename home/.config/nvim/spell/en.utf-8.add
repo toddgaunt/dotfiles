@@ -24,3 +24,12 @@ Jira
 README
 GOPATH
 natively
+subdirectories
+repo
+whitelist
+proxying
+executables
+linter
+EKU
+DNS
+VMC
