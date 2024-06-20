@@ -13,4 +13,4 @@ PEM="${PEM:1}"
 # Remove last character '"'
 PEM="${PEM%?}"
 # Convert escaped newlines to real newlines
-echo "${PEM//\\n/$'\n'}"
+printf -- "${PEM//\\n/$'\n'}"
