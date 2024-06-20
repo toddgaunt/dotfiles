@@ -290,7 +290,6 @@ packer.startup(function(use)
 					open = function()
 						require("sessions").load(nil, {})
 						require("sessions").save(nil, {})
-						vim.cmd("NvimTreeFindFile")
 					end,
 				}
 			})
@@ -404,6 +403,3 @@ if default_zet_dir ~= nil then
 else
 	zet.switch("Personal")
 end
-
--- Automatically enter insert mode in terminal buffers
---vim.cmd('autocmd BufEnter,BufNew,TermOpen term://* startinsert')
