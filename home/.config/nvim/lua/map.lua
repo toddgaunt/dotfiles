@@ -121,8 +121,8 @@ function M.setup()
 		["<C-c>"] = { '"+y', "Copy selection into OS register" },
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
-		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["<C-cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<C-space>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<C-cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
 			['/'] = { function()
 				local text = util.get_visual_selection()
