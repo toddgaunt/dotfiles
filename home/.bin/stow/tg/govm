@@ -3,23 +3,25 @@
 cmd="$1"
 
 function usage() {
-	echo "govm <command> [args]"
+	echo "usage: govm <command> [args]"
 	echo ""
-	echo "Manage go versions"
+	echo "Manage go versions. To make this script effective, you must prepend your PATH with \$HOME/sdk/go/bin."
+	echo "This script manages go versions in \$HOME/sdk, and symlinks the active go version to \$HOME/sdk/go."
 	echo ""
 	echo "Commands:"
+	echo "  help               Show this help message"
 	echo "  install <version>  Install a go version"
+	echo "  use     <version>  Symlink a go version to \$HOME/sdk/go"
+	echo "  list               List all versions present in \$HOME/sdk/go"
 }
 
 if [[ "$cmd" == "" ]]; then
-	echo "Please provide a command:"
-	echo ""
-	echo "Commands:"
-	echo "  install <version>  Install a go version"
+	usage
 	exit 1
-fi
-
-if [[ "$cmd" == "install" ]]; then
+elif [[ "$cmd" == "help" ]]; then
+	usage
+	exit 0
+elif [[ "$cmd" == "install" ]]; then
 	version="$2"
 
 	if [[ "$version" == "" ]]; then
@@ -30,4 +32,42 @@ if [[ "$cmd" == "install" ]]; then
 	go install golang.org/dl/go"$version"@latest
 
 	go"$version" download
+elif [[ "$cmd" == "use" ]]; then
+	version="$2"
+
+	if [[ "$version" == "" ]]; then
+		echo "Please provide a version"
+		exit 1
+	fi
+
+	if ! [[ -d "$HOME/sdk/go$version" ]]; then
+		echo "go$version not installed, run: govm install $version"
+		exit 1
+	fi
+
+	rm -f "$HOME/sdk/go"
+	ln -s "$HOME/sdk/go$version" "$HOME/sdk/go"
+
+	echo "Using go$version"
+elif [[ "$cmd" == "list" ]]; then
+
+	if ! [[ -d "$HOME/sdk" ]]; then
+		echo "No go sdk directory found"
+		exit 1
+	fi
+
+	installed_versions=($(ls "$HOME/sdk"))
+
+	echo "Installed go versions:"
+	for v in "${installed_versions[@]}"; do
+		if [[ "$v" == "go" ]]; then
+			continue
+		fi
+		printf -- "%s\n" "$v"
+	done
+else
+	echo "Unknown command: $cmd"
+	echo ""
+	usage
+	exit 1
 fi
