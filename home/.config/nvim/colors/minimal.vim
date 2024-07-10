@@ -93,6 +93,7 @@ hi TelescopeSelection term=NONE cterm=NONE ctermfg=0    ctermbg=14 gui=NONE guif
 hi GitSignsAdd       term=NONE cterm=NONE ctermfg=2 ctermbg=NONE    gui=NONE guifg=#26A269 guibg=NONE
 hi GitSignsChange    term=NONE cterm=NONE ctermfg=3 ctermbg=NONE    gui=NONE guifg=#A2734C guibg=NONE
 hi GitSignsDelete    term=NONE cterm=NONE ctermfg=1 ctermbg=NONE    gui=NONE guifg=#C01C28 guibg=NONE
+hi GitSignsUntracked term=NONE cterm=NONE ctermfg=2 ctermbg=NONE    gui=NONE guifg=#26A269 guibg=NONE
 
 " Git diff
 hi diffAdded         term=NONE cterm=NONE ctermfg=2 ctermbg=NONE    gui=NONE guifg=#26A269 guibg=NONE

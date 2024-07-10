@@ -98,7 +98,7 @@ function M.set_file_ignore_patterns(file_ignore_patterns)
 
 	return function()
 		vim.ui.input({
-			prompt = "Set find ignore pattern: ",
+			prompt = "Set file ignore pattern: ",
 			default = table.concat(file_ignore_patterns, ",")
 		}, function(input)
 			if input == nil then return end
@@ -115,6 +115,28 @@ function M.set_file_ignore_patterns(file_ignore_patterns)
 					file_ignore_patterns = file_ignore_patterns,
 				},
 			})
+		end)
+	end
+end
+
+-- set_env_var returns a function that set an environment variable value and updates an internal variable
+-- with the last set value to use as the default value next time it is called.
+function M.set_env_var(var, goflags)
+	return function()
+		vim.ui.input({
+			prompt = var.."=",
+			default = goflags
+		}, function(input)
+			if input == nil then return end
+
+			if input ~= "" then
+				goflags = input
+				print(var.."=" .. goflags)
+			else
+				goflags = ""
+				print(var.." cleared")
+			end
+			vim.fn.setenv(var, goflags)
 		end)
 	end
 end

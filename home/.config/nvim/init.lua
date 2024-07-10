@@ -40,36 +40,7 @@ packer.startup(function(use)
 	use {
 		"lewis6991/gitsigns.nvim",
 		config = function()
-			require("gitsigns").setup({
-				signs = {
-					add          = { hl = 'GitSignsAdd', text = '+│', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
-					change       = {
-						hl = 'GitSignsChange',
-						text = '~│',
-						numhl = 'GitSignsChangeNr',
-						linehl = 'GitSignsChangeLn'
-					},
-					delete       = {
-						hl = 'GitSignsDelete',
-						text = '-│',
-						numhl = 'GitSignsDeleteNr',
-						linehl = 'GitSignsDeleteLn'
-					},
-					topdelete    = {
-						hl = 'GitSignsDelete',
-						text = '-│',
-						numhl = 'GitSignsDeleteNr',
-						linehl = 'GitSignsDeleteLn'
-					},
-					changedelete = {
-						hl = 'GitSignsChange',
-						text = '-│',
-						numhl = 'GitSignsChangeNr',
-						linehl = 'GitSignsChangeLn'
-					},
-					untracked    = { hl = 'GitSignsAdd', text = '+┆', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
-				},
-			})
+			require("gitsigns").setup()
 		end,
 	}
 
@@ -378,8 +349,6 @@ packer.startup(function(use)
 		end,
 	}
 end)
-
--- Setup Mason manually since setting up the lsp-config seperately with packer gives a warning
 
 -- Include other config files after plugins are loaded and configured.
 require("lsp").setup()

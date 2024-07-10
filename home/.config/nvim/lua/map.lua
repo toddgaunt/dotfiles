@@ -75,7 +75,7 @@ function M.setup()
 		["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
 		["<C-x>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["<C-cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["Y"] = { "<cmd>registers<cr>", "Show contents of registers" },
 		["<C-[>"] = { "<C-[>", "Jump back in tag stack" },
 		-- Allow easy movement between softwrapped lines
@@ -122,7 +122,7 @@ function M.setup()
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 		["<C-space>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["<C-cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
 			['/'] = { function()
 				local text = util.get_visual_selection()
@@ -195,19 +195,17 @@ function M.setup()
 			["h"] = { "<cmd>TSBufToggle highlight", "Toggle syntax highlighting for the buffer" },
 		},
 		d = {
-			name = "Diagnostics",
+			name = "Debug",
 			["d"] = { "<cmd>copen<cr>", "Open quickfix list" },
 			["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
 			["l"] = { "<cmd>lopen<cr>", "Open location list" },
 			["n"] = { vim.diagnostic.goto_next, "Go to next error" },
 			["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
+			["b"] = { "<cmd>DlvAddBreakpoint<cr>", "Set delve breakpoint" },
 		},
 		e = {
-			name = "Edit",
-			["f"] = { lsp.format_file, "Format buffer using LSP" },
-			["i"] = { "gg=G", "Re-indent buffer" },
-			["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
-			["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
+			name = "Env",
+			["g"] = { util.set_env_var("GOFLAGS", '"-tags=integration"'), "Set GOFLAGS"},
 		},
 		f = {
 			name = "Files",
@@ -313,6 +311,10 @@ function M.setup()
 			name = "Refactor",
 			["a"] = { vim.lsp.buf.code_action, "Open action list" },
 			["n"] = { vim.lsp.buf.rename, "Rename symbol" },
+			["i"] = { "gg=G", "Re-indent buffer" },
+			["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
+			["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
+			["f"] = { lsp.format_file, "Format buffer using LSP" },
 		},
 		s = {
 			name = "Spellcheck",
