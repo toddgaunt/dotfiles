@@ -56,8 +56,6 @@ function M.setup()
 
 	-- [[Normal mode mappings]] --
 	wk.register({
-		['y@'] = { util.get_loc, "Line of code" },
-		['y#'] = { util.yank_filename, "File name" },
 		["+"] = { "<C-a>", "Increment number" },
 		["-"] = { "<C-x>", "Decrement number" },
 		["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
@@ -153,6 +151,8 @@ function M.setup()
 		["'"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
 		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
+		['#'] = { util.get_loc, "Line of code" },
+		['@'] = { util.yank_filename, "File name" },
 		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 		[' '] = { util.find_files, "Find a file" },
 		["<tab>"] = { "<cmd>NvimTreeFindFile!<cr>", "Open the file tree" },
