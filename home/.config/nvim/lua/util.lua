@@ -121,22 +121,28 @@ end
 
 -- set_env_var returns a function that set an environment variable value and updates an internal variable
 -- with the last set value to use as the default value next time it is called.
-function M.set_env_var(var, goflags)
+function M.set_env_var()
+	local var = ""
+	local value = ""
+
 	return function()
+		local def = ""
+		if var ~= "" and value ~= "" then
+			def = var .. "=" .. value
+		end
+
 		vim.ui.input({
-			prompt = var.."=",
-			default = goflags
+			prompt = "",
+			default = def,
 		}, function(input)
 			if input == nil then return end
 
 			if input ~= "" then
-				goflags = input
-				print(var.."=" .. goflags)
+				var, value = string.match(input, "(.*)%=(.*)")
+				print("Set " .. var.."=" .. value)
+				vim.fn.setenv(var, value)
 			else
-				goflags = ""
-				print(var.." cleared")
 			end
-			vim.fn.setenv(var, goflags)
 		end)
 	end
 end

@@ -151,8 +151,6 @@ function M.setup()
 		["'"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
 		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
-		['#'] = { util.get_loc, "Line of code" },
-		['@'] = { util.yank_filename, "File name" },
 		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 		[' '] = { util.find_files, "Find a file" },
 		["<tab>"] = { "<cmd>NvimTreeFindFile!<cr>", "Open the file tree" },
@@ -182,17 +180,24 @@ function M.setup()
 			['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
 			['o'] = { util.close_all_invisible_buffers, "Close all invisible buffers"},
 			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
+			['#'] = { util.get_loc, "Yank line of code" },
+			['@'] = { util.yank_filename, "Yank file name" },
 		},
 		c = {
 			name = "Config",
-			["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },
-			["i"] = { util.select_indentation, "Pick indentation style" },
-			["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
-			["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
-			["p"] = { "<cmd>set paste!<cr>", "Toggle paste mode" },
-			["t"] = { util.select_tab_length, "Pick tab length" },
+
+			-- Appearance
 			["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
 			["h"] = { "<cmd>TSBufToggle highlight", "Toggle syntax highlighting for the buffer" },
+			["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
+			["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
+			["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },
+
+			-- Behavior
+			["i"] = { util.select_indentation, "Pick indentation style" },
+			["p"] = { "<cmd>set paste!<cr>", "Toggle paste mode" },
+			["t"] = { util.select_tab_length, "Pick tab length" },
+			["e"] = { util.set_env_var(), "Set environment variable"},
 		},
 		d = {
 			name = "Debug",
@@ -202,10 +207,6 @@ function M.setup()
 			["n"] = { vim.diagnostic.goto_next, "Go to next error" },
 			["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
 			["b"] = { "<cmd>DlvAddBreakpoint<cr>", "Set delve breakpoint" },
-		},
-		e = {
-			name = "Env",
-			["g"] = { util.set_env_var("GOFLAGS", '"-tags=integration"'), "Set GOFLAGS"},
 		},
 		f = {
 			name = "Files",
@@ -273,12 +274,6 @@ function M.setup()
 			["c"] = { util.copilot_status, "Show Github Copilot status"},
 			["C"] = { util.copilot_toggle, "Toggle Github Copilot for buffer"},
 		},
-		m = {
-			name = "Mason",
-			["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
-			["u"] = { "<cmd>MasonUpdate<cr>", "Update Mason registries" },
-			["l"] = { "<cmd>MasonLog<cr>", "Show Mason log" },
-		},
 		o = {
 			name = "Organize",
 			["c"] = { org.cancel_task, "Cancel a task" },
@@ -299,6 +294,7 @@ function M.setup()
 			["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
 			["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
 			["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
+			["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
 		},
 		q = {
 			name = "Sessions",
