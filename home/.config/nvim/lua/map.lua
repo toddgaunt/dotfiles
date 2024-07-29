@@ -67,15 +67,17 @@ function M.setup()
 		["<F6>"] = { vim.diagnostic.goto_next, "Go to next error" },
 		["<F7>"] = { util.format_file, "Format file" },
 		["<C-q>"] = { "<cmd>bdelete!<cr>", "Close current buffer" },
-		--["<C-l>"] = { "<cmd>Telescope find_files<cr>", "Find file" },
+		-- Universal shortcuts
 		["<C-c>"] = { '"+yy', "Copy selection into OS register" },
 		["<C-v>"] = { '"+p', "Paste the OS register" },
 		["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
 		["<C-x>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
+		["<C-f>"] = { "/", "Search forward" },
+		["<C-S-f>"] = { "?", "Search backward" },
+		-- Slime
 		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["Y"] = { "<cmd>registers<cr>", "Show contents of registers" },
-		["<C-[>"] = { "<C-[>", "Jump back in tag stack" },
 		-- Allow easy movement between softwrapped lines
 		["j"] = { "gj", "Down" },
 		["k"] = { "gk", "Up" },
@@ -144,7 +146,7 @@ function M.setup()
 	-- [[Leader key mappings for all modes]] --
 	local mappings = {
 		["."] = { util.cd_to_buf, "Change directory to buffer" },
-		['-'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
+		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		['/'] = { util.live_grep, "Find pattern in files" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
@@ -173,8 +175,6 @@ function M.setup()
 			["]"] = { "<cmd>bnext<cr>", "Next buffer" },
 			["d"] = { util.bd(false), "Delete buffer" },
 			["l"] = { "<cmd>buffers<cr>", "List buffers" },
-			["n"] = { "<cmd>bnext<cr>", "Next buffer" },
-			["p"] = { "<cmd>bprev<cr>", "Previous buffer" },
 			["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 			["w"] = { "<cmd>write<cr>", "Write buffer to file" },
 			['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
@@ -204,8 +204,8 @@ function M.setup()
 			["d"] = { "<cmd>copen<cr>", "Open quickfix list" },
 			["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
 			["l"] = { "<cmd>lopen<cr>", "Open location list" },
-			["n"] = { vim.diagnostic.goto_next, "Go to next error" },
-			["p"] = { vim.diagnostic.goto_prev, "Go to previous error" },
+			["["] = { vim.diagnostic.goto_prev, "Go to previous error" },
+			["]"] = { vim.diagnostic.goto_next, "Go to next error" },
 			["b"] = { "<cmd>DlvAddBreakpoint<cr>", "Set delve breakpoint" },
 		},
 		f = {
@@ -256,6 +256,8 @@ function M.setup()
 			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifers" },
 			["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
 			["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Find workspace identifiers" },
+			["j"] = { "<C-]>", "Jump to definition" },
+			["l"] = { "<C-t>", "Jump back" },
 		},
 		k = {
 			name = "Inspect",
@@ -315,18 +317,18 @@ function M.setup()
 		s = {
 			name = "Spellcheck",
 			["a"] = { "zg", "Add word to dictionary" },
-			["n"] = { "]s", "Go to next spelling error" },
-			["p"] = { "[s", "Go to previous spelling error" },
+			["]"] = { "]s", "Go to next spelling error" },
+			["["] = { "[s", "Go to previous spelling error" },
 			["s"] = { util.toggle_spellcheck, "Toggle spell check" },
 			["w"] = { "zw", "Mark word as bad spelling" },
 			["z"] = { "z=", "Suggest spelling correction" },
 		},
 		t = {
 			name = "Tabs",
-			["["] = { "<cmd>-tabnext<cr>", "Go to the next tab" },
-			["]"] = { "<cmd>+tabnext<cr>", "Go to the previous tab" },
-			["n"] = { "<cmd>+tabnext<cr>", "Go to the next tab" },
-			["p"] = { "<cmd>-tabnext<cr>", "Go to the previous tab" },
+			["h"] = { "<cmd>-tabnext<cr>", "Go to the next tab" },
+			["l"] = { "<cmd>+tabnext<cr>", "Go to the previous tab" },
+			["["] = { "<cmd>-tabnext<cr>", "Go to the previous tab" },
+			["]"] = { "<cmd>+tabnext<cr>", "Go to the next tab" },
 			["<"] = { "<cmd>tabmove -1<cr>", "Move tab to the left" },
 			[">"] = { "<cmd>tabmove +1<cr>", "Move tab to the right" },
 			["O"] = { "<cmd>tabonly<cr>", "Close all other tabs" },
@@ -385,6 +387,8 @@ function M.setup()
 			["w"] = { zet.weekly, "Open weekly entry" },
 			["m"] = { zet.monthly, "Open monthly entry" },
 			["y"] = { zet.yearly, "Open yearly entry" },
+			["["] = { zet.prev, "Open previous entry" },
+			["]"] = { zet.next, "Open next entry" },
 		},
 	}
 

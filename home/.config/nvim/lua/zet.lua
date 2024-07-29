@@ -191,18 +191,6 @@ function M.new()
 	vim.api.nvim_buf_set_lines(0, 0, 0, false, { formatted_date })
 end
 
--- prev opens the previous entry of the same type as the current buffer.
--- If the current buffer is not a zettelkasten entry an error is displayed.
-function M.prev()
-	-- TODO
-end
-
--- next opens the next entry of the same type as the current buffer.
--- If the current buffer is not a zettelkasten entry an error is displayed.
-function M.next()
-	-- TODO
-end
-
 local function buf_is_empty(buf)
 	local n = vim.api.nvim_buf_line_count(buf)
 	if n == 0 then
@@ -246,5 +234,98 @@ function M.yearly()
 	return new_diary("%Y.md", "# Yearly <%Y>")
 end
 
+local function get_filepath()
+	local path = vim.api.nvim_buf_get_name(0)
+	local name = path:match("[^/\\]+$")
+	local dir = path:match("(.*/)[^/\\]+$")
+	return dir, name
+end
+
+local function filter_files(files, pattern)
+	local filtered_files = {}
+	local n = 1
+	for _, f in ipairs(files) do
+		if f:match(pattern) then
+			filtered_files[n]= f
+			n = n + 1
+		end
+	end
+	return filtered_files
+end
+
+local function filter_files_by_filename(a, filename)
+	local year, month, day 
+
+	year, month, day = filename:match("(%d%d%d%d)-(%d%d)-(%d%d).md")
+	if year ~= nil and month ~= nil and day ~= nil then
+		return filter_files(a, "(%d%d%d%d)-(%d%d)-(%d%d).md")
+	end
+
+	year, month = filename:match("(%d%d%d%d)-(%d%d).md")
+	if year ~= nil and month ~= nil then
+		return filter_files(a, "(%d%d%d%d)-(%d%d).md")
+	end
+
+	year = filename:match("(%d%d%d%d).md")
+	if year ~= nil then
+		return filter_files(a, "(%d%d%d%d).md")
+	end
+
+	return nil
+end
+
+-- prev opens the previous entry of the same type as the current buffer.
+-- If the current buffer is not a zettelkasten entry an error is displayed.
+function M.prev()
+	local dir, name = get_filepath()
+	local dirfiles = require("plenary.scandir").scan_dir(M.current_path .. "/Diary")
+	local filtered_files = filter_files_by_filename(dirfiles, name)
+	if filtered_files == nil then
+		print("can't get previous entry")
+		return
+	end
+
+	for i,f in ipairs(filtered_files) do
+		if f == (dir .. name) then
+			if i > 1 then
+				vim.cmd("execute 'e " .. filtered_files[i + -1] .. "'")
+				return
+			else
+				print("can't get previous entry")
+				return
+			end
+			break
+		end
+	end
+
+	--print("current file is not a diary entry")
+end
+
+-- next opens the next entry of the same type as the current buffer.
+-- If the current buffer is not a zettelkasten entry an error is displayed.
+function M.next()
+	local dir, name = get_filepath()
+	local dirfiles = require("plenary.scandir").scan_dir(M.current_path .. "/Diary")
+	local filtered_files = filter_files_by_filename(dirfiles, name)
+	if filtered_files == nil then
+		print("can't get next entry")
+		return
+	end
+
+	for i,f in ipairs(filtered_files) do
+		if f == (dir .. name) then
+			if i < #filtered_files then
+				vim.cmd("execute 'e " .. filtered_files[i + 1] .. "'")
+				return
+			else
+				print("can't get next entry")
+				return
+			end
+			break
+		end
+	end
+
+	print("current file is not a diary entry")
+end
 
 return M
