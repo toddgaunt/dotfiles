@@ -2,6 +2,21 @@ local M = {
 	diff_branch = "master"
 }
 
+function M.yes_no(prompt, yes_fn, no_fn)
+	vim.ui.input({
+		prompt = prompt,
+		default = "yes"
+	}, function(input)
+		if input == nil then return end
+
+		if input == "y" or input == "yes" then
+			yes_fn()
+		elseif input == "n" or input == "no" then
+			no_fn()
+		end
+	end)
+end
+
 function M.yank_filename()
 	local path = vim.api.nvim_buf_get_name(0)
 	local name = path:match("[^/\\]+$")
@@ -238,7 +253,13 @@ function M.find_buffer_relative_pattern()
 end
 
 function M.cd_to_buf()
-	vim.cmd("cd " .. vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+	M.yes_no("Change directory to buffer's directory? ", function()
+		local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
+		vim.cmd("cd " .. dir)
+		print("cd " .. dir)
+	end, function()
+		print("cd cancelled")
+	end)
 end
 
 function M.is_git_repo(path)

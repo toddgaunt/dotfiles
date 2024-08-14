@@ -56,6 +56,8 @@ function M.setup()
 
 	-- [[Normal mode mappings]] --
 	wk.register({
+		['y#'] = { util.get_loc, "Yank line of code" },
+		['y@'] = { util.yank_filename, "Yank file name" },
 		["+"] = { "<C-a>", "Increment number" },
 		["-"] = { "<C-x>", "Decrement number" },
 		["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
@@ -146,16 +148,18 @@ function M.setup()
 	-- [[Leader key mappings for all modes]] --
 	local mappings = {
 		["."] = { util.cd_to_buf, "Change directory to buffer" },
+		[','] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
-		['='] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		['/'] = { util.live_grep, "Find pattern in files" },
+		["?"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
 		["'"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
 		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 		[' '] = { util.find_files, "Find a file" },
-		["<tab>"] = { "<cmd>NvimTreeFindFile!<cr>", "Open the file tree" },
+		["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Find current file in the file tree" },
+		["<S-tab>"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
 		a = {
 			name = "Actions",
 			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
@@ -180,8 +184,6 @@ function M.setup()
 			['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
 			['o'] = { util.close_all_invisible_buffers, "Close all invisible buffers"},
 			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
-			['#'] = { util.get_loc, "Yank line of code" },
-			['@'] = { util.yank_filename, "Yank file name" },
 		},
 		c = {
 			name = "Config",
@@ -273,6 +275,7 @@ function M.setup()
 			["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
 			["s"] = { "<cmd>LspStop<cr>", "Stop LSP" },
 			["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
+			["l"] = { "<cmd>LspLog<cr>", "Show language server log" },
 			["c"] = { util.copilot_status, "Show Github Copilot status"},
 			["C"] = { util.copilot_toggle, "Toggle Github Copilot for buffer"},
 		},

@@ -250,17 +250,15 @@ packer.startup(function(use)
 		config = function()
 			require("workspaces").setup({
 				hooks = {
-					open_pre = function()
-						-- If recording, save current session state and stop recording
-						require("sessions").stop_autosave({save=true})
-
-						-- delete all buffers (does not save changes)
-						vim.cmd("silent %bdelete!")
-					end,
+					open_pre = {
+						"SessionsStop",
+						"silent %bdelete!",
+					},
 
 					open = function()
 						require("sessions").load(nil, {})
-						require("sessions").save(nil, {})
+						require("nvim-tree.api").tree.toggle()
+						vim.cmd("LspRestart")
 					end,
 				}
 			})
@@ -300,11 +298,6 @@ packer.startup(function(use)
 		config = function()
 			require('snippy').setup({})
 		end,
-	}
-
-	-- formatter lets me integrate formatters from mason
-	use {
-		"mhartington/formatter.nvim"
 	}
 
 	-- lsp-config allows Neovim's native LSP to be setup
