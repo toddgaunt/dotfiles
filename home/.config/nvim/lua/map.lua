@@ -338,6 +338,12 @@ function M.setup()
 			["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
 			["t"] = { "<cmd>tabnew<cr>", "Create a new tab" },
 		},
+		u = {
+			name = "Undo",
+			["u"] = { "u", "undo last change" },
+			["r"] = { "<C-r>", "redo last undo" },
+			["l"] = { "<cmd>undol<cr>", "Show undo list" },
+		},
 		w = {
 			name = "Windows",
 			["="] = { "<C-w>=", "Equalize window size" },
