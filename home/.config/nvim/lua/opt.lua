@@ -10,8 +10,7 @@ function M.setup()
 	vim.cmd('let b:git_status = "unknown"')
 
 	-- Create an autocmd to get the git branch name to display in the status line.
-	vim.cmd(
-		'autocmd BufEnter,FocusGained * let b:git_status = substitute(system("git rev-parse --abbrev-ref HEAD 2> /dev/null"), "\\n", " ", "g")')
+	vim.cmd('autocmd BufEnter,FocusGained * let b:git_status = substitute(system("git rev-parse --abbrev-ref HEAD 2> /dev/null"), "\\n", " ", "g")')
 	-- User interface
 	vim.opt.termguicolors = true
 	vim.cmd("colorscheme minimal")
@@ -25,7 +24,7 @@ function M.setup()
 	vim.opt.mouse = "a"
 	vim.opt.guicursor = "n:block-blinkwait500-blinkoff500-blinkon500,v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
 	vim.opt.cmdheight = 1
-	vim.opt.lazyredraw = true
+	vim.opt.lazyredraw = false
 	vim.opt.number = true
 	vim.opt.ruler = true
 	vim.opt.scrolloff = 0
