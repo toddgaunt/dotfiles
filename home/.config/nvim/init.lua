@@ -108,9 +108,23 @@ packer.startup(function(use)
 				update_focused_file = {
 					enable = false,
 				},
+				diagnostics = {
+					enable = true,
+					show_on_dirs = true,
+					show_on_open_dirs = true,
+				},
+				filters = {
+					git_ignored = false,
+					dotfiles = false,
+					git_clean = false,
+					no_buffer = false,
+					no_bookmark = false,
+					custom = {},
+					exclude = {},
+				},
 				view = {
 					preserve_window_proportions = true,
-					signcolumn = "no",
+					signcolumn = "yes",
 					float = {
 						enable = false,
 					},
