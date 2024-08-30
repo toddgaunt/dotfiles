@@ -48,7 +48,7 @@ packer.startup(function(use)
 	use {
 		"echasnovski/mini.bufremove",
 		config = function()
-			require("mini.bufremove").setup({})
+			require("mini.bufremove").setup()
 		end
 	}
 
@@ -70,7 +70,6 @@ packer.startup(function(use)
 					"lua",
 					"markdown",
 					"markdown_inline",
-					"python",
 					"python",
 					"query",
 					"regex",
@@ -176,6 +175,7 @@ packer.startup(function(use)
 					vim.keymap.set('n', 'gy', api.fs.copy.absolute_path, opts('Copy Absolute Path'))
 					vim.keymap.set('n', 'H', api.tree.toggle_hidden_filter, opts('Toggle Dotfiles'))
 					vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts('Toggle Git Ignore'))
+					-- These default mappings are disabled so they don't conflict with my window movement bindings.
 					--vim.keymap.set('n', '<C-j>', api.node.navigate.sibling.last, opts('Last Sibling'))
 					--vim.keymap.set('n', '<C-k>', api.node.navigate.sibling.first, opts('First Sibling'))
 					vim.keymap.set('n', 'm', api.marks.toggle, opts('Toggle Bookmark'))
