@@ -1,3 +1,8 @@
+-- bib.lua is little program I wrote for inserting random bible verses into text.
+-- I didn't really do it for any reason other than as a little homage to Terry A. Davis,
+-- creator of Temple OS. He had a program that would print out random bible verses and
+-- I thought it would be a fun little challenge to write my own version of it.
+
 local M = {
 	indices = nil,
 	count = 0,
