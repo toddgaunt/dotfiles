@@ -9,47 +9,10 @@ local function my_path()
 	return str:match('(.*' .. '/' .. ')')
 end
 
-function M.random_index_method()
-	local io = require("io")
-	local math = require("math")
-
-	local path = my_path() .. "kjv.txt"
-
-	local file = io.open(path, "r")
-	if file == nil then
-		print("bib: failed to open kjv.txt")
-		return nil
-	end
-
-	-- get the file size
-	local size = file:seek("end")
-	file:seek("set")
-
-	local n = math.random(size)
-
-	file:seek("set", n)
-
-	-- Read backwards until a newline is encountered
-	for i = n, 0, -1 do
-		file:seek("set", i)
-		local rn = file:read(1)
-		if rn == "\n" then
-			break
-		end
-	end
-	local verse = file:lines()()
-
-	if verse == nil then
-		print("bib:failed to find a verse")
-		return nil
-	end
-
-	file:close()
-
-	return verse
-end
-
-function M.random_line_method()
+-- random_line_method returns a random verse of the KJV bible based on each line.
+-- Since the source file is one verse per newline, this results in a uniformly
+-- random selection.
+local function random_line_method()
 	local io = require("io")
 	local math = require("math")
 
@@ -91,12 +54,14 @@ function M.random_line_method()
 end
 
 -- verse returns a random verse from the King James Version of the Holy Bible.
-function M.verse()
-	return M.random_line_method()
+function M.random_verse()
+	return random_line_method()
 end
 
-function M.insert(opts)
-	local verse = M.verse()
+-- insert places a random bible verse below the current line. If opts = {above = true}, then
+-- the verse is inserted above the current line.
+function M.insert_random_verse(opts)
+	local verse = M.random_verse()
 	if verse == nil then
 		return
 	end
@@ -108,8 +73,8 @@ function M.insert(opts)
 	vim.api.nvim_set_current_line(verse)
 end
 
-function M.print()
-	print(M.verse())
+function M.print_random_verse()
+	print(M.random_verse())
 end
 
 return M
