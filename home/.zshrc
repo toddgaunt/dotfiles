@@ -84,11 +84,6 @@ alias j='jobs'
 alias b='bg'
 alias sxiv='sxiv -a'
 alias genrsa='openssl genrsa'
-# The exa command is good replacement for ls and tree
-if [[ -x "$(command -v exa)" ]]; then
-	alias ls='exa -g'
-	alias tree='exa --tree'
-fi
 alias archive-url="archive-url --directory=$HOME/Annex/Sites"
 alias sane="stty sane"
 alias sudoenv="sudo -E"
