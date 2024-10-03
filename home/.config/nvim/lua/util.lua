@@ -138,12 +138,12 @@ end
 -- with the last set value to use as the default value next time it is called.
 function M.set_env_var()
 	local var = ""
-	local value = ""
+	local val = ""
 
 	return function()
 		local def = ""
-		if var ~= "" and value ~= "" then
-			def = var .. "=" .. value
+		if var ~= "" and val ~= "" then
+			def = var .. "=" .. val
 		end
 
 		vim.ui.input({
@@ -153,9 +153,15 @@ function M.set_env_var()
 			if input == nil then return end
 
 			if input ~= "" then
-				var, value = string.match(input, "(.*)%=(.*)")
-				print("Set " .. var.."=" .. value)
-				vim.fn.setenv(var, value)
+				local newVar, newVal = string.match(input, "(.*)%=(.*)")
+				if newVar == nil or newVal == nil then
+					print("Invalid input")
+				else
+					print("Set " .. newVar.."=" .. newVal)
+					vim.fn.setenv(newVar, newVal)
+					var = newVar
+					val = newVal
+				end
 			else
 			end
 		end)
@@ -487,6 +493,11 @@ function M.copilot_toggle()
 	end
 
 	M.copilot_status()
+end
+
+function M.split_tab()
+	local current_buf = vim.api.nvim_get_current_buf()
+	vim.cmd("tab sbuffer " .. current_buf)
 end
 
 return M

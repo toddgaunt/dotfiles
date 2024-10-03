@@ -55,7 +55,6 @@ packer.startup(function(use)
 	-- treesitter provides better syntax highlighting based on parsing the code instead of regex
 	use {
 		"nvim-treesitter/nvim-treesitter",
-		tag = "v0.9.2",
 		run = ":TSUpdate",
 		config = function()
 			require("nvim-treesitter.configs").setup({
@@ -147,6 +146,7 @@ packer.startup(function(use)
 					vim.keymap.set('n', 'K', api.node.show_info_popup, opts('Info'))
 					vim.keymap.set('n', '<C-r>', api.fs.rename_sub, opts('Rename: Omit Filename'))
 					vim.keymap.set('n', '<C-t>', api.node.open.tab, opts('Open: New Tab'))
+					vim.keymap.set('n', 't', api.node.open.tab, opts('Open: New Tab'))
 					vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts('Open: Vertical Split'))
 					vim.keymap.set('n', '<C-x>', api.node.open.horizontal, opts('Open: Horizontal Split'))
 					vim.keymap.set('n', '<BS>', api.node.navigate.parent_close, opts('Close Directory'))
@@ -317,7 +317,7 @@ packer.startup(function(use)
 	-- lsp-config allows Neovim's native LSP to be setup
 	use "neovim/nvim-lspconfig"
 
-	-- nvim-cmp adds a rich auto complete
+	-- nvim-cmp adds a rich auto completedot
 	use {
 		"hrsh7th/nvim-cmp",
 		requires = {
@@ -332,18 +332,6 @@ packer.startup(function(use)
 		},
 	}
 
-	-- barbecue adds a path to the top of each window leading to the current code object the cursor resides in
-	use {
-		"utilyre/barbecue.nvim",
-		requires = {
-			"SmiteshP/nvim-navic",
-			"nvim-tree/nvim-web-devicons",
-		},
-		config = function()
-			require("barbecue").setup()
-		end,
-	}
-
 	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
 	use {
 		"github/copilot.vim",
@@ -355,6 +343,9 @@ packer.startup(function(use)
 			vim.g.copilot_no_tab_map = true
 		end,
 	}
+
+	-- vim-surround to edit your surroundings
+	use "tpope/vim-surround"
 end)
 
 -- Include other config files after plugins are loaded and configured.

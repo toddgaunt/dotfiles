@@ -39,6 +39,12 @@ function M.setup()
 	map("n", "S", "", default_opts) -- I use 'D' then enter insert mode instead of substituting a single line.
 	map("n", "s", "", default_opts) -- I never use substitute for a single char
 
+	-- These get bound to window movement, so I don't want any default functionality left on these keys.
+	map("n", "<C-h>", "", default_opts)
+	map("n", "<C-j>", "", default_opts)
+	map("n", "<C-k>", "", default_opts)
+	map("n", "<C-l>", "", default_opts)
+
 	--[[Terminal mode mappings]]
 	map("t", "<Esc>", "<C-\\><C-N>", default_opts)
 	map("t", "<S-Space>", "<Space>", default_opts)
@@ -56,6 +62,7 @@ function M.setup()
 
 	-- [[Normal mode mappings]] --
 	wk.register({
+		['dsf'] = { "ds)db", "Delete surrounding function" },
 		['y#'] = { util.get_loc, "Yank line of code" },
 		['y@'] = { util.yank_filename, "Yank file name" },
 		["+"] = { "<C-a>", "Increment number" },
@@ -164,8 +171,8 @@ function M.setup()
 			name = "Actions",
 			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
 			["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
-			["v"] = { bib.insert_random_verse, "Insert a random Bible verse below" },
-			["V"] = { function() bib.insert_random_verse({ above = true }) end, "Insert a random Bible verse above" },
+			["v"] = { bib.insert, "Insert a random Bible verse below" },
+			["V"] = { function() bib.insert({ above = true }) end, "Insert a random Bible verse above" },
 			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
 			["r"] = { "<cmd>luafile $MYVIMRC<cr>", "Reload config"},
@@ -336,7 +343,8 @@ function M.setup()
 			[">"] = { "<cmd>tabmove +1<cr>", "Move tab to the right" },
 			["O"] = { "<cmd>tabonly<cr>", "Close all other tabs" },
 			["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
-			["t"] = { "<cmd>tabnew<cr>", "Create a new tab" },
+			["t"] = { "<cmd>tabnew<cr>", "Open a new tab" },
+			["s"] = { util.split_tab, "Split buffer to new tab" },
 		},
 		u = {
 			name = "Undo",
