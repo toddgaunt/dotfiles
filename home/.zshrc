@@ -64,10 +64,15 @@ function check-last-exit-code() {
 
 setopt PROMPT_SUBST
 
+color="black"
+if [[ "$HOST" == "toolbox" ]]; then
+	color="magenta"
+fi
+
 # Left-hand prompt
 NEWLINE=$'\n'
-PROMPT='%F{magenta}%n@%m[%f%F{blue}%~%f$(parse-git-branch)%F{magenta}]%f${NEWLINE}%(1j.(%j).)> '
-RPROMPT='%F{magenta}[%f$(check-last-exit-code)%F{magenta}]%f'
+PROMPT='%F{'"$color"'}%n@%m[%f%F{blue}%~%f$(parse-git-branch)%F{'"$color"'}]%f${NEWLINE}%(1j.(%j).)> '
+RPROMPT='%F{'"$color"'}[%f$(check-last-exit-code)%F{'"$color"'}]%f'
 
 # gpg configuration
 gpg-agent > /dev/null 2>&1 || gpg-agent --daemon
