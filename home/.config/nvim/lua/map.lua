@@ -30,6 +30,14 @@ function M.setup()
 	-- opts is a default option set for keybindings
 	local default_opts = { noremap = true, silent = true }
 
+	-- Unmap bindings I often fat-finger and would rather use other universal style bindings to perform
+	map("n", "u", "", default_opts) -- Use C-z to undo instead
+	map("n", "y", "", default_opts) -- Use C-c to copy instead
+	map("n", "p", "", default_opts) -- Use C-v to paste instead
+	map("n", "r", "", default_opts) -- Use C-y to redo instead
+	map("n", "x", "", default_opts) -- Use delete key to delete characters instead
+	map("v", "x", "", default_opts) -- Use delete key to delete characters instead
+
 	-- Unmap unused bindings to free up keys
 	map("n", "R", "", default_opts) -- I never use this.
 	map("n", "r", "", default_opts) -- I never use this.
@@ -80,7 +88,10 @@ function M.setup()
 		["<C-c>"] = { '"+yy', "Copy selection into OS register" },
 		["<C-v>"] = { '"+p', "Paste the OS register" },
 		["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
-		["<C-x>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
+		["<C-z>"] = { "u", "undo" },
+		["<C-y>"] = { "<C-r>", "redo" },
+		["<C-x>"] = { "x", "delete" },
+		["<C-i>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
 		["<C-f>"] = { "/", "Search forward" },
 		["<C-S-f>"] = { "?", "Search backward" },
 		-- Slime
