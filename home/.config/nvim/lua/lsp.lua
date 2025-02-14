@@ -46,6 +46,16 @@ local function cmp_capabilities()
 			['<Tab>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 			-- Unbind C-Space since it conflicts with SLIME
 			['<C-Space>'] = nil,
+			-- Use ctrl-k to toggle documentation while completion is open
+			['<C-k>'] = cmp.mapping(function(fallback)
+				if cmp.visible_docs() then
+					cmp.close_docs()
+				elseif cmp.visible() then
+					cmp.open_docs()
+				else
+					fallback()
+				end
+			end),
 		}),
 
 		sources = cmp.config.sources({

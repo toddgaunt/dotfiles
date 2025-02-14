@@ -1,0 +1,45 @@
+#!/bin/bash
+
+packages=(
+# Operating System
+zsh
+lsof
+man-db
+man-pages
+gnupg2
+util-linux
+stow
+
+# Optical Media
+dvdbackup
+k3b
+dvd+rw-tools
+
+# Programming Development Tools
+git
+fzf
+golang
+texlive
+neovim
+clang
+gcc
+make
+clojure
+gdb
+delve
+zip
+valgrind
+
+# Internet Utilities
+wget
+curl
+nmap
+tcpdump
+traceroute
+bind-utils
+
+# Media Utilities
+mupdf
+)
+
+sudo dnf install "${packages[@]}"

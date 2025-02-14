@@ -66,6 +66,8 @@ setopt PROMPT_SUBST
 
 color="black"
 if [[ "$HOST" == "toolbox" ]]; then
+	color="yellow"
+elif [[ "$HOST" == "toolbx" ]]; then
 	color="magenta"
 fi
 

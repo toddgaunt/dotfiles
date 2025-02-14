@@ -34,9 +34,10 @@ function M.setup()
 	map("n", "u", "", default_opts) -- Use C-z to undo instead
 	map("n", "y", "", default_opts) -- Use C-c to copy instead
 	map("n", "p", "", default_opts) -- Use C-v to paste instead
-	map("n", "r", "", default_opts) -- Use C-y to redo instead
+	map("n", "<c-r>", "", default_opts) -- use C-y to redo instead
 	map("n", "x", "", default_opts) -- Use delete key to delete characters instead
 	map("v", "x", "", default_opts) -- Use delete key to delete characters instead
+	map("v", "y", "", default_opts) -- Use C-c to copy instead
 
 	-- Unmap unused bindings to free up keys
 	map("n", "R", "", default_opts) -- I never use this.
@@ -68,9 +69,11 @@ function M.setup()
 	vim.cmd("cnoremap <C-b> <Left>")
 	vim.cmd("cnoremap <C-f> <Right>")
 
+	-- [[Visual mode search]] --
+	map("v", "/", "<esc>/\\%V", { noremap = true, silent = false})
+
 	-- [[Normal mode mappings]] --
 	wk.register({
-		['dsf'] = { "ds)db", "Delete surrounding function" },
 		['y#'] = { util.get_loc, "Yank line of code" },
 		['y@'] = { util.yank_filename, "Yank file name" },
 		["+"] = { "<C-a>", "Increment number" },
@@ -90,8 +93,7 @@ function M.setup()
 		["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
 		["<C-z>"] = { "u", "undo" },
 		["<C-y>"] = { "<C-r>", "redo" },
-		["<C-x>"] = { "x", "delete" },
-		["<C-i>"] = { "<cmd>Inspect<cr>", "inspect identifier" },
+		["<C-x>"] = { '"+dd', "cut line" },
 		["<C-f>"] = { "/", "Search forward" },
 		["<C-S-f>"] = { "?", "Search backward" },
 		-- Slime
@@ -133,16 +135,30 @@ function M.setup()
 	-- NOTE: bindings for visual mode use ':' rather than <cmd> in order for the
 	-- visual mode selection to be passed to them.
 	wk.register({
+	-- Surround selected text with quotes
+		["'"] = { 'c\'<c-r>"\'<esc>', "Surround with '"},
+		['"'] = { 'c"<c-r>""<esc>', 'Surround with "'},
 		["v"] = { '<C-v>', "Block selection" },
 		["V"] = { '<S-v>', "Line selection" },
 		["s"] = { ":sort<cr>", "Sort selection (ascending)" },
 		["S"] = { ":sort!<cr>", "Sort selection (descending)" },
 		["<C-w>"] = { 'gw', "Format the selected lines" },
 		["<C-c>"] = { '"+y', "Copy selection into OS register" },
+		["<C-v>"] = { 'c<C-R>+<esc>', "Paste selection from OS register" },
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 		["<C-space>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["x"] = {
+			name = "X.509",
+			["x"] = { "!xxd<cr>", "Selection hex dump" },
+			["X"] = { "!xxd -r<cr>", "Reverse hex dump"},
+			["c"] = { "!openssl x509 -inform PEM -outform DER | xxd<cr>", "PEM to DER hex dump" },
+			["C"] = { "!xxd -r | openssl x509 -inform DER -outform PEM<cr>", "DER hex dump to PEM"},
+			["v"] = { "!openssl x509 -noout -text<cr>", "PEM text dump"},
+			["o"] = { ":<C-u>s/\\%V, /./g<cr>", "Comma separated integers to Oid"},
+			["O"] = { ":<C-u>s/\\%V\\./, /g<cr>", "Oid to comma separated integers"},
+		},
 		["<leader>"] = {
 			['/'] = { function()
 				local text = util.get_visual_selection()
@@ -178,6 +194,7 @@ function M.setup()
 		[' '] = { util.find_files, "Find a file" },
 		["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Find current file in the file tree" },
 		["<S-tab>"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
+		["<C-z>"] = { "<cmd>suspend<cr>", "Suspend process" },
 		a = {
 			name = "Actions",
 			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
@@ -278,6 +295,8 @@ function M.setup()
 			["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Find workspace identifiers" },
 			["j"] = { "<C-]>", "Jump to definition" },
 			["l"] = { "<C-t>", "Jump back" },
+			["x"] = { "<cmd>Inspect<cr>", "Inspect identifier" },
+
 		},
 		k = {
 			name = "Inspect",
@@ -334,6 +353,7 @@ function M.setup()
 			["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
 			["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
 			["f"] = { lsp.format_file, "Format buffer using LSP" },
+			['c'] = { "ds)db", "Delete surrounding function call" },
 		},
 		s = {
 			name = "Spellcheck",
@@ -368,7 +388,7 @@ function M.setup()
 			["="] = { "<C-w>=", "Equalize window size" },
 			["Q"] = { "<C-w>q", "Close current split" },
 			["s"] = { "<C-w>s<cmd>set wfh<cr>", "Split horizontal" },
-			["t"] = { "<C-w>t", "Move window into a new tab" },
+			["t"] = { "<C-w>T", "Move window into a new tab" },
 			["v"] = { "<C-w>v", "Split vertical" },
 			["h"] = { "<C-w>h", "Switch to window on left" },
 			["j"] = { "<C-w>j", "Switch to window below" },

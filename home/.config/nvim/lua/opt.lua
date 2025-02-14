@@ -15,8 +15,8 @@ function M.setup()
 	vim.opt.termguicolors = true
 	vim.cmd("colorscheme minimal")
 
-	--vim.cmd("let &statusline = '%<[%P] %f %h%m%r%= no vcs %=%([%l,%c%V]%)'") -- Set the status line to the way I like it, without git branch info
-	vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
+	vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, without git branch info
+	--vim.cmd("let &statusline = '%<[%P] %f %h%m%r%=%{get(b:,\"git_status\",\"\")}%=%([%l,%c%V]%)'") -- Set the status line to the way I like it, with git branch info
 
 	-- Keep the gutter always open
 	vim.opt.signcolumn = "auto:1"

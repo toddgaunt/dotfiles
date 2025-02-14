@@ -59,14 +59,16 @@ packer.startup(function(use)
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
-					"bash",
 					"c",
+					"help",
+					"lua",
+					"vim",
+					"bash",
 					"go",
 					"html",
 					"javascript",
 					"json",
 					"latex",
-					"lua",
 					"markdown",
 					"markdown_inline",
 					"python",
@@ -74,13 +76,12 @@ packer.startup(function(use)
 					"regex",
 					"tsx",
 					"typescript",
-					"vim",
 					"yaml",
 				},
 				sync_install = false,
 				auto_install = true,
 				indent = {
-					enable = false
+					enable = true
 				},
 				highlight = {
 					enable = true,
