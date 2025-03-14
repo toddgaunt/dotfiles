@@ -476,20 +476,18 @@ function M.live_grep(search_opts)
 end
 
 function M.copilot_status()
-	if vim.b.copilot_enabled == true then
+	if vim.g.copilot_enabled == true then
 		print("copilot=true")
-	elseif vim.b.copilot_enabled == false then
-		print("copilot=false")
 	else
-		print("copilot=auto")
+		print("copilot=false")
 	end
 end
 
 function M.copilot_toggle()
-	if vim.b.copilot_enabled ~= true then
-		vim.b.copilot_enabled = true
+	if vim.g.copilot_enabled ~= true then
+		vim.g.copilot_enabled = true
 	else
-		vim.b.copilot_enabled = false
+		vim.g.copilot_enabled = false
 	end
 
 	M.copilot_status()

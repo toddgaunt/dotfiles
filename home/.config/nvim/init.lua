@@ -60,7 +60,6 @@ packer.startup(function(use)
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"c",
-					"help",
 					"lua",
 					"vim",
 					"bash",
@@ -342,6 +341,7 @@ packer.startup(function(use)
 				replace_keycodes = false
 			})
 			vim.g.copilot_no_tab_map = true
+			vim.g.copilot_enabled = true
 		end,
 	}
 

@@ -328,4 +328,13 @@ function M.next()
 	print("current file is not a diary entry")
 end
 
+function M.cd_to_current_collection()
+	vim.cmd("cd " .. M.current_path)
+end
+
+function M.todo()
+	select_initial_space()
+	vim.cmd("e " .. M.current_path .. "/TODO.md")
+end
+
 return M

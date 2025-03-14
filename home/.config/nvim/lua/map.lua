@@ -310,11 +310,10 @@ function M.setup()
 			-- LSP information and meta-control
 			["a"] = { util.toggle_autocomplete, "Toggle autocomplete" },
 			["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
-			["s"] = { "<cmd>LspStop<cr>", "Stop LSP" },
-			["i"] = { "<cmd>LspInfo<cr>", "Show language server information" },
+			["x"] = { "<cmd>LspStop<cr>", "Stop LSP" },
+			["s"] = { "<cmd>LspInfo<cr>", "Show language server status" },
 			["l"] = { "<cmd>LspLog<cr>", "Show language server log" },
-			["c"] = { util.copilot_status, "Show Github Copilot status"},
-			["C"] = { util.copilot_toggle, "Toggle Github Copilot for buffer"},
+			["c"] = { util.copilot_toggle, "Toggle Github Copilot for buffer" },
 		},
 		o = {
 			name = "Organize",
@@ -421,6 +420,7 @@ function M.setup()
 		},
 		z = {
 			name = "Zettelkasten",
+			["."] = { zet.cd_to_current_collection, "Change dir to collection" },
 			["c"] = { zet.select, "Select a note-space" },
 			["p"] = { zet.search, "Find a pattern" },
 			["P"] = { zet.search_select, "Find a pattern in selected" },
@@ -435,6 +435,7 @@ function M.setup()
 			["w"] = { zet.weekly, "Open weekly entry" },
 			["m"] = { zet.monthly, "Open monthly entry" },
 			["y"] = { zet.yearly, "Open yearly entry" },
+			["t"] = { zet.todo, "Open the TODO list" },
 			["["] = { zet.prev, "Open previous entry" },
 			["]"] = { zet.next, "Open next entry" },
 		},

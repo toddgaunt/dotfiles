@@ -140,6 +140,11 @@ hi FloatBorder   term=NONE cterm=NONE ctermfg=0    ctermbg=7       gui=NONE     
 hi NormalFloat   term=NONE cterm=NONE ctermfg=0    ctermbg=15      gui=NONE      guifg=NONE    guibg=#EEEEEE
 
 " Code syntax
+" Make sure these are the same as Normal
+"hi @variable    term=NONE guibg=#FFFFFF guifg=#171421 cterm=NONE ctermbg=NONE ctermfg=0
+"hi Delimiter    term=NONE guibg=#FFFFFF guifg=#171421 cterm=NONE ctermbg=NONE ctermfg=0
+"hi Operator     term=NONE guibg=#FFFFFF guifg=#171421 cterm=NONE ctermbg=NONE ctermfg=0
+" Colors
 hi Title        term=NONE cterm=bold      ctermfg=1    ctermbg=NONE gui=bold      guifg=#C01C28 guibg=NONE
 hi Character    term=NONE cterm=italic    ctermfg=13   ctermbg=NONE gui=italic    guifg=#C061CB guibg=NONE
 hi Comment      term=NONE cterm=italic    ctermfg=8    ctermbg=NONE gui=italic    guifg=#171421 guibg=NONE
