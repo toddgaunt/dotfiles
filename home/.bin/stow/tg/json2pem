@@ -8,9 +8,12 @@ if [ "$#" -ne 1 ]; then
 fi
 
 PEM=$(cat "$1")
-# Remove first character '"'
-PEM="${PEM:1}"
-# Remove last character '"'
-PEM="${PEM%?}"
+
+if [[ "${PEM:0:1}" == '"' ]] && [[ "${PEM: -1}" == '"' ]]; then
+	# Remove first character '"'
+	PEM="${PEM:1}"
+	# Remove last character '"'
+	PEM="${PEM%?}"
+fi
 # Convert escaped newlines to real newlines
 printf -- "${PEM//\\n/$'\n'}"
