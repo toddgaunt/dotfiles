@@ -81,6 +81,7 @@ gpg-agent > /dev/null 2>&1 || gpg-agent --daemon
 export GPG_TTY=$(tty)
 
 # Aliases
+alias ls="ls --color=auto"
 alias bindings="print -rl -- ${(k)aliases}"
 alias python='python3'
 alias cx='chmod +x'
