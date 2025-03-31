@@ -1,6 +1,6 @@
 #!/bin/bash
 
-packages=(
+base=(
 # Operating System
 zsh
 lsof
@@ -9,6 +9,8 @@ man-pages
 gnupg2
 util-linux
 stow
+pv
+jq
 
 # Optical Media
 dvdbackup
@@ -40,6 +42,10 @@ bind-utils
 
 # Media Utilities
 mupdf
+
+# Game Development Tools
+gimp
 )
 
-sudo dnf install "${packages[@]}"
+sudo dnf install "${base[@]}"
+go install golang.org/x/tools/gopls@latest
