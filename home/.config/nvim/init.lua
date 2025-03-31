@@ -341,12 +341,15 @@ packer.startup(function(use)
 				replace_keycodes = false
 			})
 			vim.g.copilot_no_tab_map = true
-			vim.g.copilot_enabled = true
+			vim.g.copilot_enabled = false
 		end,
 	}
 
 	-- vim-surround to edit your surroundings
 	use "tpope/vim-surround"
+
+	-- Pico-8
+	--use "git@github.com:Bakudankun/PICO-8.vim.git"
 end)
 
 -- Include other config files after plugins are loaded and configured.
