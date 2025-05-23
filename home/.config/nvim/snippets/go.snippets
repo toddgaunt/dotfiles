@@ -123,6 +123,14 @@ snippet bench "benchmark function"
 	}
 snippet flag "commandline flag"
 	${1:variable} := flag.${2:String}("${3:name}", ${4:value}, "${5:how this flag is used}")
+
 snippet handler "http handler"
 	func ${0:${VISUAL}}(w http.ResponseWriter, r *http.Request) {
 	}
+
+snippet read "read an io.Reader"
+	func() []byte {
+		b, _ := io.ReadAll(${1:reader})
+		return b
+	}()
+
