@@ -56,6 +56,7 @@ elif [[ "$cmd" == "list" ]]; then
 		exit 1
 	fi
 
+	current_version=$(go version | grep -oe 'go[0-9]\+\.[0-9]\+\.[0-9]\+')
 	installed_versions=($(ls "$HOME/sdk"))
 
 	echo "Installed go versions:"
@@ -63,7 +64,11 @@ elif [[ "$cmd" == "list" ]]; then
 		if [[ "$v" == "go" ]]; then
 			continue
 		fi
-		printf -- "%s\n" "$v"
+		if [[ "$v" == "$current_version" ]]; then
+			printf -- "%s <- using \n" "$v"
+		else
+			printf -- "%s\n" "$v"
+		fi
 	done
 else
 	echo "Unknown command: $cmd"
