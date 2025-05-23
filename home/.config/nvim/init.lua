@@ -14,7 +14,6 @@ packer.startup(function(use)
 	-- which-key is the best keybinding plugin ever
 	use {
 		"folke/which-key.nvim",
-		tag = "v1.6.0",
 		config = function()
 			vim.opt.timeout = true
 			vim.opt.timeoutlen = 0
@@ -95,7 +94,6 @@ packer.startup(function(use)
 	-- nvim-tree provides a file-explorer tree with icon support
 	use {
 		"nvim-tree/nvim-tree.lua",
-		tag = "nvim-tree-v1.1.1",
 		requires = {
 			"nvim-tree/nvim-web-devicons"
 		},
@@ -228,19 +226,24 @@ packer.startup(function(use)
 	-- telescope is a very powerful fuzzy finder with a great UI
 	use {
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.6",
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope-fzf-native.nvim",
 		},
 		config = function()
+			local actions = require('telescope.actions')
 			require("telescope").setup({
 				defaults = {
 					wrap_results = true,
 					dynamic_preview_title = true,
 					preview = {
 						hide_on_startup = false,
-					}
+					},
+					mappings = {
+						i = {
+							["<C-c>"] = actions.smart_send_to_qflist + actions.open_qflist,
+						},
+					},
 				},
 			})
 		end

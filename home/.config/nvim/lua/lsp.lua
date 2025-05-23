@@ -13,8 +13,8 @@ local function cmp_capabilities()
 			cmp.config.compare.length
 		},
 
-		sorting = {
-			comparators = {
+		--sorting = {
+			--comparators = {
 				--cmp.config.compare.offset,
 				--cmp.config.compare.exact,
 				--cmp.config.compare.score,
@@ -24,8 +24,8 @@ local function cmp_capabilities()
 				--cmp.config.compare.order,
 				--cmp.config.compare.locality,
 				--cmp.config.compare.recently_used,
-			},
-		},
+			--},
+		--},
 
 		snippet = {
 			-- REQUIRED - you must specify a snippet engine.
@@ -59,12 +59,9 @@ local function cmp_capabilities()
 		}),
 
 		sources = cmp.config.sources({
-			{ name = 'nvim_lsp' },
-		}, {
 			{ name = 'snippy' },
-		}, {
+			{ name = 'nvim_lsp' },
 			{ name = 'emoji' },
-		}, {
 			{ name = 'buffer' },
 		}),
 	}
@@ -131,6 +128,7 @@ function M.setup()
 	local capabilities = cmp_capabilities()
 
 	local lspconfig = require("lspconfig")
+	local configs = require('lspconfig.configs')
 	local util = require("lspconfig/util")
 
 	-- Default options when creating keymaps.
@@ -155,7 +153,7 @@ function M.setup()
 	-- Use a loop to conveniently call "setup" on multiple servers that don't
 	-- require custom configuration and to map buffer local keybindings when the
 	-- language server attaches
-	local servers = { "bashls", "pyright", "clojure_lsp", "ts_ls", "rust_analyzer", "pico8_ls"}
+	local servers = { "bashls", "pyright", "clojure_lsp", "ts_ls", "rust_analyzer", "pico8_ls" }
 	for _, lsp in pairs(servers) do
 		lspconfig[lsp].setup {
 			capabilities = capabilities,

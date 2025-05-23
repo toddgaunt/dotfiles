@@ -86,7 +86,6 @@ function M.setup()
 		["<F5>"] = { vim.diagnostic.goto_prev, "Go to previous error" },
 		["<F6>"] = { vim.diagnostic.goto_next, "Go to next error" },
 		["<F7>"] = { util.format_file, "Format file" },
-		["<C-q>"] = { "<cmd>bdelete!<cr>", "Close current buffer" },
 		-- Universal shortcuts
 		["<C-c>"] = { '"+yy', "Copy selection into OS register" },
 		["<C-v>"] = { '"+p', "Paste the OS register" },
@@ -239,6 +238,8 @@ function M.setup()
 		d = {
 			name = "Debug",
 			["d"] = { "<cmd>copen<cr>", "Open quickfix list" },
+			["n"] = { "<cmd>cn<cr>", "Next quickfix location" },
+			["p"] = { "<cmd>cp<cr>", "Previous quickfix location" },
 			["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
 			["l"] = { "<cmd>lopen<cr>", "Open location list" },
 			["["] = { vim.diagnostic.goto_prev, "Go to previous error" },
