@@ -10,21 +10,20 @@ local function cmp_capabilities()
 
 		completion = {
 			completeopt = 'menu,menuone,noselect',
-			cmp.config.compare.length
 		},
 
 		--sorting = {
-			--comparators = {
-				--cmp.config.compare.offset,
-				--cmp.config.compare.exact,
-				--cmp.config.compare.score,
-				--cmp.config.compare.kind,
-				--cmp.config.compare.sort_text,
-				--cmp.config.compare.length,
-				--cmp.config.compare.order,
-				--cmp.config.compare.locality,
-				--cmp.config.compare.recently_used,
-			--},
+		--comparators = {
+		--cmp.config.compare.offset,
+		--cmp.config.compare.exact,
+		--cmp.config.compare.score,
+		--cmp.config.compare.kind,
+		--cmp.config.compare.sort_text,
+		--cmp.config.compare.length,
+		--cmp.config.compare.order,
+		--cmp.config.compare.locality,
+		--cmp.config.compare.recently_used,
+		--},
 		--},
 
 		snippet = {
@@ -59,11 +58,14 @@ local function cmp_capabilities()
 		}),
 
 		sources = cmp.config.sources({
-			{ name = 'snippy' },
 			{ name = 'nvim_lsp' },
 			{ name = 'emoji' },
+			{ name = 'snippy' },
+		}, {
 			{ name = 'buffer' },
-		}),
+			{ name = 'emoji' },
+			{ name = 'snippy' },
+		})
 	}
 
 	-- Set configuration for specific filetype.
@@ -77,9 +79,7 @@ local function cmp_capabilities()
 
 	-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 	cmp.setup.cmdline('/', {
-		mapping = cmp.mapping.preset.cmdline({
-
-		}),
+		mapping = cmp.mapping.preset.cmdline({}),
 		sources = {
 			{ name = 'buffer' }
 		}
@@ -182,7 +182,20 @@ function M.setup()
 		},
 		init_options = {
 			usePlaceholders = true,
-		}
+		},
+		before_init = function(_, config)
+			if vim.fn.executable("go") ~= 1 then
+				return
+			end
+
+			local module = vim.fn.trim(vim.fn.system("go list -m"))
+			if vim.v.shell_error ~= 0 then
+				return
+			end
+			module = module:gsub("\n", ",")
+
+			config.settings.gopls["formatting.local"] = module
+		end,
 	}
 
 	--

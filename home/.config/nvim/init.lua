@@ -1,11 +1,15 @@
 local packer = require("packer")
 packer.startup(function(use)
 	-- Package manager for installing all other packages
-	use "wbthomason/packer.nvim"
+	use {
+		"wbthomason/packer.nvim",
+		commit = "ea0cc3c59f67c440c5ff0bbe4fb9420f4350b9a3",
+	}
 
-	-- Mason makes installing language server tools dead-easy
 	use {
 		"williamboman/mason.nvim",
+		tag = "v2.0.0",
+		commit = "7f265cd6ae56cecdd0aa50c8c73fc593b0604801",
 		config = function()
 			require("mason").setup()
 		end
@@ -14,6 +18,8 @@ packer.startup(function(use)
 	-- which-key is the best keybinding plugin ever
 	use {
 		"folke/which-key.nvim",
+		tag = "v2.1.0",
+		commit = "0539da005b98b02cf730c1d9da82b8e8edb1c2d2",
 		config = function()
 			vim.opt.timeout = true
 			vim.opt.timeoutlen = 0
@@ -24,11 +30,16 @@ packer.startup(function(use)
 	}
 
 	-- vim-lastplace remembers my last cursor position in files
-	use "farmergreg/vim-lastplace"
+	use {
+		"farmergreg/vim-lastplace",
+		tag = "v4.4.0",
+		commit = "17b69463aa384b990a8d45e4fd241f446ac0be1e",
+	}
 
 	-- luatab provides a better tab bar
 	use {
 		"alvarosevilla95/luatab.nvim",
+		commit = "7ac54b014b542f02a73b62fcae65db7a2382a378",
 		requires = "kyazdani42/nvim-web-devicons",
 		config = function()
 			require("luatab").setup()
@@ -38,6 +49,8 @@ packer.startup(function(use)
 	-- gitsigns adds git status symbols in the gutter
 	use {
 		"lewis6991/gitsigns.nvim",
+		tag="v1.0.2",
+		commit="7010000889bfb6c26065e0b0f7f1e6aa9163edd9",
 		config = function()
 			require("gitsigns").setup()
 		end,
@@ -46,12 +59,15 @@ packer.startup(function(use)
 	-- mini.bufremove maintains window layout when deleting a buffer
 	use {
 		"echasnovski/mini.bufremove",
+		tag = "v0.16.0",
+		commit = "66019ecebdc5bc0759e04747586994e2e3f98416",
 		config = function()
 			require("mini.bufremove").setup()
 		end
 	}
 
 	-- treesitter provides better syntax highlighting based on parsing the code instead of regex
+	-- No tag or commit is to allow for automatic updates since this plugin has frequent fixes.
 	use {
 		"nvim-treesitter/nvim-treesitter",
 		run = ":TSUpdate",
@@ -94,6 +110,8 @@ packer.startup(function(use)
 	-- nvim-tree provides a file-explorer tree with icon support
 	use {
 		"nvim-tree/nvim-tree.lua",
+		tag = "v1.12.0",
+		commit = "be5b788f2dc1522c73fb7afad9092331c8aebe80",
 		requires = {
 			"nvim-tree/nvim-web-devicons"
 		},
@@ -226,9 +244,17 @@ packer.startup(function(use)
 	-- telescope is a very powerful fuzzy finder with a great UI
 	use {
 		"nvim-telescope/telescope.nvim",
+		tag = "0.1.8",
+		commit = "a0bbec21143c7bc5f8bb02e0005fa0b982edc026",
 		requires = {
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope-fzf-native.nvim",
+			{
+				"nvim-lua/plenary.nvim",
+				commit="08e301982b9a057110ede7a735dd1b5285eb341f",
+			},
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				commit="9ef21b2e6bb6ebeaf349a0781745549bbb870d27",
+			},
 		},
 		config = function()
 			local actions = require('telescope.actions')
@@ -252,6 +278,7 @@ packer.startup(function(use)
 	-- session management makes switching projects easier
 	use {
 		"natecraddock/sessions.nvim",
+		commit = "f13158483e0b6255c6dfe473145ce4ee3495d844",
 		config = function()
 			require("sessions").setup({
 				events = { "VimLeavePre" },
@@ -264,6 +291,7 @@ packer.startup(function(use)
 	-- workspaces allows for easily changing between projects
 	use {
 		"natecraddock/workspaces.nvim",
+		commit = "55a1eb6f5b72e07ee8333898254e113e927180ca",
 		config = function()
 			require("workspaces").setup({
 				hooks = {
@@ -286,6 +314,7 @@ packer.startup(function(use)
 	-- vim-slime makes REPL development possible.
 	use {
 		"jpalardy/vim-slime",
+		commit = "507107dd24c9b85721fa589462fd5068e0f70266",
 		config = function()
 			vim.cmd('let g:slime_target = "neovim"')
 		end
@@ -293,29 +322,53 @@ packer.startup(function(use)
 	}
 
 	-- vim-delve gives access to the Go debugger
-	use "sebdah/vim-delve"
+	use {
+		"sebdah/vim-delve",
+		commit = "41d6ad294fb6dd5090f5f938318fc4ed73b6e1ea",
+	}
 
 	-- vim-fugitive is the best git-porcelain ever
-	use "tpope/vim-fugitive"
+	use {
+		"tpope/vim-fugitive",
+		tag = "v3.7",
+		commit = "96c1009fcf8ce60161cc938d149dd5a66d570756",
+	}
 
 	-- vim-test makes running tests in-editor easy
 	use {
 		"vim-test/vim-test",
+		commit = "bb7342bd1c2c32e41092fe362a27087d2250bcf6",
 		config = function()
 			vim.cmd('let test#strategy = "neovim"')
 		end
 	}
 
 	-- vim-sleuth automatically configures neovim to automatically detect the correct indentation style
-	use "tpope/vim-sleuth"
+	use {
+		"tpope/vim-sleuth",
+		commit = "be69bff86754b1aa5adcbb527d7fcd1635a84080",
+	}
 
 	-- snippy adds very useful snippet completion
 	use {
 		"dcampos/nvim-snippy",
+		commit = "93c329f7dad98565ad5db9634ced253d665c1760",
 		config = function()
 			require('snippy').setup({})
 		end,
 	}
+
+	-- vim-surround to edit your surroundings
+	use {
+		"tpope/vim-surround",
+		commit = "3d188ed2113431cf8dac77be61b842acb64433d9",
+	}
+
+	-- Pico-8
+	--use "git@github.com:Bakudankun/PICO-8.vim.git"
+
+	-- The following LSP plugins are not versioned since they are
+	-- core plugins for Neovim and are pretty stable between updates.
 
 	-- lsp-config allows Neovim's native LSP to be setup
 	use "neovim/nvim-lspconfig"
@@ -344,15 +397,9 @@ packer.startup(function(use)
 				replace_keycodes = false
 			})
 			vim.g.copilot_no_tab_map = true
-			vim.g.copilot_enabled = false
+			vim.g.copilot_enabled = true
 		end,
 	}
-
-	-- vim-surround to edit your surroundings
-	use "tpope/vim-surround"
-
-	-- Pico-8
-	--use "git@github.com:Bakudankun/PICO-8.vim.git"
 end)
 
 -- Include other config files after plugins are loaded and configured.
