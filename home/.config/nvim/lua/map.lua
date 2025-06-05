@@ -15,7 +15,6 @@ function M.setup()
 	-- Load local modules
 	local zet = require("zet")
 	local org = require("org")
-	local bib = require("bib")
 	local lsp = require("lsp")
 
 	-- The util module contains functions that integrate plugins better
@@ -198,8 +197,6 @@ function M.setup()
 			name = "Actions",
 			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
 			["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
-			["v"] = { bib.insert, "Insert a random Bible verse below" },
-			["V"] = { function() bib.insert({ above = true }) end, "Insert a random Bible verse above" },
 			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
 			["r"] = { "<cmd>luafile $MYVIMRC<cr>", "Reload config"},
