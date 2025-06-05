@@ -3,7 +3,7 @@
 -- creator of Temple OS. He had a program that would print out random bible verses; though
 -- his printed out randomly generated verses using biblical vocabulary rather than
 -- already existing verses. This program doesn't do that, but instead simply selects random
--- verses when called. I thought it would be a fun little programming challenge.
+-- verses when called. It was a fun little programming challenge.
 
 local M = {
 	indices = nil,
@@ -34,7 +34,7 @@ local function random_line_method()
 	-- Compute a list of indices that mark the beginning of each verse in the bible.
 	-- This is done so that each verse gets a fair chance of being displayed, rather
 	-- than picking a random index in the entire text which would favor longer verses
-	-- since more indices correlate to longer verses. Only the indices are stored as part
+	-- since longer verses have more indices. Only the indices are stored as part
 	-- of the module once computed for the first time so the entire text isn't held in memory.
 	if M.indices == nil then
 		M.indices = {}
