@@ -41,3 +41,5 @@
 	rebase = false
 [push]
 	default = current
+[includeIf "gitdir:**/globalsign/**"]
+	path=~/.config/git/config-globalsign
