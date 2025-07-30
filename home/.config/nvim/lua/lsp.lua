@@ -13,17 +13,17 @@ local function cmp_capabilities()
 		},
 
 		--sorting = {
-		--comparators = {
-		--cmp.config.compare.offset,
-		--cmp.config.compare.exact,
-		--cmp.config.compare.score,
-		--cmp.config.compare.kind,
-		--cmp.config.compare.sort_text,
-		--cmp.config.compare.length,
-		--cmp.config.compare.order,
-		--cmp.config.compare.locality,
-		--cmp.config.compare.recently_used,
-		--},
+			--comparators = {
+				--cmp.config.compare.offset,
+				--cmp.config.compare.exact,
+				--cmp.config.compare.score,
+				--cmp.config.compare.kind,
+				--cmp.config.compare.sort_text,
+				--cmp.config.compare.length,
+				--cmp.config.compare.order,
+				--cmp.config.compare.locality,
+				--cmp.config.compare.recently_used,
+			--},
 		--},
 
 		snippet = {
@@ -58,8 +58,8 @@ local function cmp_capabilities()
 		}),
 
 		sources = cmp.config.sources({
-			{ name = 'nvim_lsp' },
 			{ name = 'snippy' },
+			{ name = 'nvim_lsp' },
 			{ name = 'emoji' },
 		}, {
 			{ name = 'buffer' },

@@ -303,7 +303,6 @@ packer.startup(function(use)
 					open = function()
 						require("sessions").load(nil, {})
 						require("nvim-tree.api").tree.toggle()
-						vim.cmd("LspRestart")
 					end,
 				}
 			})
