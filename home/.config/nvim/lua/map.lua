@@ -8,7 +8,7 @@ local function map(mode, lhs, rhs, opts)
 	if opts then
 		options = vim.tbl_extend("force", options, opts)
 	end
-	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+	vim.keymap.set(mode, lhs, rhs, options)
 end
 
 function M.setup()
@@ -64,9 +64,9 @@ function M.setup()
 
 	-- [[Command mode mappings]] --
 	-- I just want to be able to use consistent key bindings to move characters when typing characters! Is that too much to ask?
-	vim.cmd("cnoremap <C-a> <C-b>")
-	vim.cmd("cnoremap <C-b> <Left>")
-	vim.cmd("cnoremap <C-f> <Right>")
+	vim.keymap.set("c", "<C-a>", "<C-b>", { noremap = true })
+	vim.keymap.set("c", "<C-b>", "<Left>", { noremap = true })
+	vim.keymap.set("c", "<C-f>", "<Right>", { noremap = true })
 
 	-- [[Visual mode search]] --
 	map("v", "/", "<esc>/\\%V", { noremap = true, silent = false})
@@ -77,7 +77,7 @@ function M.setup()
 		['y@'] = { util.yank_filename, "Yank file name" },
 		["+"] = { "<C-a>", "Increment number" },
 		["-"] = { "<C-x>", "Decrement number" },
-		["<C-/>"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
+		["<C-/>"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
 		["<F1>"] = { "<cmd>WhichKey<cr>", "Show keybindings" },
 		["<F2>"] = { vim.lsp.buf.rename, "Rename identifer" },
 		["<F3>"] = { vim.lsp.buf.references, "Open a list of references" },
@@ -196,10 +196,10 @@ function M.setup()
 		a = {
 			name = "Actions",
 			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
-			["h"] = { '<cmd>noh<cr><cmd>let @/ = ""<cr>', "Clear search highlight" },
+			["h"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
 			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
-			["r"] = { "<cmd>luafile $MYVIMRC<cr>", "Reload config"},
+			["r"] = { "<cmd>source $MYVIMRC<cr>", "Reload config"},
 		},
 		b = {
 			name = "Buffers",
@@ -212,7 +212,7 @@ function M.setup()
 			["l"] = { "<cmd>buffers<cr>", "List buffers" },
 			["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 			["w"] = { "<cmd>write<cr>", "Write buffer to file" },
-			['b'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
+			['f'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
 			['o'] = { util.close_all_invisible_buffers, "Close all invisible buffers"},
 			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
 		},
@@ -221,7 +221,7 @@ function M.setup()
 
 			-- Appearance
 			["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
-			["h"] = { "<cmd>TSBufToggle highlight", "Toggle syntax highlighting for the buffer" },
+			["h"] = { "<cmd>TSBufToggle highlight<cr>", "Toggle syntax highlighting for the buffer" },
 			["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
 			["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
 			["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },

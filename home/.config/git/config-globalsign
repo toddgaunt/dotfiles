@@ -1,0 +1,6 @@
+[user]
+	name = Todd Gaunt
+	email = todd.gaunt@globalsign.com
+	#signingkey = 30F589735E392AEE1771857D2DFEFB9CA35B1C9B
+[commit]
+	gpgSign = false

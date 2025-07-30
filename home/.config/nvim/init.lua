@@ -389,17 +389,17 @@ packer.startup(function(use)
 	}
 
 	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
-	use {
-		"github/copilot.vim",
-		config = function()
-			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
-				expr = true,
-				replace_keycodes = false
-			})
-			vim.g.copilot_no_tab_map = true
-			vim.g.copilot_enabled = true
-		end,
-	}
+--	use {
+--		"github/copilot.vim",
+--		config = function()
+--			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
+--				expr = true,
+--				replace_keycodes = false
+--			})
+--			vim.g.copilot_no_tab_map = true
+--			vim.g.copilot_enabled = true
+--		end,
+--	}
 end)
 
 -- Include other config files after plugins are loaded and configured.

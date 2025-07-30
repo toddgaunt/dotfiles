@@ -59,12 +59,10 @@ local function cmp_capabilities()
 
 		sources = cmp.config.sources({
 			{ name = 'nvim_lsp' },
-			{ name = 'emoji' },
 			{ name = 'snippy' },
+			{ name = 'emoji' },
 		}, {
 			{ name = 'buffer' },
-			{ name = 'emoji' },
-			{ name = 'snippy' },
 		})
 	}
 

@@ -254,7 +254,7 @@ local function filter_files(files, pattern)
 end
 
 local function filter_files_by_filename(a, filename)
-	local year, month, day 
+	local year, month, day
 
 	year, month, day = filename:match("(%d%d%d%d)-(%d%d)-(%d%d).md")
 	if year ~= nil and month ~= nil and day ~= nil then
