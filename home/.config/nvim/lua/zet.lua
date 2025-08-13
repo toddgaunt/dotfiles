@@ -1,6 +1,6 @@
 local M = {}
 
--- current_path holds the current working directory for the zettelkasten notemap.
+-- current_path holds the current working directory for the zettelkasten note map.
 M.current_path = ""
 
 -- spaces associates short names with paths on the filesystem that lead to zettelkasten note mappaths on the filesystem that lead to zettelkasten note maps

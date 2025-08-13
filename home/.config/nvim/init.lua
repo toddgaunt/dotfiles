@@ -8,8 +8,8 @@ packer.startup(function(use)
 
 	use {
 		"williamboman/mason.nvim",
-		tag = "v2.0.0",
-		commit = "7f265cd6ae56cecdd0aa50c8c73fc593b0604801",
+		tag = "v2.0.1",
+		commit = "197f6352c276bbc2d25541dfce00ec50d1a4e88f",
 		config = function()
 			require("mason").setup()
 		end
@@ -110,8 +110,8 @@ packer.startup(function(use)
 	-- nvim-tree provides a file-explorer tree with icon support
 	use {
 		"nvim-tree/nvim-tree.lua",
-		tag = "v1.12.0",
-		commit = "be5b788f2dc1522c73fb7afad9092331c8aebe80",
+		tag = "v1.14.0",
+		commit = "321bc61580fd066b76861c32de3319c3a6d089e7",
 		requires = {
 			"nvim-tree/nvim-web-devicons"
 		},
