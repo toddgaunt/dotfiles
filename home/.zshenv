@@ -30,5 +30,3 @@ export PATH="$HOME/.bin:$PATH"
 if [[ -f "$HOME/.env" ]]; then
 	source "$HOME/.env"
 fi
-
-. "$HOME/.cargo/env"

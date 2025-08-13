@@ -46,7 +46,7 @@ function parse-git-branch() {
 		branch="${branch:0:$max_len}…"
 	fi
 	if [[ "$branch" != "" ]]; then
-		echo "%F{magenta}:%f%F{green}${branch}%f"
+		echo "%F{green}:%f%F{magenta}${branch}%f"
 	fi
 }
 
@@ -64,7 +64,7 @@ function check-last-exit-code() {
 
 setopt PROMPT_SUBST
 
-color="black"
+color="green"
 if [[ "$HOST" == "toolbox" ]]; then
 	color="yellow"
 elif [[ "$HOST" == "toolbx" ]]; then
