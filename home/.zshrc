@@ -68,7 +68,7 @@ color="green"
 if [[ "$HOST" == "toolbox" ]]; then
 	color="yellow"
 elif [[ "$HOST" == "toolbx" ]]; then
-	color="magenta"
+	color="yellow"
 fi
 
 # Left-hand prompt
