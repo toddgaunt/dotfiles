@@ -298,7 +298,7 @@ function M.prev()
 		end
 	end
 
-	--print("current file is not a diary entry")
+	print("current file is not a note")
 end
 
 -- next opens the next entry of the same type as the current buffer.
@@ -325,7 +325,7 @@ function M.next()
 		end
 	end
 
-	print("current file is not a diary entry")
+	print("current file is not a note")
 end
 
 function M.cd_to_current_collection()
