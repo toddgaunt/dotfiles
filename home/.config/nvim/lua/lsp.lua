@@ -98,7 +98,7 @@ end
 
 -- go_fumport automatically imports missing packages and then formats the file according to the LSP formatter
 local function go_fumport(wait_ms)
-	local params = vim.lsp.util.make_range_params()
+	local params = vim.lsp.util.make_range_params(0, "utf-8")
 	params.context = { only = { "source.organizeImports" } }
 	local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
 	for cid, res in pairs(result or {}) do
@@ -126,7 +126,7 @@ function M.setup()
 	local capabilities = cmp_capabilities()
 
 	local lspconfig = require("lspconfig")
-	local configs = require('lspconfig.configs')
+	--local configs = require('lspconfig.configs')
 	local util = require("lspconfig/util")
 
 	-- Default options when creating keymaps.

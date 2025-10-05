@@ -82,8 +82,8 @@ function M.setup()
 		["<F2>"] = { vim.lsp.buf.rename, "Rename identifer" },
 		["<F3>"] = { vim.lsp.buf.references, "Open a list of references" },
 		["<F4>"] = { vim.lsp.buf.definition, "Go to definition" },
-		["<F5>"] = { vim.diagnostic.goto_prev, "Go to previous error" },
-		["<F6>"] = { vim.diagnostic.goto_next, "Go to next error" },
+		["<F5>"] = { util.goto_prev_err, "Go to previous error" },
+		["<F6>"] = { util.goto_next_err, "Go to next error" },
 		["<F7>"] = { util.format_file, "Format file" },
 		-- Universal shortcuts
 		["<C-c>"] = { '"+yy', "Copy selection into OS register" },
@@ -240,8 +240,8 @@ function M.setup()
 			["p"] = { "<cmd>cp<cr>", "Previous quickfix location" },
 			["k"] = { vim.diagnostic.open_float, "Float diagnostic message under cursor" },
 			["l"] = { "<cmd>lopen<cr>", "Open location list" },
-			["["] = { vim.diagnostic.goto_prev, "Go to previous error" },
-			["]"] = { vim.diagnostic.goto_next, "Go to next error" },
+			["["] = { util.goto_prev_err, "Go to previous error" },
+			["]"] = { util.goto_next_err, "Go to next error" },
 			["b"] = { "<cmd>DlvAddBreakpoint<cr>", "Set delve breakpoint" },
 		},
 		f = {

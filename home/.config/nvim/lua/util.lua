@@ -498,4 +498,12 @@ function M.split_tab()
 	vim.cmd("tab sbuffer " .. current_buf)
 end
 
+function M.goto_prev_err()
+	vim.diagnostic.jump({count = -1, float = false})
+end
+
+function M.goto_next_err()
+	vim.diagnostic.jump({count =  1, float = false})
+end
+
 return M
