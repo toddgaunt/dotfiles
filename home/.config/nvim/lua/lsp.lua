@@ -1,4 +1,84 @@
-local M = {}
+local M = {
+	servers = {
+		--{
+		--	name ="gopls",
+		--	conf = function (capabilities, on_attach)
+		--		local util = require("lspconfig/util")
+		--		return {
+		--			cmd = { "gopls" },
+		--			capabilities = capabilities,
+		--			on_attach = on_attach,
+		--			filetypes = { "go", "gomod" },
+		--			root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+		--			settings = {
+		--				gopls = {
+		--					analyses = {
+		--						unusedparams = true,
+		--						fillstruct = true,
+		--						--shadow = true,
+		--					},
+		--				},
+		--				staticcheck = true,
+		--			},
+		--			init_options = {
+		--				usePlaceholders = true,
+		--			},
+		--			before_init = function(_, config)
+		--				if vim.fn.executable("go") ~= 1 then
+		--					return
+		--				end
+
+		--				local module = vim.fn.trim(vim.fn.system("go list -m"))
+		--				if vim.v.shell_error ~= 0 then
+		--					return
+		--				end
+		--				module = module:gsub("\n", ",")
+
+		--				config.settings.gopls["formatting.local"] = module
+		--			end,
+		--		}
+		--	end
+		--},
+		--{
+		--	name="lua_ls",
+		--	conf= function(capabilities, on_attach)
+		--		return {
+		--			capabilities = capabilities,
+		--			on_attach = on_attach,
+		--			settings = {
+		--				Lua = {
+		--					runtime = {
+		--						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+		--						version = "LuaJIT",
+		--					},
+		--					diagnostics = {
+		--						-- Recognize the neovim provided 'vim' global variable.
+		--						globals = { "vim" },
+		--					},
+		--					workspace = {
+		--						-- Make the server aware of Neovim runtime files
+		--						library = vim.api.nvim_get_runtime_file("", true),
+		--						checkThirdParty = false,
+		--					},
+		--					telemetry = {
+		--						-- Do not send telemetry data containing a randomized but unique identifier
+		--						enable = false,
+		--					},
+		--				}
+		--			}
+		--		}
+		--	end
+		--},
+		"bashls",
+		"pyright",
+		"clojure_lsp",
+		"ts_ls",
+		"rust_analyzer",
+		"pico8_ls",
+		"gopls",
+		"lua_ls",
+	}
+}
 
 local function cmp_capabilities()
 	local cmp = require("cmp")
@@ -13,17 +93,17 @@ local function cmp_capabilities()
 		},
 
 		--sorting = {
-			--comparators = {
-				--cmp.config.compare.offset,
-				--cmp.config.compare.exact,
-				--cmp.config.compare.score,
-				--cmp.config.compare.kind,
-				--cmp.config.compare.sort_text,
-				--cmp.config.compare.length,
-				--cmp.config.compare.order,
-				--cmp.config.compare.locality,
-				--cmp.config.compare.recently_used,
-			--},
+		--comparators = {
+		--cmp.config.compare.offset,
+		--cmp.config.compare.exact,
+		--cmp.config.compare.score,
+		--cmp.config.compare.kind,
+		--cmp.config.compare.sort_text,
+		--cmp.config.compare.length,
+		--cmp.config.compare.order,
+		--cmp.config.compare.locality,
+		--cmp.config.compare.recently_used,
+		--},
 		--},
 
 		snippet = {
@@ -62,8 +142,8 @@ local function cmp_capabilities()
 			{ name = 'nvim_lsp' },
 			{ name = 'emoji' },
 		}, {
-			{ name = 'buffer' },
-		})
+				{ name = 'buffer' },
+			})
 	}
 
 	-- Set configuration for specific filetype.
@@ -71,8 +151,8 @@ local function cmp_capabilities()
 		sources = cmp.config.sources({
 			{ name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
 		}, {
-			{ name = 'buffer' },
-		})
+				{ name = 'buffer' },
+			})
 	})
 
 	-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -89,8 +169,8 @@ local function cmp_capabilities()
 		sources = cmp.config.sources({
 			{ name = 'path' }
 		}, {
-			{ name = 'cmdline' }
-		})
+				{ name = 'cmdline' }
+			})
 	})
 
 	return require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -127,7 +207,6 @@ function M.setup()
 
 	local lspconfig = require("lspconfig")
 	--local configs = require('lspconfig.configs')
-	local util = require("lspconfig/util")
 
 	-- Default options when creating keymaps.
 	local opts = { noremap = true, silent = true }
@@ -139,7 +218,7 @@ function M.setup()
 	-- after the language server attaches to the current buffer
 	local on_attach = function(_, bufnr)
 		-- Enable completion triggered by <c-x><c-o>
-		vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+		-- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
 		-- Mappings.
 		-- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -147,83 +226,47 @@ function M.setup()
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-]>", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
 	end
 
-	-- Generic LSP Configuration:
-	-- Use a loop to conveniently call "setup" on multiple servers that don't
-	-- require custom configuration and to map buffer local keybindings when the
-	-- language server attaches
-	local servers = { "bashls", "pyright", "clojure_lsp", "ts_ls", "rust_analyzer", "pico8_ls" }
-	for _, lsp in pairs(servers) do
-		lspconfig[lsp].setup {
-			capabilities = capabilities,
-			on_attach = on_attach,
-		}
+	for _, lsp in pairs(M.servers) do
+		if type(lsp) == "string" then
+			vim.lsp.config(lsp, {capabilities=capabilities, on_attach=on_attach})
+			vim.lsp.enable(lsp)
+		else
+			--vim.lsp.config(lsp.name, lsp.conf(capabilities, on_attach))
+			--vim.lsp.enable(lsp.name)
+		end
 	end
-
-	--
-	-- Golang LSP configuration
-	--
-	lspconfig.gopls.setup {
-		cmd = { "gopls", "serve" },
-		capabilities = capabilities,
-		on_attach = on_attach,
-		filetypes = { "go", "gomod" },
-		root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-		settings = {
-			gopls = {
-				analyses = {
-					unusedparams = true,
-					fillstruct = true,
-					--shadow = true,
-				},
-			},
-			staticcheck = true,
-		},
-		init_options = {
-			usePlaceholders = true,
-		},
-		before_init = function(_, config)
-			if vim.fn.executable("go") ~= 1 then
-				return
-			end
-
-			local module = vim.fn.trim(vim.fn.system("go list -m"))
-			if vim.v.shell_error ~= 0 then
-				return
-			end
-			module = module:gsub("\n", ",")
-
-			config.settings.gopls["formatting.local"] = module
-		end,
-	}
-
-	--
-	-- Lua LSP configuration
-	--
-	lspconfig.lua_ls.setup {
-		capabilities = capabilities,
-		on_attach = on_attach,
-		settings = {
-			Lua = {
-				runtime = {
-					-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-					version = "LuaJIT",
-				},
-				diagnostics = {
-					-- Recognize the neovim provided 'vim' global variable.
-					globals = { "vim" },
-				},
-				workspace = {
-					-- Make the server aware of Neovim runtime files
-					library = vim.api.nvim_get_runtime_file("", true),
-					checkThirdParty = false,
-				},
-				telemetry = {
-					-- Do not send telemetry data containing a randomized but unique identifier
-					enable = false,
-				},
-			}
-		}
-	}
 end
+
+function M.stop()
+	for _, lsp in pairs(M.servers) do
+		local name = ""
+		if type(lsp) == "string" then
+			name = lsp
+		else
+			name = lsp.name
+		end
+
+		vim.lsp.enable(name, false)
+	end
+end
+
+function M.start()
+	for _, lsp in pairs(M.servers) do
+		local name = ""
+		if type(lsp) == "string" then
+			name = lsp
+		else
+			name = lsp.name
+		end
+
+		vim.lsp.enable(name, true)
+	end
+end
+
+function M.restart()
+	M.stop()
+	M.start()
+end
+
 
 return M

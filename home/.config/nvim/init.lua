@@ -357,17 +357,24 @@ packer.startup(function(use)
 		end,
 	}
 
+	--------------------------------------------------------------------
+	-- The following plugins are commented out since I didn't use     --
+	-- them very much, though I may want to try them again some day.  --
+	--------------------------------------------------------------------
+
 	-- vim-surround to edit your surroundings
-	use {
-		"tpope/vim-surround",
-		commit = "3d188ed2113431cf8dac77be61b842acb64433d9",
-	}
+	--use {
+		--"tpope/vim-surround",
+		--commit = "3d188ed2113431cf8dac77be61b842acb64433d9",
+	--}
 
 	-- Pico-8
 	--use "git@github.com:Bakudankun/PICO-8.vim.git"
 
-	-- The following LSP plugins are not versioned since they are
-	-- core plugins for Neovim and are pretty stable between updates.
+	--------------------------------------------------------------------
+	-- The following LSP plugins are not versioned since they are     --
+	-- core plugins for Neovim and are pretty stable between updates. --
+	--------------------------------------------------------------------
 
 	-- lsp-config allows Neovim's native LSP to be setup
 	use "neovim/nvim-lspconfig"

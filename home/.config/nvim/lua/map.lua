@@ -308,9 +308,10 @@ function M.setup()
 			name = "LSP",
 			-- LSP information and meta-control
 			["a"] = { util.toggle_autocomplete, "Toggle autocomplete" },
-			["r"] = { "<cmd>LspRestart<cr>", "Restart the language server" },
-			["x"] = { "<cmd>LspStop<cr>", "Stop LSP" },
-			["s"] = { "<cmd>LspInfo<cr>", "Show language server status" },
+			["r"] = { lsp.restart, "Restart all active language servers" },
+			["x"] = { lsp.stop, "Stop LSP" },
+			["s"] = { lsp.start, "Start LSP" },
+			["i"] = { "<cmd>LspInfo<cr>", "Show language server status" },
 			["l"] = { "<cmd>LspLog<cr>", "Show language server log" },
 			["c"] = { util.copilot_toggle, "Toggle Github Copilot for buffer" },
 		},
