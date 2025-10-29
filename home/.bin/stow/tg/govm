@@ -9,10 +9,10 @@ function usage() {
 	echo "This script manages go versions in \$HOME/sdk, and symlinks the active go version to \$HOME/sdk/go."
 	echo ""
 	echo "Commands:"
-	echo "  help               Show this help message"
-	echo "  install <version>  Install a go version"
-	echo "  use     <version>  Symlink a go version to \$HOME/sdk/go"
-	echo "  list               List all versions present in \$HOME/sdk/go"
+	echo "  help               Show this help message and exit."
+	echo "  list               List all versions present in \$HOME/sdk/go. Active version is marked with '*'."
+	echo "  install <version>  Install a go version in \$HOME/sdk."
+	echo "  use     <version>  Symlink the selected go version to \$HOME/sdk/go."
 }
 
 if [[ "$cmd" == "" ]]; then
@@ -50,22 +50,22 @@ elif [[ "$cmd" == "use" ]]; then
 
 	echo "Using go$version"
 elif [[ "$cmd" == "list" ]]; then
-
 	if ! [[ -d "$HOME/sdk" ]]; then
 		echo "No go sdk directory found"
 		exit 1
 	fi
 
 	current_version=$(go version | grep -oe 'go[0-9]\+\.[0-9]\+\.[0-9]\+')
-	installed_versions=($(ls "$HOME/sdk"))
+	installed_versions=("$HOME"/sdk/go*)
+	# "##*/" removes all but the basename in the globbed path
+	installed_versions=("${installed_versions[@]##*/}")
 
-	echo "Installed go versions:"
 	for v in "${installed_versions[@]}"; do
 		if [[ "$v" == "go" ]]; then
 			continue
 		fi
 		if [[ "$v" == "$current_version" ]]; then
-			printf -- "%s <- using \n" "$v"
+			printf -- "%s*\n" "$v"
 		else
 			printf -- "%s\n" "$v"
 		fi
