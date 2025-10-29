@@ -76,7 +76,7 @@ while true; do
 	esac
 done
 
-for arg in "${@[@]}"; do
+for arg in "$@"; do
 	if [[ "$arg" == "" ]]; then
 		usage
 		exit 1
