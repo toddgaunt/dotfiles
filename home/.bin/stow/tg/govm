@@ -3,16 +3,16 @@
 cmd="$1"
 
 function usage() {
-	echo "usage: govm <command> [args]"
-	echo ""
-	echo "Manage go versions. To make this script effective, you must prepend your PATH with \$HOME/sdk/go/bin."
-	echo "This script manages go versions in \$HOME/sdk, and symlinks the active go version to \$HOME/sdk/go."
-	echo ""
-	echo "Commands:"
-	echo "  help               Show this help message and exit."
-	echo "  list               List all versions present in \$HOME/sdk/go. Active version is marked with '*'."
-	echo "  install <version>  Install a go version in \$HOME/sdk."
-	echo "  use     <version>  Symlink the selected go version to \$HOME/sdk/go."
+	echo 'usage: govm <command> [args]'
+	echo ''
+	echo 'Manage go versions. To make this script effective, you must prepend your PATH with "$HOME/sdk/go/bin".'
+	echo 'This script manages go versions in "$HOME/sdk", and symlinks the active go version to "$HOME/sdk/go".'
+	echo ''
+	echo 'Commands:'
+	echo '  help               Show this help message and exit.'
+	echo '  list               List all versions present in "$HOME/sdk/go". Active version is marked with '*'.'
+	echo '  install <version>  Install a go version in "$HOME/sdk".'
+	echo '  use     <version>  Symlink the selected go version to "$HOME/sdk/go".'
 }
 
 if [[ "$cmd" == "" ]]; then
@@ -22,7 +22,16 @@ elif [[ "$cmd" == "help" ]]; then
 	usage
 	exit 0
 elif [[ "$cmd" == "install" ]]; then
+	go_bin="$HOME/go/bin"
 	version="$2"
+
+	if [[ "$GOPATH" != "" ]]; then
+		go_bin="$GOPATH/bin"
+	fi
+
+	if [[ "$GOBIN" != "" ]]; then
+		go_bin="$GOBIN"
+	fi
 
 	if [[ "$version" == "" ]]; then
 		echo "Please provide a version"
@@ -31,7 +40,7 @@ elif [[ "$cmd" == "install" ]]; then
 
 	go install golang.org/dl/go"$version"@latest
 
-	go"$version" download
+	"$go_bin/go$version" download
 elif [[ "$cmd" == "use" ]]; then
 	version="$2"
 
