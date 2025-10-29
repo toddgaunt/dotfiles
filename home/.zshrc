@@ -86,10 +86,8 @@ alias bindings="print -rl -- ${(k)aliases}"
 alias python='python3'
 alias cx='chmod +x'
 alias e='edit'
-alias g='git'
+alias g='grimoire'
 alias grep='rg'
-alias j='jobs'
-alias b='bg'
 alias sxiv='sxiv -a'
 alias genrsa='openssl genrsa'
 alias archive-url="archive-url --directory=$HOME/Annex/Sites"
@@ -103,3 +101,5 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 if [[ -f "$HOME/.rc" ]]; then
 	source "$HOME/.rc"
 fi
+
+source <(fzf --zsh)
