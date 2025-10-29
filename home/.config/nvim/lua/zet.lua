@@ -138,7 +138,7 @@ function M.search(subpath)
 	end
 
 	local opts = {
-		prompt_title = "Search Zettelkasten Contents", -- Title for the picker
+		prompt_title = "Searching " .. M.current_path, -- Title for the picker
 		cwd = cwd,
 		initial_mode = "insert",
 		selection_strategy = "reset",
