@@ -9,6 +9,7 @@ man-pages
 gnupg2
 util-linux
 stow
+zip
 pv
 jq
 
@@ -17,20 +18,29 @@ dvdbackup
 k3b
 dvd+rw-tools
 
-# Programming Development Tools
+# Software Engineering
+
+## Tools
+neovim
 git
 fzf
-golang
-texlive
-neovim
-clang
-gcc
-make
-clojure
+plotutils
+gnuplot
+
+## Debuggers
 gdb
 delve
-zip
 valgrind
+
+## Documentation
+texlive
+
+## Compiler Toolchains
+make
+gcc
+clang
+golang
+clojure
 
 # Internet Utilities
 wget
@@ -42,8 +52,6 @@ bind-utils
 
 # Media Utilities
 mupdf
-
-# Game Development Tools
 gimp
 )
 
