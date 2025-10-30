@@ -102,4 +102,4 @@ if [[ -f "$HOME/.rc" ]]; then
 	source "$HOME/.rc"
 fi
 
-source <(fzf --zsh)
+#source <(fzf --zsh)
