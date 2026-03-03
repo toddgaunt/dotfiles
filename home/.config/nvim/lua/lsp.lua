@@ -80,9 +80,31 @@ local M = {
 	}
 }
 
+local lspkind_comparator = function(conf)
+	local lsp_types = require('cmp.types').lsp
+	return function(entry1, entry2)
+		if entry1.source.name ~= 'nvim_lsp' then
+			if entry2.source.name == 'nvim_lsp' then
+				return false
+			else
+				return nil
+			end
+		end
+		local kind1 = lsp_types.CompletionItemKind[entry1:get_kind()]
+		local kind2 = lsp_types.CompletionItemKind[entry2:get_kind()]
+
+		local priority1 = conf.kind_priority[kind1] or 0
+		local priority2 = conf.kind_priority[kind2] or 0
+		if priority1 == priority2 then
+			return nil
+		end
+		return priority2 < priority1
+	end
+end
+
 local function cmp_capabilities()
 	local cmp = require("cmp")
-
+	local types = require('cmp.types')
 
 	cmp.setup {
 		-- Don't autoselect an item or automatically insert it.
@@ -92,19 +114,44 @@ local function cmp_capabilities()
 			completeopt = 'menu,menuone,noselect',
 		},
 
-		--sorting = {
-		--comparators = {
-		--cmp.config.compare.offset,
-		--cmp.config.compare.exact,
-		--cmp.config.compare.score,
-		--cmp.config.compare.kind,
-		--cmp.config.compare.sort_text,
-		--cmp.config.compare.length,
-		--cmp.config.compare.order,
-		--cmp.config.compare.locality,
-		--cmp.config.compare.recently_used,
-		--},
-		--},
+		sorting = {
+			comparators = {
+				lspkind_comparator({
+					kind_priority = {
+						Field = 11,
+						Property = 11,
+						Constant = 10,
+						Enum = 10,
+						EnumMember = 10,
+						Event = 10,
+						Function = 10,
+						Method = 10,
+						Operator = 10,
+						Reference = 10,
+						Struct = 10,
+						Variable = 9,
+						File = 8,
+						Folder = 8,
+						Class = 5,
+						Color = 5,
+						Module = 5,
+						Keyword = 2,
+						Constructor = 1,
+						Interface = 1,
+						Snippet = 0,
+						Text = 1,
+						TypeParameter = 1,
+						Unit = 1,
+						Value = 1,
+					},
+				}),
+				cmp.config.compare.offset,
+				cmp.config.compare.exact,
+				cmp.config.compare.score,
+				cmp.config.compare.recently_used,
+				cmp.config.compare.kind,
+			},
+		},
 
 		snippet = {
 			-- REQUIRED - you must specify a snippet engine.
@@ -138,12 +185,12 @@ local function cmp_capabilities()
 		}),
 
 		sources = cmp.config.sources({
-			{ name = 'snippy' },
 			{ name = 'nvim_lsp' },
+			{ name = 'snippy' },
 			{ name = 'emoji' },
 		}, {
-				{ name = 'buffer' },
-			})
+			{ name = 'buffer' },
+		})
 	}
 
 	-- Set configuration for specific filetype.
@@ -151,8 +198,8 @@ local function cmp_capabilities()
 		sources = cmp.config.sources({
 			{ name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
 		}, {
-				{ name = 'buffer' },
-			})
+			{ name = 'buffer' },
+		})
 	})
 
 	-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -169,8 +216,8 @@ local function cmp_capabilities()
 		sources = cmp.config.sources({
 			{ name = 'path' }
 		}, {
-				{ name = 'cmdline' }
-			})
+			{ name = 'cmdline' }
+		})
 	})
 
 	return require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -228,7 +275,7 @@ function M.setup()
 
 	for _, lsp in pairs(M.servers) do
 		if type(lsp) == "string" then
-			vim.lsp.config(lsp, {capabilities=capabilities, on_attach=on_attach})
+			vim.lsp.config(lsp, { capabilities = capabilities, on_attach = on_attach })
 			vim.lsp.enable(lsp)
 		else
 			--vim.lsp.config(lsp.name, lsp.conf(capabilities, on_attach))
@@ -267,6 +314,5 @@ function M.restart()
 	M.stop()
 	M.start()
 end
-
 
 return M

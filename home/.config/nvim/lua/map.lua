@@ -30,13 +30,13 @@ function M.setup()
 	local default_opts = { noremap = true, silent = true }
 
 	-- Unmap bindings I often fat-finger and would rather use other universal style bindings to perform
-	map("n", "u", "", default_opts) -- Use C-z to undo instead
-	map("n", "y", "", default_opts) -- Use C-c to copy instead
-	map("n", "p", "", default_opts) -- Use C-v to paste instead
+	map("n", "u", "", default_opts)  -- Use C-z to undo instead
+	map("n", "y", "", default_opts)  -- Use C-c to copy instead
+	map("n", "p", "", default_opts)  -- Use C-v to paste instead
 	map("n", "<c-r>", "", default_opts) -- use C-y to redo instead
-	map("n", "x", "", default_opts) -- Use delete key to delete characters instead
-	map("v", "x", "", default_opts) -- Use delete key to delete characters instead
-	map("v", "y", "", default_opts) -- Use C-c to copy instead
+	map("n", "x", "", default_opts)  -- Use delete key to delete characters instead
+	map("v", "x", "", default_opts)  -- Use delete key to delete characters instead
+	map("v", "y", "", default_opts)  -- Use C-c to copy instead
 
 	-- Unmap unused bindings to free up keys
 	map("n", "R", "", default_opts) -- I never use this.
@@ -69,7 +69,7 @@ function M.setup()
 	vim.keymap.set("c", "<C-f>", "<Right>", { noremap = true })
 
 	-- [[Visual mode search]] --
-	map("v", "/", "<esc>/\\%V", { noremap = true, silent = false})
+	map("v", "/", "<esc>/\\%V", { noremap = true, silent = false })
 
 	-- [[Normal mode mappings]] --
 	wk.register({
@@ -133,9 +133,9 @@ function M.setup()
 	-- NOTE: bindings for visual mode use ':' rather than <cmd> in order for the
 	-- visual mode selection to be passed to them.
 	wk.register({
-	-- Surround selected text with quotes
-		["'"] = { 'c\'<c-r>"\'<esc>', "Surround with '"},
-		['"'] = { 'c"<c-r>""<esc>', 'Surround with "'},
+		-- Surround selected text with quotes
+		["'"] = { 'c\'<c-r>"\'<esc>', "Surround with '" },
+		['"'] = { 'c"<c-r>""<esc>', 'Surround with "' },
 		["v"] = { '<C-v>', "Block selection" },
 		["V"] = { '<S-v>', "Line selection" },
 		["s"] = { ":sort<cr>", "Sort selection (ascending)" },
@@ -145,19 +145,19 @@ function M.setup()
 		["<C-v>"] = { 'c<C-R>+<esc>', "Paste selection from OS register" },
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
-		["<C-space>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["<cr>"] = { ":SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["x"] = {
-			name = "X.509",
-			["x"] = { "!xxd<cr>", "Selection hex dump" },
-			["X"] = { "!xxd -r<cr>", "Reverse hex dump"},
-			["c"] = { "!openssl x509 -inform PEM -outform DER | xxd<cr>", "PEM to DER hex dump" },
-			["C"] = { "!xxd -r | openssl x509 -inform DER -outform PEM<cr>", "DER hex dump to PEM"},
-			["v"] = { "!openssl x509 -noout -text<cr>", "PEM text dump"},
-			["o"] = { ":<C-u>s/\\%V, /./g<cr>", "Comma separated integers to Oid"},
-			["O"] = { ":<C-u>s/\\%V\\./, /g<cr>", "Oid to comma separated integers"},
-		},
+		["<C-space>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<cr>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
+			["x"] = {
+				name = "X.509",
+				["x"] = { "!xxd<cr>", "Selection hex dump" },
+				["X"] = { "!xxd -r<cr>", "Reverse hex dump" },
+				["c"] = { "!openssl x509 -inform PEM -outform DER | xxd<cr>", "PEM to DER hex dump" },
+				["C"] = { "!xxd -r | openssl x509 -inform DER -outform PEM<cr>", "DER hex dump to PEM" },
+				["v"] = { "!openssl x509 -noout -text<cr>", "PEM text dump" },
+				["o"] = { ":<C-u>s/\\%V, /./g<cr>", "Comma separated integers to Oid" },
+				["O"] = { ":<C-u>s/\\%V\\./, /g<cr>", "Oid to comma separated integers" },
+			},
 			['/'] = { function()
 				local text = util.get_visual_selection()
 				util.live_grep({ default_text = text })
@@ -201,7 +201,7 @@ function M.setup()
 			["h"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
 			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
 			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
-			["r"] = { "<cmd>source $MYVIMRC<cr>", "Reload config"},
+			["r"] = { "<cmd>source $MYVIMRC<cr>", "Reload config" },
 		},
 		b = {
 			name = "Buffers",
@@ -215,7 +215,7 @@ function M.setup()
 			["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 			["w"] = { "<cmd>write<cr>", "Write buffer to file" },
 			['f'] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Find a buffer" },
-			['o'] = { util.close_all_invisible_buffers, "Close all invisible buffers"},
+			['o'] = { util.close_all_invisible_buffers, "Close all invisible buffers" },
 			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
 		},
 		c = {
@@ -232,7 +232,7 @@ function M.setup()
 			["i"] = { util.select_indentation, "Pick indentation style" },
 			["p"] = { "<cmd>set paste!<cr>", "Toggle paste mode" },
 			["t"] = { util.select_tab_length, "Pick tab length" },
-			["e"] = { util.set_env_var(), "Set environment variable"},
+			["e"] = { util.set_env_var(), "Set environment variable" },
 		},
 		d = {
 			name = "Debug",
@@ -318,15 +318,15 @@ function M.setup()
 		},
 		o = {
 			name = "Organize",
-			["c"] = { org.cancel_task, "Cancel a task" },
-			["h"] = { 'o<Esc>"=strftime("# %Y.%m.%d %a")<cr>P', "Insert a date heading" },
-			["e"] = { org.create_deadline, "Create a deadline for a task" },
+			["c"] = { org.cancel_task, "Mark a task as cancelled" },
+			["h"] = { 'o<Esc>"=strftime("# %Y.%m.%d %a")<cr>P', "Create a date heading" },
+			["e"] = { org.create_deadline, "Add deadline to a task" },
 			["p"] = { org.mark_task_in_progress, "Mark a task as in progress" },
 			["o"] = { org.mark_task_unfinished, "Mark a task as unfinished" },
-			["t"] = { org.create_task, "Insert a task below" },
-			["T"] = { function() org.create_task({ above = true }) end, "Insert a task above" },
+			["t"] = { org.insert_task, "Insert a task below" },
+			["T"] = { function() org.insert_task({ above = true }) end, "Insert a task above" },
 			["x"] = { org.mark_task_finished, "Mark a task as finished" },
-			["s"] = { 'o<Esc>"=strftime("<%Y.%m.%d %a>")<cr>P', "Insert a timestamp" },
+			["s"] = { 'o<Esc>"=strftime("<%Y.%m.%d %a>")<cr>P', "Add a timestamp" },
 		},
 		p = {
 			name = "Plugins",

@@ -49,8 +49,8 @@ packer.startup(function(use)
 	-- gitsigns adds git status symbols in the gutter
 	use {
 		"lewis6991/gitsigns.nvim",
-		tag="v1.0.2",
-		commit="7010000889bfb6c26065e0b0f7f1e6aa9163edd9",
+		tag = "v1.0.2",
+		commit = "7010000889bfb6c26065e0b0f7f1e6aa9163edd9",
 		config = function()
 			require("gitsigns").setup()
 		end,
@@ -142,6 +142,24 @@ packer.startup(function(use)
 					float = {
 						enable = false,
 					},
+				},
+				renderer = {
+					indent_markers = {
+						enable = true,
+						inline_arrows = true,
+						icons = {
+							corner = "└",
+							edge = "│",
+							item = "│",
+							bottom = "─",
+							none = " ",
+						},
+					},
+				},
+				sort = {
+					sorter = nil,
+					folders_first = true,
+					files_first = false,
 				},
 				on_attach = function(bufnr)
 					local api = require('nvim-tree.api')
@@ -249,11 +267,11 @@ packer.startup(function(use)
 		requires = {
 			{
 				"nvim-lua/plenary.nvim",
-				commit="08e301982b9a057110ede7a735dd1b5285eb341f",
+				commit = "08e301982b9a057110ede7a735dd1b5285eb341f",
 			},
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
-				commit="9ef21b2e6bb6ebeaf349a0781745549bbb870d27",
+				commit = "9ef21b2e6bb6ebeaf349a0781745549bbb870d27",
 			},
 		},
 		config = function()
@@ -364,8 +382,8 @@ packer.startup(function(use)
 
 	-- vim-surround to edit your surroundings
 	--use {
-		--"tpope/vim-surround",
-		--commit = "3d188ed2113431cf8dac77be61b842acb64433d9",
+	--"tpope/vim-surround",
+	--commit = "3d188ed2113431cf8dac77be61b842acb64433d9",
 	--}
 
 	-- Pico-8
@@ -395,17 +413,17 @@ packer.startup(function(use)
 	}
 
 	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
---	use {
---		"github/copilot.vim",
---		config = function()
---			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
---				expr = true,
---				replace_keycodes = false
---			})
---			vim.g.copilot_no_tab_map = true
---			vim.g.copilot_enabled = true
---		end,
---	}
+	--	use {
+	--		"github/copilot.vim",
+	--		config = function()
+	--			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
+	--				expr = true,
+	--				replace_keycodes = false
+	--			})
+	--			vim.g.copilot_no_tab_map = true
+	--			vim.g.copilot_enabled = true
+	--		end,
+	--	}
 end)
 
 -- Include other config files after plugins are loaded and configured.
