@@ -27,3 +27,10 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvi
 echo ""
 echo "=> start nvim and run :PackerInstall and :PackerCompile"
 echo ""
+
+echo "nerd-fonts: font that includes many icons and glyphs for terminal-based programs."
+echo "This will allow the terminal to display all sorts of icons using the font."
+echo "It is especially useful for Neovim and the nvim-tree plugin."
+echo ""
+echo "=> Download and install a font of your choice from https://www.nerdfonts.com"
+echo ""
