@@ -76,6 +76,9 @@ NEWLINE=$'\n'
 PROMPT='%F{'"$color"'}%n@%m[%f%F{blue}%~%f$(parse-git-branch)%F{'"$color"'}]%f${NEWLINE}%(1j.(%j).)> '
 #RPROMPT='%F{'"$color"'}[%f$(check-last-exit-code)%F{'"$color"'}]%f'
 
+# Short prompt
+#PROMPT='%F{'"$color"'}%n@%m%f%(1j.(%j).)> '
+
 # gpg configuration
 gpg-agent > /dev/null 2>&1 || gpg-agent --daemon
 export GPG_TTY=$(tty)
