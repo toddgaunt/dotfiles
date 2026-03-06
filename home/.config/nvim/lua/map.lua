@@ -96,7 +96,7 @@ function M.setup()
 		["<C-S-f>"] = { "?", "Search backward" },
 		-- Slime
 		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		--["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["Y"] = { "<cmd>registers<cr>", "Show contents of registers" },
 		-- Allow easy movement between softwrapped lines
 		["j"] = { "gj", "Down" },
