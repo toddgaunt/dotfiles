@@ -7,7 +7,7 @@ M.current_path = ""
 M.spaces = {}
 M.spaces_len = 0
 
-local subspaces = { "Zettelkasten", "Diary", "Collections", "Reference"}
+local subspaces = { "Zettelkasten", "Diary", "Collections", "Reference" }
 
 -- select_initial_space is called at the start of most exported functions of this module to prompt the user to pick a collection if one wasn't selected already.
 local function select_initial_space()
@@ -186,9 +186,24 @@ function M.new()
 	select_initial_space()
 
 	local file_name = os.date("%y%m%d%H%M%S.md")
-	local formatted_date = os.date("# %Y.%m.%d %a")
-	vim.cmd("execute 'e " .. M.current_path .. "/Zettelkasten/" .. file_name .. "'")
-	vim.api.nvim_buf_set_lines(0, 0, 0, false, { formatted_date })
+	local formatted_date = os.date("# %Y.%m.%d %a:")
+	local file_path = M.current_path .. "/Zettelkasten/" .. file_name
+
+	-- Check if file exists
+	local file = io.open(file_path, "r")
+	local file_exists = file ~= nil
+	if file then
+		file:close()
+	end
+
+	vim.cmd("execute 'e " .. file_path .. "'")
+
+	-- Only set the formatted date if the file didn't exist already.
+	-- This is an edge case to prevent a user from accidentally overwriting
+	-- the title header if they create a new note within the same second as another note.
+	if not file_exists then
+		vim.api.nvim_buf_set_lines(0, 0, 1, false, { formatted_date })
+	end
 end
 
 local function buf_is_empty(buf)
@@ -246,7 +261,7 @@ local function filter_files(files, pattern)
 	local n = 1
 	for _, f in ipairs(files) do
 		if f:match(pattern) then
-			filtered_files[n]= f
+			filtered_files[n] = f
 			n = n + 1
 		end
 	end
@@ -285,7 +300,7 @@ function M.prev()
 		return
 	end
 
-	for i,f in ipairs(filtered_files) do
+	for i, f in ipairs(filtered_files) do
 		if f == (dir .. name) then
 			if i > 1 then
 				vim.cmd("execute 'e " .. filtered_files[i + -1] .. "'")
@@ -312,7 +327,7 @@ function M.next()
 		return
 	end
 
-	for i,f in ipairs(filtered_files) do
+	for i, f in ipairs(filtered_files) do
 		if f == (dir .. name) then
 			if i < #filtered_files then
 				vim.cmd("execute 'e " .. filtered_files[i + 1] .. "'")
