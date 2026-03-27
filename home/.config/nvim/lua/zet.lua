@@ -7,8 +7,6 @@ M.current_path = ""
 M.spaces = {}
 M.spaces_len = 0
 
-local subspaces = { "Zettelkasten", "Diary", "Collections", "Reference" }
-
 -- select_initial_space is called at the start of most exported functions of this module to prompt the user to pick a collection if one wasn't selected already.
 local function select_initial_space()
 	if M.current_path == "" then
@@ -146,26 +144,6 @@ function M.search(subpath)
 
 	-- Pass opts to find_files
 	require("telescope.builtin").live_grep(opts)
-end
-
-function M.find_select()
-	vim.ui.select(subspaces, {
-		prompt = "Select subspace",
-	}, function(choice)
-		if choice == nil then return end
-
-		M.find("/" .. choice)
-	end)
-end
-
-function M.search_select()
-	vim.ui.select(subspaces, {
-		prompt = "Select subspace",
-	}, function(choice)
-		if choice == nil then return end
-
-		M.search("/" .. choice)
-	end)
 end
 
 -- open prompts the user for a name of a file and opens the file inside M.current_path.
