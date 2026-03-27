@@ -8,7 +8,7 @@ packer.startup(function(use)
 
 	use {
 		"williamboman/mason.nvim",
-		tag = "v2.0.1",
+		tag = "v2.2.1",
 		commit = "197f6352c276bbc2d25541dfce00ec50d1a4e88f",
 		config = function()
 			require("mason").setup()
@@ -49,7 +49,7 @@ packer.startup(function(use)
 	-- gitsigns adds git status symbols in the gutter
 	use {
 		"lewis6991/gitsigns.nvim",
-		tag = "v1.0.2",
+		tag = "v2.1.0",
 		commit = "7010000889bfb6c26065e0b0f7f1e6aa9163edd9",
 		config = function()
 			require("gitsigns").setup()
@@ -110,7 +110,7 @@ packer.startup(function(use)
 	-- nvim-tree provides a file-explorer tree with icon support
 	use {
 		"nvim-tree/nvim-tree.lua",
-		tag = "v1.14.0",
+		tag = "v1.16.0",
 		commit = "321bc61580fd066b76861c32de3319c3a6d089e7",
 		requires = {
 			"nvim-tree/nvim-web-devicons"
