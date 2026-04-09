@@ -326,6 +326,8 @@ function M.setup()
 			["t"] = { org.insert_task, "Insert a task below" },
 			["T"] = { function() org.insert_task({ above = true }) end, "Insert a task above" },
 			["x"] = { org.mark_task_finished, "Mark a task as finished" },
+			["<"] = { org.mark_task_rescheduled, "Mark a task as rescheduled" },
+			[">"] = { org.mark_task_migrated, "Mark a task as migrated" },
 			["s"] = { 'o<Esc>"=strftime("<%Y.%m.%d %a>")<cr>P', "Add a timestamp" },
 		},
 		p = {

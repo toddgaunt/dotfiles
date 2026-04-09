@@ -73,28 +73,36 @@ end
 
 -- MarkTaskUnfinished marks a task as unfinished.
 function M.mark_task_unfinished()
-	local line = vim.api.nvim_get_current_line()
-	local sub, count = string.gsub(line, fullTaskPattern, "%1- [ ] %2", 1)
-	if count == 1 then
-		vim.api.nvim_set_current_line(sub)
-	end
+	mark_task(" ")()
 end
 
 -- mark_task_in_progress marks a task as in progress.
 function M.mark_task_in_progress()
-	local line = vim.api.nvim_get_current_line()
-	local sub, count = string.gsub(line, taskPattern, "%1- [@]", 1)
-	if count == 1 then
-		vim.api.nvim_set_current_line(sub)
-	end
+	mark_task(".")()
 end
 
 -- mark_task_finished marks a task as finished.
 function M.mark_task_finished()
-	local line = vim.api.nvim_get_current_line()
-	local sub, count = string.gsub(line, taskPattern, "%1- [X]", 1)
-	if count == 1 then
-		vim.api.nvim_set_current_line(sub)
+	mark_task("X")()
+end
+
+-- mark_task_rescheduled marks a task as rescheduled to some point in the future.
+function M.mark_task_rescheduled()
+	mark_task("<")()
+end
+
+-- mark_task_migrated marks a task as migrated to the next day.
+function M.mark_task_migrated()
+	mark_task(">")()
+end
+
+function mark_task(symbol)
+	return function()
+		local line = vim.api.nvim_get_current_line()
+		local sub, count = string.gsub(line, taskPattern, "%1- [" .. symbol .. "]", 1)
+		if count == 1 then
+			vim.api.nvim_set_current_line(sub)
+		end
 	end
 end
 
