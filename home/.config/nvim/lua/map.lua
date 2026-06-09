@@ -67,6 +67,8 @@ function M.setup()
 	vim.keymap.set("c", "<C-a>", "<C-b>", { noremap = true })
 	vim.keymap.set("c", "<C-b>", "<Left>", { noremap = true })
 	vim.keymap.set("c", "<C-f>", "<Right>", { noremap = true })
+	vim.keymap.set("c", "<C-c>", function () vim.fn.setreg("+", vim.fn.getcmdline()) end, { noremap = true })
+	vim.keymap.set("c", "<C-v>", "<C-r>+", { noremap = true })
 
 	-- [[Visual mode search]] --
 	map("v", "/", "<esc>/\\%V", { noremap = true, silent = false })
@@ -146,7 +148,7 @@ function M.setup()
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 		["<C-space>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
-		["<cr>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		--["<cr>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
 			["x"] = {
 				name = "X.509",
