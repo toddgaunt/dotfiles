@@ -1,7 +1,12 @@
 local M = {
+	-- servers contains the list of LSP servers to attach. An entry can either be
+	-- a string which is just the server name, in which case it will use the default
+	-- configuration for that server. Alternatively, if that server requires custom
+	-- configuration you can supply a two item table containing a "name" field and
+	-- a "conf" function that accepts LSP capabilities and an on_attach function.
 	servers = {
 		--{
-		--	name ="gopls",
+		--	name = "gopls",
 		--	conf = function (capabilities, on_attach)
 		--		local util = require("lspconfig/util")
 		--		return {
@@ -40,8 +45,8 @@ local M = {
 		--	end
 		--},
 		--{
-		--	name="lua_ls",
-		--	conf= function(capabilities, on_attach)
+		--	name = "lua_ls",
+		--	conf = function(capabilities, on_attach)
 		--		return {
 		--			capabilities = capabilities,
 		--			on_attach = on_attach,
@@ -69,8 +74,45 @@ local M = {
 		--		}
 		--	end
 		--},
+		{
+			name = "pyright",
+			conf = function(capabilities, on_attach)
+				return {
+					capabilities = capabilities,
+					on_attach = on_attach,
+					handlers = {
+						-- Override the default rename handler to remove the `annotationId` from edits.
+						--
+						-- Pyright is being non-compliant here by returning `annotationId` in the edits, but not
+						-- populating the `changeAnnotations` field in the `WorkspaceEdit`. This causes Neovim to
+						-- throw an error when applying the workspace edit.
+						--
+						-- See:
+						-- - https://github.com/neovim/neovim/issues/34731
+						-- - https://github.com/microsoft/pyright/issues/10671
+						[vim.lsp.protocol.Methods.textDocument_rename] = function(err, result, ctx)
+							if err then
+								vim.notify('Pyright rename failed: ' .. err.message, vim.log.levels.ERROR)
+								return
+							end
+
+							---@cast result lsp.WorkspaceEdit
+							for _, change in ipairs(result.documentChanges or {}) do
+								for _, edit in ipairs(change.edits or {}) do
+									if edit.annotationId then
+										edit.annotationId = nil
+									end
+								end
+							end
+
+							local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+							vim.lsp.util.apply_workspace_edit(result, client.offset_encoding)
+						end,
+					},
+				}
+			end,
+		},
 		"bashls",
-		"pyright",
 		"clojure_lsp",
 		"ts_ls",
 		"rust_analyzer",
@@ -217,8 +259,8 @@ function M.setup()
 			vim.lsp.config(lsp, { capabilities = capabilities, on_attach = on_attach })
 			vim.lsp.enable(lsp)
 		else
-			--vim.lsp.config(lsp.name, lsp.conf(capabilities, on_attach))
-			--vim.lsp.enable(lsp.name)
+			vim.lsp.config(lsp.name, lsp.conf(capabilities, on_attach))
+			vim.lsp.enable(lsp.name)
 		end
 	end
 end
