@@ -66,46 +66,48 @@ packer.startup(function(use)
 		end
 	}
 
+	-- NOTE: nvim-treesitter was archived April 3rd 2026 because the maintainer got tired of idiots (Valid).
 	-- treesitter provides better syntax highlighting based on parsing the code instead of regex
 	-- No tag or commit is to allow for automatic updates since this plugin has frequent fixes.
-	use {
-		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = {
-					"c",
-					"lua",
-					"vim",
-					"bash",
-					"go",
-					"html",
-					"javascript",
-					"json",
-					"latex",
-					"markdown",
-					"markdown_inline",
-					"python",
-					"query",
-					"regex",
-					"tsx",
-					"typescript",
-					"yaml",
-				},
-				sync_install = false,
-				auto_install = true,
-				indent = {
-					enable = true
-				},
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-				},
-				modules = {},
-				ignore_install = {},
-			})
-		end,
-	}
+	--use {
+	--	"nvim-treesitter/nvim-treesitter",
+	--	run = ":TSUpdate",
+	--	commit = "cf12346a3414fa1b06af75c79faebe7f76df080a",
+	--	config = function()
+	--		require("nvim-treesitter.configs").setup({
+	--			ensure_installed = {
+	--				"c",
+	--				"lua",
+	--				"vim",
+	--				"bash",
+	--				"go",
+	--				"html",
+	--				"javascript",
+	--				"json",
+	--				"latex",
+	--				"markdown",
+	--				"markdown_inline",
+	--				"python",
+	--				"query",
+	--				"regex",
+	--				"tsx",
+	--				"typescript",
+	--				"yaml",
+	--			},
+	--			sync_install = false,
+	--			auto_install = true,
+	--			indent = {
+	--				enable = true
+	--			},
+	--			highlight = {
+	--				enable = true,
+	--				additional_vim_regex_highlighting = false,
+	--			},
+	--			modules = {},
+	--			ignore_install = {},
+	--		})
+	--	end,
+	--}
 
 	-- nvim-tree provides a file-explorer tree with icon support
 	use {
