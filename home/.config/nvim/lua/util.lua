@@ -157,7 +157,7 @@ function M.set_env_var()
 				if newVar == nil or newVal == nil then
 					print("Invalid input")
 				else
-					print("Set " .. newVar.."=" .. newVal)
+					print("Set " .. newVar .. "=" .. newVal)
 					vim.fn.setenv(newVar, newVal)
 					var = newVar
 					val = newVal
@@ -499,11 +499,11 @@ function M.split_tab()
 end
 
 function M.goto_prev_err()
-	vim.diagnostic.jump({count = -1, float = false})
+	vim.diagnostic.jump({ count = -1, float = false })
 end
 
 function M.goto_next_err()
-	vim.diagnostic.jump({count =  1, float = false})
+	vim.diagnostic.jump({ count = 1, float = false })
 end
 
 return M
