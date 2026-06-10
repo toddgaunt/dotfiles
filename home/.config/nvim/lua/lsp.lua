@@ -44,36 +44,36 @@ local M = {
 		--		}
 		--	end
 		--},
-		--{
-		--	name = "lua_ls",
-		--	conf = function(capabilities, on_attach)
-		--		return {
-		--			capabilities = capabilities,
-		--			on_attach = on_attach,
-		--			settings = {
-		--				Lua = {
-		--					runtime = {
-		--						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-		--						version = "LuaJIT",
-		--					},
-		--					diagnostics = {
-		--						-- Recognize the neovim provided 'vim' global variable.
-		--						globals = { "vim" },
-		--					},
-		--					workspace = {
-		--						-- Make the server aware of Neovim runtime files
-		--						library = vim.api.nvim_get_runtime_file("", true),
-		--						checkThirdParty = false,
-		--					},
-		--					telemetry = {
-		--						-- Do not send telemetry data containing a randomized but unique identifier
-		--						enable = false,
-		--					},
-		--				}
-		--			}
-		--		}
-		--	end
-		--},
+		{
+			name = "lua_ls",
+			conf = function(capabilities, on_attach)
+				return {
+					capabilities = capabilities,
+					on_attach = on_attach,
+					settings = {
+						Lua = {
+							runtime = {
+								-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+								version = "LuaJIT",
+							},
+							diagnostics = {
+								-- Recognize the neovim provided 'vim' global variable.
+								globals = { "vim" },
+							},
+							workspace = {
+								-- Make the server aware of Neovim runtime files
+								library = vim.api.nvim_get_runtime_file("", true),
+								checkThirdParty = false,
+							},
+							telemetry = {
+								-- Do not send telemetry data containing a randomized but unique identifier
+								enable = false,
+							},
+						}
+					}
+				}
+			end
+		},
 		{
 			name = "pyright",
 			conf = function(capabilities, on_attach)
@@ -118,7 +118,6 @@ local M = {
 		"rust_analyzer",
 		"pico8_ls",
 		"gopls",
-		"lua_ls",
 	}
 }
 
