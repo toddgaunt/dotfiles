@@ -159,6 +159,44 @@ function M.open()
 	end)
 end
 
+-- find uses Telescope to find a named note based on its filename inside M.current_path/Collections.
+-- The user can choose to create a file from the search using the binding provided (Default is <C-x>)
+function M.find_open(binding)
+	binding = binding or "<C-x>"
+
+	select_initial_space()
+
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	require("telescope.builtin").find_files({
+		prompt_title = "<CR> to open, " .. binding .. " to create",
+		cwd = M.current_path .. "/Collections",
+		initial_mode = "insert",
+		attach_mappings = function(prompt_bufnr, map)
+			local create_from_prompt = function()
+				local name = action_state.get_current_line()
+				actions.close(prompt_bufnr)
+				if name == nil or name == "" then
+					return
+				end
+				if not name:match("%.md$") then
+					name = name .. ".md"
+				end
+
+				vim.cmd("e " .. M.current_path .. "/Collections/" .. name)
+			end
+
+			-- Provide shortcuts to create a file in case the entered name partially
+			-- matches an existing file that the user doesn't want to reuse.
+			map("i", binding, create_from_prompt)
+			map("n", binding, create_from_prompt)
+
+			return true
+		end,
+	})
+end
+
 -- new creates a new file in M.current_path with an automatic unique filename.
 function M.new()
 	select_initial_space()

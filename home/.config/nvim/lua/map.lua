@@ -431,7 +431,7 @@ function M.setup()
 			["f"] = { zet.find, "Find a note" },
 			["s"] = { zet.select, "Select space" },
 			["l"] = { zet.link, "Insert a link to a note" },
-			["n"] = { zet.open, "Create a collection" },
+			["n"] = { zet.find_open, "Open or create a named collection" },
 			["z"] = { zet.new, "Create a new note" },
 			-- Diary specific bindings
 			["d"] = { zet.daily, "Open daily entry" },
