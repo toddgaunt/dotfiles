@@ -182,7 +182,7 @@ function M.setup()
 	-- [[Leader key mappings for all modes]] --
 	local mappings = {
 		["~"] = { "<cmd>e ~/.scripts.md<cr>", "Open scripts file" },
-		["."] = { util.cd_to_buf, "Change directory to buffer" },
+		["."] = { util.tcd_to_buf, "Change directory to buffer" },
 		[','] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['/'] = { util.live_grep, "Find pattern in files" },

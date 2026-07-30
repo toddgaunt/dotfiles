@@ -258,13 +258,13 @@ function M.find_buffer_relative_pattern()
 	require("telescope.builtin").live_grep(search_opts)
 end
 
-function M.cd_to_buf()
-	M.yes_no("Change directory to buffer's directory? ", function()
+function M.tcd_to_buf()
+	M.yes_no("Change tab's directory to buffer's directory? ", function()
 		local dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-		vim.cmd("cd " .. dir)
-		print("cd " .. dir)
+		vim.cmd("tcd " .. dir)
+		print("tcd " .. dir)
 	end, function()
-		print("cd cancelled")
+		print("tcd cancelled")
 	end)
 end
 
