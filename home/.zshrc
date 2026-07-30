@@ -90,7 +90,7 @@ alias python='python3'
 alias cx='chmod +x'
 alias e='edit'
 alias g='grimoire'
-alias grep='rg'
+#alias grep='rg'
 alias sxiv='sxiv -a'
 alias genrsa='openssl genrsa'
 alias archive-url="archive-url --directory=$HOME/Annex/Sites"
