@@ -34,6 +34,8 @@ valgrind
 
 ## Documentation
 texlive
+texlive-plantuml
+texline-enumitem
 
 ## Compiler Toolchains
 make
@@ -61,3 +63,6 @@ go install golang.org/x/tools/gopls@latest
 # CKAN for KSP
 #sudo dnf config-manager addrepo --from-repofile https://ksp-ckan.s3-us-west-2.amazonaws.com/rpm/stable/ckan_stable.repo
 #sudo dnf install ckan
+
+# Raspberry pi imaging tool
+#sudo dnf install rpi-imager
