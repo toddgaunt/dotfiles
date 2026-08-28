@@ -67,7 +67,7 @@ function M.setup()
 	vim.keymap.set("c", "<C-a>", "<C-b>", { noremap = true })
 	vim.keymap.set("c", "<C-b>", "<Left>", { noremap = true })
 	vim.keymap.set("c", "<C-f>", "<Right>", { noremap = true })
-	vim.keymap.set("c", "<C-c>", function () vim.fn.setreg("+", vim.fn.getcmdline()) end, { noremap = true })
+	vim.keymap.set("c", "<C-c>", function() vim.fn.setreg("+", vim.fn.getcmdline()) end, { noremap = true })
 	vim.keymap.set("c", "<C-v>", "<C-r>+", { noremap = true })
 
 	-- [[Visual mode search]] --
@@ -178,12 +178,11 @@ function M.setup()
 
 	-- [[Leader key mappings for all modes]] --
 	local mappings = {
-		["~"] = { "<cmd>e ~/.scripts.md<cr>", "Open scripts file" },
 		["."] = { util.tcd_to_buf, "Change directory to buffer" },
 		[','] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['/'] = { util.live_grep, "Find pattern in files" },
-		["?"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
+		["?"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer directory" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
 		["'"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
 		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
@@ -254,21 +253,17 @@ function M.setup()
 		g = {
 			name = "Git",
 			["A"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
-			["P"] = { "<cmd>Git push<cr>", "Push changes" },
-			["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
 			["c"] = { "<cmd>Git diff --staged<cr>", "Show staged diff" },
 			["C"] = { "<cmd>Git commit<cr>", "Commit changes" },
 			["a"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
 			["b"] = { "<cmd>Telescope git_branches<cr>", "Switch to branch" },
-			["d"] = { function() util.git_diff("Gvdiffsplit") end, "Diff against branch" },
-			["D"] = { util.git_diff_select_branch, "Select a diff branch" },
 			["F"] = { "<cmd>Git fetch<cr>", "Fetch updates" },
 			["g"] = { "<cmd>Telescope git_commits<cr>", "Switch to commit" },
 			["l"] = { "<cmd>Git log<cr>", "View commit log" },
-			["m"] = { "<cmd>Git mergetool<cr>", "Open the merge tool" },
+			["P"] = { "<cmd>Git push<cr>", "Push changes" },
 			["s"] = { "<cmd>Git<cr>", "Show status" },
+			["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
 			["w"] = { "<cmd>Gwrite<cr>", "Write changes in buffer" },
-			["r"] = { function() util.git_list_diff_files() end, "Review changed files" },
 		},
 		h = {
 			name = "Help",
@@ -306,7 +301,7 @@ function M.setup()
 		l = {
 			name = "LSP",
 			-- LSP information and meta-control
-			["a"] = { util.toggle_autocomplete, "Toggle autocomplete" },
+			["a"] = { util.toggle_autocomplete(true), "Toggle autocomplete (buffer)" },
 			["r"] = { lsp.restart, "Restart all active language servers" },
 			["x"] = { lsp.stop, "Stop LSP" },
 			["s"] = { lsp.start, "Start LSP" },

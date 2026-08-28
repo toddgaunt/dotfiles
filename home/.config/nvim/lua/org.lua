@@ -5,6 +5,16 @@ local fullTaskPattern = taskPattern .."%s*~?([^~]+)~?%s*"
 --local topTaskPattern = taskPattern .. "[^:]*:"
 local topTaskPattern = taskPattern .. ".-:\n"
 
+local function mark_task(symbol)
+	return function()
+		local line = vim.api.nvim_get_current_line()
+		local sub, count = string.gsub(line, taskPattern, "%1- [" .. symbol .. "]", 1)
+		if count == 1 then
+			vim.api.nvim_set_current_line(sub)
+		end
+	end
+end
+
 -- create_deadline inserts a deadline on the current task
 function M.create_deadline()
 	local pattern = "(%s*)%- %[[%s.]]%s*"
@@ -94,16 +104,6 @@ end
 -- mark_task_migrated marks a task as migrated to the next day.
 function M.mark_task_migrated()
 	mark_task(">")()
-end
-
-function mark_task(symbol)
-	return function()
-		local line = vim.api.nvim_get_current_line()
-		local sub, count = string.gsub(line, taskPattern, "%1- [" .. symbol .. "]", 1)
-		if count == 1 then
-			vim.api.nvim_set_current_line(sub)
-		end
-	end
 end
 
 return M

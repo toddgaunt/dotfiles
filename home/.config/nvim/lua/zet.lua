@@ -9,22 +9,21 @@ M.spaces_len = 0
 
 -- select_initial_space is called at the start of most exported functions of this module to prompt the user to pick a collection if one wasn't selected already.
 local function select_initial_space()
+	M.current_path = ""
 	if M.current_path == "" then
 		if M.spaces_len == 0 then
 			print("a space must be registered to create notes")
 			return
 		elseif M.spaces_len == 1 then
-			M.current_path = next(M.spaces)
+			M.current_path = M.spaces[next(M.spaces)]
 		else
 			M.select()
-			-- If the user fails to select a space, just return without creating a
-			-- note since they likely just wanted to cancel the action.
-			if M.current_path == "" then
-				return
-			end
 		end
 	end
 end
+
+-- If the user fails to select a space, just return without creating a
+-- note since they likely just wanted to cancel the action.
 
 -- register associates a name with a fullpath to a space.
 function M.register(name, fullpath)
@@ -73,6 +72,7 @@ end
 -- link finds a note using Telescope in M.current_path and insert's its name as a markdown link.
 function M.link()
 	select_initial_space()
+	if M.current_path == "" then return end
 
 	local opts = {
 		prompt_title = "Link Zettelkasten", -- Title for the picker
@@ -108,6 +108,7 @@ end
 -- find uses Telescope to find a note based on its filename inside M.current_path.
 function M.find(subpath)
 	select_initial_space()
+	if M.current_path == "" then return end
 
 	local cwd = M.current_path
 	if subpath ~= nil then
@@ -129,6 +130,7 @@ end
 -- search uses Telescope to find a note by pattern-matching its contents inside M.current_path.
 function M.search(subpath)
 	select_initial_space()
+	if M.current_path == "" then return end
 
 	local cwd = M.current_path
 	if subpath ~= nil then
@@ -149,6 +151,7 @@ end
 -- open prompts the user for a name of a file and opens the file inside M.current_path.
 function M.open()
 	select_initial_space()
+	if M.current_path == "" then return end
 
 	vim.ui.input({
 		prompt = "Input the name of the note: ",
@@ -165,6 +168,7 @@ function M.find_open(binding)
 	binding = binding or "<C-x>"
 
 	select_initial_space()
+	if M.current_path == "" then return end
 
 	local actions = require("telescope.actions")
 	local action_state = require("telescope.actions.state")
@@ -200,6 +204,7 @@ end
 -- new creates a new file in M.current_path with an automatic unique filename.
 function M.new()
 	select_initial_space()
+	if M.current_path == "" then return end
 
 	local file_name = os.date("%y%m%d%H%M%S.md")
 	local formatted_date = os.date("# %Y.%m.%d %a:")
@@ -248,11 +253,6 @@ end
 -- daily creates a new diary file for the current day in M.current_path/Diary with an automatic unique filename.
 function M.daily()
 	return new_diary("%Y-%m-%d.md", "# Daily <%Y.%m.%d %a>")
-end
-
--- weekly creates a new diary file for the current week in M.current_path/Diary with an automatic unique filename.
-function M.weekly()
-	return new_diary("%Y-w%V.md", "# Weekly <%Y %V/52>")
 end
 
 -- monthly creates a new diary file for the current month in M.current_path/Diary
@@ -365,6 +365,7 @@ end
 
 function M.todo()
 	select_initial_space()
+	if M.current_path == "" then return end
 	vim.cmd("e " .. M.current_path .. "/TODO.md")
 end
 
