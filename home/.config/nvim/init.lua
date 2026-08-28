@@ -382,12 +382,6 @@ packer.startup(function(use)
 	-- them very much, though I may want to try them again some day.  --
 	--------------------------------------------------------------------
 
-	-- vim-surround to edit your surroundings
-	--use {
-	--"tpope/vim-surround",
-	--commit = "3d188ed2113431cf8dac77be61b842acb64433d9",
-	--}
-
 	-- Pico-8
 	--use "git@github.com:Bakudankun/PICO-8.vim.git"
 
@@ -414,18 +408,6 @@ packer.startup(function(use)
 		},
 	}
 
-	-- copilot integrates Github Copilot with the editor for AI-driven code suggestions
-	--	use {
-	--		"github/copilot.vim",
-	--		config = function()
-	--			vim.keymap.set('i', '<C-f>', 'copilot#Accept("\\<CR>")', {
-	--				expr = true,
-	--				replace_keycodes = false
-	--			})
-	--			vim.g.copilot_no_tab_map = true
-	--			vim.g.copilot_enabled = true
-	--		end,
-	--	}
 end)
 
 -- Include other config files after plugins are loaded and configured.

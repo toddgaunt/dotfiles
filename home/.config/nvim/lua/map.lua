@@ -86,7 +86,7 @@ function M.setup()
 		["<F4>"] = { vim.lsp.buf.definition, "Go to definition" },
 		["<F5>"] = { util.goto_prev_err, "Go to previous error" },
 		["<F6>"] = { util.goto_next_err, "Go to next error" },
-		["<F7>"] = { util.format_file, "Format file" },
+		["<F7>"] = { lsp.format_file, "Format file" },
 		-- Universal shortcuts
 		["<C-c>"] = { '"+yy', "Copy selection into OS register" },
 		["<C-v>"] = { '"+p', "Paste the OS register" },
@@ -103,9 +103,6 @@ function M.setup()
 		-- Allow easy movement between softwrapped lines
 		["j"] = { "gj", "Down" },
 		["k"] = { "gk", "Up" },
-		-- Leap plugin movement
-		["s"] = { "<Plug>(leap-forward-to)", "Leap forward" },
-		["S"] = { "<Plug>(leap-backward-to)", "Leap backward" },
 		-- Emacs movement since it is so ingrained
 		["<C-a>"] = { "0", "Start of line" },
 		["<C-e>"] = { "$", "End of line" },
@@ -136,8 +133,6 @@ function M.setup()
 	-- visual mode selection to be passed to them.
 	wk.register({
 		-- Surround selected text with quotes
-		["'"] = { 'c\'<c-r>"\'<esc>', "Surround with '" },
-		['"'] = { 'c"<c-r>""<esc>', 'Surround with "' },
 		["v"] = { '<C-v>', "Block selection" },
 		["V"] = { '<S-v>', "Line selection" },
 		["s"] = { ":sort<cr>", "Sort selection (ascending)" },
@@ -176,6 +171,8 @@ function M.setup()
 				local text = util.get_visual_selection()
 				require("telescope.builtin").current_buffer_fuzzy_find({ default_text = text })
 			end, "Search buffer for selected text" },
+			["'"] = { 'c\'<c-r>"\'<esc>', "Surround with '" },
+			['"'] = { 'c"<c-r>""<esc>', 'Surround with "' },
 		}
 	}, { mode = "v", noremap = true, silent = true })
 
@@ -202,7 +199,7 @@ function M.setup()
 			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
 			["h"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
 			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
-			["S"] = { "<cmd>SnippyRestart<cr>", "Refresh the snippet cache" },
+			["S"] = { "<cmd>SnippyReload<cr>", "Refresh the snippet cache" },
 			["r"] = { "<cmd>source $MYVIMRC<cr>", "Reload config" },
 		},
 		b = {
@@ -225,7 +222,6 @@ function M.setup()
 
 			-- Appearance
 			["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
-			["h"] = { "<cmd>TSBufToggle highlight<cr>", "Toggle syntax highlighting for the buffer" },
 			["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
 			["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
 			["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },
@@ -357,7 +353,6 @@ function M.setup()
 			["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
 			["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
 			["f"] = { lsp.format_file, "Format buffer using LSP" },
-			['c'] = { "ds)db", "Delete surrounding function call" },
 		},
 		s = {
 			name = "Spellcheck",
