@@ -286,8 +286,6 @@ function M.setup()
 			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifers" },
 			["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
 			["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Find workspace identifiers" },
-			["j"] = { "<C-]>", "Jump to definition" },
-			["l"] = { "<C-t>", "Jump back" },
 			["x"] = { "<cmd>Inspect<cr>", "Inspect identifier" },
 
 		},
@@ -360,8 +358,6 @@ function M.setup()
 		},
 		t = {
 			name = "Tabs",
-			["h"] = { "<cmd>-tabnext<cr>", "Go to the next tab" },
-			["l"] = { "<cmd>+tabnext<cr>", "Go to the previous tab" },
 			["["] = { "<cmd>-tabnext<cr>", "Go to the previous tab" },
 			["]"] = { "<cmd>+tabnext<cr>", "Go to the next tab" },
 			["<"] = { "<cmd>tabmove -1<cr>", "Move tab to the left" },
@@ -416,7 +412,6 @@ function M.setup()
 		z = {
 			name = "Zettelkasten",
 			["."] = { zet.cd_to_current_collection, "Change dir to collection" },
-			["c"] = { zet.select, "Select a note-space" },
 			["p"] = { zet.search, "Find a pattern in a note" },
 			["f"] = { zet.find, "Find a note" },
 			["s"] = { zet.select, "Select space" },
@@ -434,7 +429,6 @@ function M.setup()
 		},
 	}
 
-	-- Register these mappings for both normal and visual mode.
 	wk.register(mappings, { mode = "n", prefix = "<leader>" })
 end
 
