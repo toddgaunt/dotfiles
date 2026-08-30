@@ -374,7 +374,16 @@ packer.startup(function(use)
 		commit = "93c329f7dad98565ad5db9634ced253d665c1760",
 		config = function()
 			require('snippy').setup({})
-		end,
+		end
+	}
+
+	-- Visualization for marks
+	use {
+		"chentoast/marks.nvim",
+		commit = "f353e8c08c50f39e99a9ed474172df7eddd89b72",
+		config = function()
+			require('marks').setup()
+		end
 	}
 
 	--------------------------------------------------------------------
@@ -407,8 +416,6 @@ packer.startup(function(use)
 			"neovim/nvim-lspconfig",
 		},
 	}
-
-
 end)
 
 -- Include other config files after plugins are loaded and configured.

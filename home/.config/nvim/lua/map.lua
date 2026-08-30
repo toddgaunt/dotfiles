@@ -180,6 +180,7 @@ function M.setup()
 	local mappings = {
 		["."] = { util.tcd_to_buf, "Change directory to buffer" },
 		[','] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
+		["-"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
 		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['/'] = { util.live_grep, "Find pattern in files" },
 		["?"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer directory" },
@@ -188,19 +189,12 @@ function M.setup()
 		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
 		--['%'] = { util.set_file_ignore_patterns({".*%.md",".*%.html",".*%.txt"}), "Set find ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
+		[';'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
 		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 		[' '] = { util.find_files, "Find a file" },
 		["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Find current file in the file tree" },
 		["<S-tab>"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
 		["<C-z>"] = { "<cmd>suspend<cr>", "Suspend process" },
-		a = {
-			name = "Actions",
-			['c'] = { "<cmd>checkhealth<cr>", "Check health" },
-			["h"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
-			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
-			["S"] = { "<cmd>SnippyReload<cr>", "Refresh the snippet cache" },
-			["r"] = { "<cmd>source $MYVIMRC<cr>", "Reload config" },
-		},
 		b = {
 			name = "Buffers",
 			["D"] = { util.bd(true), "Delete buffer (force)" },
@@ -218,7 +212,6 @@ function M.setup()
 		},
 		c = {
 			name = "Config",
-
 			-- Appearance
 			["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
 			["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
@@ -230,6 +223,9 @@ function M.setup()
 			["p"] = { "<cmd>set paste!<cr>", "Toggle paste mode" },
 			["t"] = { util.select_tab_length, "Pick tab length" },
 			["e"] = { util.set_env_var(), "Set environment variable" },
+
+			-- Actions
+			["R"] = { "<cmd>source $MYVIMRC<cr>", "Reload lua config" },
 		},
 		d = {
 			name = "Debug",
@@ -243,12 +239,15 @@ function M.setup()
 			["b"] = { "<cmd>DlvAddBreakpoint<cr>", "Set delve breakpoint" },
 		},
 		f = {
-			name = "Files",
-			["f"] = { util.find_files, "Find a file" },
-			["o"] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
-			["p"] = { util.live_grep, "Find pattern in files" },
-			["r"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
-			["t"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
+			name = "Find",
+			["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifer" },
+			["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifer" },
+			["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifer" },
+			["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifer" },
+			["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifer" },
+			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Document identifers" },
+			["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Type of identifier" },
+			["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace identifiers" },
 		},
 		g = {
 			name = "Git",
@@ -276,25 +275,12 @@ function M.setup()
 			["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
 		},
 		i = {
-			name = "Identifiers",
-			["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifer" },
-			["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifer" },
-			["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifer" },
-			["k"] = { vim.lsp.buf.hover, "Show identifer information" },
-			["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifer" },
-			["r"] = { "<cmd>Telescope lsp_references<cr>", "Find references to the identifer" },
-			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Find document identifers" },
-			["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Find type of identifier" },
-			["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Find workspace identifiers" },
-			["x"] = { "<cmd>Inspect<cr>", "Inspect identifier" },
-
-		},
-		k = {
 			name = "Inspect",
 			["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
 			["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
 			["b"] = { util.print_buf_name, "Show current buffer name" },
 			["i"] = { "<cmd>Inspect<cr>", "Inspect identifier" },
+			["k"] = { vim.lsp.buf.hover, "Show identifer information" },
 		},
 		l = {
 			name = "LSP",
@@ -305,7 +291,8 @@ function M.setup()
 			["s"] = { lsp.start, "Start LSP" },
 			["i"] = { "<cmd>LspInfo<cr>", "Show language server status" },
 			["l"] = { "<cmd>LspLog<cr>", "Show language server log" },
-			["c"] = { util.copilot_toggle, "Toggle Github Copilot for buffer" },
+			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
+			["S"] = { "<cmd>SnippyReload<cr>", "Refresh the snippet cache" },
 		},
 		o = {
 			name = "Organize",
@@ -330,6 +317,7 @@ function M.setup()
 			["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
 			["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
 			["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
+			['h'] = { "<cmd>checkhealth<cr>", "Check health" },
 		},
 		q = {
 			name = "Sessions",
@@ -348,7 +336,7 @@ function M.setup()
 			["f"] = { lsp.format_file, "Format buffer using LSP" },
 		},
 		s = {
-			name = "Spellcheck",
+			name = "Spelling",
 			["a"] = { "zg", "Add word to dictionary" },
 			["]"] = { "]s", "Go to next spelling error" },
 			["["] = { "[s", "Go to previous spelling error" },
