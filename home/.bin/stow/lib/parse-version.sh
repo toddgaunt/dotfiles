@@ -1,3 +1,6 @@
+# parse-version.sh
+# parse-version provides a utility function to parse semVer schemes.
+
 function parse-version() {
 	local version
 	version="$(echo "$1" | grep -oe '[[:digit:]]\.[[:digit:]]\+\(\.[[:digit:]]\+\)\?')"
