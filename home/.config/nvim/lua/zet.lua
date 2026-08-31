@@ -9,7 +9,6 @@ M.spaces_len = 0
 
 -- select_initial_space is called at the start of most exported functions of this module to prompt the user to pick a collection if one wasn't selected already.
 local function select_initial_space()
-	M.current_path = ""
 	if M.current_path == "" then
 		if M.spaces_len == 0 then
 			print("a space must be registered to create notes")
@@ -366,6 +365,7 @@ end
 function M.todo()
 	select_initial_space()
 	if M.current_path == "" then return end
+
 	vim.cmd("e " .. M.current_path .. "/TODO.md")
 end
 
