@@ -56,7 +56,7 @@ function M.insert_task(opts)
 	local task = '- [ ] '
 
 	if case1 ~= nil then
-		task = case1 .. "\t" .. task
+		task = case1 .. "  " .. task
 	elseif case2 ~= nil then
 		task = case2 .. task
 	end
