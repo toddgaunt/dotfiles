@@ -123,7 +123,6 @@ local M = {
 
 local function cmp_capabilities()
 	local cmp = require("cmp")
-	local types = require('cmp.types')
 
 	cmp.setup {
 		-- Don't autoselect an item or automatically insert it.

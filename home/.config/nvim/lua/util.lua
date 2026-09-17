@@ -1,6 +1,4 @@
-local M = {
-	diff_branch = "master"
-}
+local M = {}
 
 function M.yes_no(prompt, yes_fn, no_fn)
 	vim.ui.input({

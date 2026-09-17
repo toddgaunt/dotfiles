@@ -16,6 +16,7 @@ function M.setup()
 	local zet = require("zet")
 	local org = require("org")
 	local lsp = require("lsp")
+	local gitreview = require("gitreview")
 
 	-- The util module contains functions that integrate plugins better
 	local util = require("util")
@@ -173,6 +174,12 @@ function M.setup()
 			end, "Search buffer for selected text" },
 			["'"] = { 'c\'<c-r>"\'<esc>', "Surround with '" },
 			['"'] = { 'c"<c-r>""<esc>', 'Surround with "' },
+			['g'] = {
+				name = "Git",
+				-- A comment over a range of lines can only be made from visual mode,
+				-- so the binding has to exist in both.
+				["n"] = { gitreview.comment_line, "Comment on the reviewed lines" },
+			},
 		}
 	}, { mode = "v", noremap = true, silent = true })
 
@@ -248,7 +255,9 @@ function M.setup()
 			["F"] = { "<cmd>Git fetch<cr>", "Fetch updates" },
 			["g"] = { "<cmd>Telescope git_commits<cr>", "Switch to commit" },
 			["l"] = { "<cmd>Git log<cr>", "View commit log" },
+			["n"] = { gitreview.comment_line, "Comment on the reviewed line" },
 			["P"] = { "<cmd>Git push<cr>", "Push changes" },
+			["r"] = { gitreview.select_branch, "Review against select branch" },
 			["s"] = { "<cmd>Git<cr>", "Show status" },
 			["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
 			["w"] = { "<cmd>Gwrite<cr>", "Write changes in buffer" },

@@ -35,7 +35,12 @@ function M.setup()
 	vim.opt.listchars = "tab:>·,trail:+"
 	vim.opt.list = true
 	vim.opt.showtabline = 1
-	vim.opt.foldenable = false
+	vim.opt.foldenable = true
+
+	-- Diffs: the default already aligns changed lines and highlights the changed
+	-- part of a line (linematch, inline:char), this just picks a diff algorithm
+	-- with better hunk boundaries than the default.
+	vim.opt.diffopt:append("algorithm:histogram")
 
 	-- Built-in Completion Settings
 	vim.cmd("set omnifunc=syntaxcomplete#Complete")
