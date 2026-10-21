@@ -74,6 +74,21 @@ function M.setup()
 	-- [[Visual mode search]] --
 	map("v", "/", "<esc>/\\%V", { noremap = true, silent = false })
 
+	-- [[Mouse mappings]] --
+	-- Double-click a closed fold to open it, or the first line of an open fold
+	-- to close it. Anywhere else keeps the default word selection.
+	vim.keymap.set("n", "<2-LeftMouse>", function()
+		local lnum = vim.fn.line(".")
+		if vim.fn.foldclosed(lnum) ~= -1 then
+			return "zo"
+		end
+		local level = vim.fn.foldlevel(lnum)
+		if level > 0 and level > vim.fn.foldlevel(lnum - 1) then
+			return "zc"
+		end
+		return "<2-LeftMouse>"
+	end, { expr = true, silent = true })
+
 	-- [[Normal mode mappings]] --
 	wk.register({
 		['y#'] = { util.get_loc, "Yank line of code" },
