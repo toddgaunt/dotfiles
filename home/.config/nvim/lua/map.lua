@@ -193,7 +193,7 @@ function M.setup()
 				name = "Git",
 				-- A comment over a range of lines can only be made from visual mode,
 				-- so the binding has to exist in both.
-				["n"] = { gitreview.comment_line, "Comment on the reviewed lines" },
+				["c"] = { gitreview.comment_line, "Comment on the reviewed lines" },
 			},
 		}
 	}, { mode = "v", noremap = true, silent = true })
@@ -263,14 +263,14 @@ function M.setup()
 		g = {
 			name = "Git",
 			["A"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
-			["c"] = { "<cmd>Git diff --staged<cr>", "Show staged diff" },
 			["C"] = { "<cmd>Git commit<cr>", "Commit changes" },
 			["a"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
 			["b"] = { "<cmd>Telescope git_branches<cr>", "Switch to branch" },
+			["c"] = { gitreview.comment_line, "Comment on the reviewed line" },
+			["d"] = { "<cmd>Git diff --staged<cr>", "Show staged diff" },
 			["F"] = { "<cmd>Git fetch<cr>", "Fetch updates" },
 			["g"] = { "<cmd>Telescope git_commits<cr>", "Switch to commit" },
 			["l"] = { "<cmd>Git log<cr>", "View commit log" },
-			["n"] = { gitreview.comment_line, "Comment on the reviewed line" },
 			["P"] = { "<cmd>Git push<cr>", "Push changes" },
 			["r"] = { gitreview.select_branch, "Review against select branch" },
 			["s"] = { "<cmd>Git<cr>", "Show status" },
