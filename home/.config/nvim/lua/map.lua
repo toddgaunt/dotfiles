@@ -143,7 +143,7 @@ function M.setup()
 		["<C-v>"] = { 'c<C-R>+<esc>', "Paste selection from OS register" },
 		["<C-x>"] = { '"+d', "Copy selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
-		["<C-space>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
+		["<C-space>"] = { ":<C-u>call slime#send_op(visualmode(), 1)<cr>", "Send selection to SLIME" },
 		--["<cr>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
 			["x"] = {
