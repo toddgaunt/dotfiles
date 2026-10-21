@@ -46,6 +46,16 @@ packer.startup(function(use)
 		end
 	}
 
+	-- nvim-scrollbar shows a scrollbar with diagnostic and cursor marks
+	use {
+		"petertriho/nvim-scrollbar",
+		tag = "v1.0.0",
+		commit = "f8e87b96cd6362ef8579be456afee3b38fd7e2a8",
+		config = function()
+			require("scrollbar").setup()
+		end,
+	}
+
 	-- gitsigns adds git status symbols in the gutter
 	use {
 		"lewis6991/gitsigns.nvim",
@@ -53,6 +63,7 @@ packer.startup(function(use)
 		commit = "7010000889bfb6c26065e0b0f7f1e6aa9163edd9",
 		config = function()
 			require("gitsigns").setup()
+			require("scrollbar.handlers.gitsigns").setup()
 		end,
 	}
 

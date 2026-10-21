@@ -161,6 +161,7 @@ function M.setup()
 		["<C-space>"] = { ":<C-u>call slime#send_op(visualmode(), 1)<cr>", "Send selection to SLIME" },
 		--["<cr>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
+			['#'] = { util.goto_selected_loc, "Go to selected line of code" },
 			["x"] = {
 				name = "X.509",
 				["x"] = { "!xxd<cr>", "Selection hex dump" },
@@ -194,6 +195,9 @@ function M.setup()
 				-- A comment over a range of lines can only be made from visual mode,
 				-- so the binding has to exist in both.
 				["c"] = { gitreview.comment_line, "Comment on the reviewed lines" },
+				["a"] = { function()
+					require("gitsigns").stage_hunk({ vim.fn.line("v"), vim.fn.line(".") })
+				end, "Stage or unstage selected lines" },
 			},
 		}
 	}, { mode = "v", noremap = true, silent = true })
@@ -203,6 +207,7 @@ function M.setup()
 		["."] = { util.tcd_to_buf, "Change directory to buffer" },
 		[','] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		["-"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
+		['#'] = { util.goto_cursor_loc, "Go to line of code under cursor" },
 		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
 		['/'] = { util.live_grep, "Find pattern in files" },
 		["?"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer directory" },
@@ -264,7 +269,7 @@ function M.setup()
 			name = "Git",
 			["A"] = { "<cmd>Git commit --amend<cr>", "Amend commit" },
 			["C"] = { "<cmd>Git commit<cr>", "Commit changes" },
-			["a"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
+			["a"] = { function() require("gitsigns").stage_hunk() end, "Stage or unstage hunk" },
 			["b"] = { "<cmd>Telescope git_branches<cr>", "Switch to branch" },
 			["c"] = { gitreview.comment_line, "Comment on the reviewed line" },
 			["d"] = { "<cmd>Git diff --staged<cr>", "Show staged diff" },
@@ -275,7 +280,7 @@ function M.setup()
 			["r"] = { gitreview.select_branch, "Review against select branch" },
 			["s"] = { "<cmd>Git<cr>", "Show status" },
 			["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
-			["w"] = { "<cmd>Gwrite<cr>", "Write changes in buffer" },
+			["w"] = { "<cmd>Git blame<cr>", "Show line authors (blame)" },
 		},
 		h = {
 			name = "Help",
