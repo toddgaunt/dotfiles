@@ -3,7 +3,7 @@
 local M = {}
 
 function M.setup()
-	-- British
+	-- English
 	vim.opt.spelllang = 'en_us'
 
 	-- Record the git branch name in a buffer local variable
