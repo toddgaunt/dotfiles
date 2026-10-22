@@ -225,11 +225,25 @@ local function render_list(state)
 		table.insert(lines, entry.status .. "  " .. display_path(entry))
 	end
 
+	-- A branch that has not diverged from its target yet is still worth a review to
+	-- sit in, so that r can be pressed once there is something to look at.
+	if #lines == 0 then
+		lines = { "(no changes)" }
+	end
+
 	vim.bo[state.list_buf].modifiable = true
 	vim.api.nvim_buf_set_lines(state.list_buf, 0, -1, false, lines)
 	vim.bo[state.list_buf].modifiable = false
 
 	vim.api.nvim_buf_clear_namespace(state.list_buf, ns, 0, -1)
+	if #state.entries == 0 then
+		vim.api.nvim_buf_set_extmark(state.list_buf, ns, 0, 0, {
+			end_col = #lines[1],
+			hl_group = "Comment",
+		})
+		return
+	end
+
 	for i, entry in ipairs(state.entries) do
 		local hl = nil
 		if entry.status == "A" then
@@ -398,10 +412,34 @@ local function setup_panel(win, side, entry)
 		{ win = win, scope = "local" })
 end
 
--- load_entry loads the file at index idx into the two diff panels.
+-- clear_panels empties both diff panels, for a review with nothing to show. The
+-- panels would otherwise keep the last file they were given, or the file list
+-- itself on a review that opened with no changes at all, since a window starts out
+-- sharing the buffer of the one it was split from.
+local function clear_panels(state)
+	vim.api.nvim_win_call(state.base_win, function()
+		vim.cmd("diffoff!")
+	end)
+
+	for _, panel in ipairs({
+		{ win = state.base_win, side = "merge-base" },
+		{ win = state.work_win, side = "working-tree" },
+	}) do
+		-- A name of its own per side, so neither panel is left holding the buffer
+		-- the other one is showing.
+		local name = "gitreview://" .. state.tab .. "/empty/" .. panel.side
+		vim.api.nvim_win_set_buf(panel.win, scratch_buf(name, ""))
+		vim.api.nvim_set_option_value("statusline", panel.side,
+			{ win = panel.win, scope = "local" })
+	end
+end
+
+-- load_entry loads the file at index idx into the two diff panels, or empties them
+-- when there is no such entry, which is the whole review when nothing has changed.
 local function load_entry(state, idx)
 	local entry = state.entries[idx]
 	if entry == nil then
+		clear_panels(state)
 		return
 	end
 
@@ -477,11 +515,6 @@ local function refresh(state)
 	local entries, msg = changed_files(state.root, state.base)
 	if entries == nil then
 		err("could not diff against " .. state.branch .. ": " .. msg)
-		return
-	end
-
-	if #entries == 0 then
-		err("no changes against " .. state.branch)
 		return
 	end
 
@@ -674,11 +707,6 @@ function M.open_against(branch)
 	entries, msg = changed_files(root, base)
 	if entries == nil then
 		err("could not diff against " .. branch .. ": " .. msg)
-		return
-	end
-
-	if #entries == 0 then
-		vim.notify("gitreview: no changes against " .. branch)
 		return
 	end
 
