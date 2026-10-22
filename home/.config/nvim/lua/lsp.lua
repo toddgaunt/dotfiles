@@ -231,9 +231,6 @@ end
 function M.setup()
 	local capabilities = cmp_capabilities()
 
-	local lspconfig = require("lspconfig")
-	--local configs = require('lspconfig.configs')
-
 	-- Default options when creating keymaps.
 	local opts = { noremap = true, silent = true }
 
