@@ -237,8 +237,8 @@ function M.setup()
 	-- Default options when creating keymaps.
 	local opts = { noremap = true, silent = true }
 
-	vim.api.nvim_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-	vim.api.nvim_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
+	--vim.api.nvim_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
+	--vim.api.nvim_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
 
 	-- Use an on_attach function to only map the following keys
 	-- after the language server attaches to the current buffer

@@ -16,10 +16,11 @@ function M.setup()
 	local zet = require("zet")
 	local org = require("org")
 	local lsp = require("lsp")
-	local gitreview = require("gitreview")
-
+	local loc = require("loc")
 	-- The util module contains functions that integrate plugins better
 	local util = require("util")
+	-- gitreview adds a useful git review mode
+	local gitreview = require("gitreview")
 
 	-- Load which-key, the best neovim plugin.
 	local wk = require('which-key')
@@ -91,27 +92,25 @@ function M.setup()
 
 	-- [[Normal mode mappings]] --
 	wk.register({
-		['y#'] = { util.get_loc, "Yank line of code" },
+		['y#'] = { loc.get_loc, "Yank line of code" },
 		['y@'] = { util.yank_filename, "Yank file name" },
 		["+"] = { "<C-a>", "Increment number" },
 		["-"] = { "<C-x>", "Decrement number" },
 		["<C-/>"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
 		["<F1>"] = { "<cmd>WhichKey<cr>", "Show keybindings" },
-		["<F2>"] = { vim.lsp.buf.rename, "Rename identifer" },
+		["<F2>"] = { vim.lsp.buf.rename, "Rename identifier" },
 		["<F3>"] = { vim.lsp.buf.references, "Open a list of references" },
 		["<F4>"] = { vim.lsp.buf.definition, "Go to definition" },
 		["<F5>"] = { util.goto_prev_err, "Go to previous error" },
 		["<F6>"] = { util.goto_next_err, "Go to next error" },
-		["<F7>"] = { lsp.format_file, "Format file" },
+		["<F7>"] = { lsp.format_file, "Format buffer" },
 		-- Universal shortcuts
-		["<C-c>"] = { '"+yy', "Copy selection into OS register" },
+		["<C-c>"] = { '"+yy', "Copy line into OS register" },
 		["<C-v>"] = { '"+p', "Paste the OS register" },
 		["<C-s>"] = { "<cmd>write<cr>", "Save buffer" },
-		["<C-z>"] = { "u", "undo" },
-		["<C-y>"] = { "<C-r>", "redo" },
-		["<C-x>"] = { '"+dd', "cut line" },
-		["<C-f>"] = { "/", "Search forward" },
-		["<C-S-f>"] = { "?", "Search backward" },
+		["<C-z>"] = { "u", "Undo" },
+		["<C-y>"] = { "<C-r>", "Redo" },
+		["<C-x>"] = { '"+dd', "Cut line" },
 		-- Slime
 		["<C-space>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		--["<cr>"] = { "<cmd>SlimeSend<cr>", "Send current line or selection to SLIME" },
@@ -129,10 +128,10 @@ function M.setup()
 		["<A-n>"] = { "gj", "Down (virtual)" },
 		["<A-p>"] = { "gk", "Up (virtual)" },
 		-- Easy movement between windows
-		["<C-h>"] = { "<C-w>h", "Move to window on left" },
-		["<C-j>"] = { "<C-w>j", "Move to window below" },
-		["<C-k>"] = { "<C-w>k", "Move to window above" },
-		["<C-l>"] = { "<C-w>l", "Move to window on right" },
+		["<C-h>"] = { "<C-w>h", "Go to left window" },
+		["<C-j>"] = { "<C-w>j", "Go to below window" },
+		["<C-k>"] = { "<C-w>k", "Go to above window" },
+		["<C-l>"] = { "<C-w>l", "Go to right window" },
 	}, { mode = "n", noremap = true, silent = true })
 
 	-- [[Insert mode mappings]] --
@@ -143,12 +142,10 @@ function M.setup()
 		["<C-v>"] = { "<C-R>+", "Paste the OS register" },
 	}, { mode = "i", noremap = true, silent = true })
 
-
 	-- [[Visual mode mappings]] --
 	-- NOTE: bindings for visual mode use ':' rather than <cmd> in order for the
 	-- visual mode selection to be passed to them.
 	wk.register({
-		-- Surround selected text with quotes
 		["v"] = { '<C-v>', "Block selection" },
 		["V"] = { '<S-v>', "Line selection" },
 		["s"] = { ":sort<cr>", "Sort selection (ascending)" },
@@ -156,12 +153,12 @@ function M.setup()
 		["<C-w>"] = { 'gw', "Format the selected lines" },
 		["<C-c>"] = { '"+y', "Copy selection into OS register" },
 		["<C-v>"] = { 'c<C-R>+<esc>', "Paste selection from OS register" },
-		["<C-x>"] = { '"+d', "Copy selection into OS register" },
+		["<C-x>"] = { '"+d', "Cut selection into OS register" },
 		["<C-s>"] = { '<C-c>:write<cr>', "Save buffer" },
 		["<C-space>"] = { ":<C-u>call slime#send_op(visualmode(), 1)<cr>", "Send selection to SLIME" },
 		--["<cr>"] = { ":'<,'>SlimeSend<cr>", "Send current line or selection to SLIME" },
 		["<leader>"] = {
-			['#'] = { util.goto_selected_loc, "Go to selected line of code" },
+			['#'] = { loc.goto_selected_loc, "Go to selected line of code" },
 			["x"] = {
 				name = "X.509",
 				["x"] = { "!xxd<cr>", "Hex dump" },
@@ -169,8 +166,8 @@ function M.setup()
 				["c"] = { "!openssl x509 -inform PEM -outform DER | xxd<cr>", "PEM to DER hex dump" },
 				["C"] = { "!xxd -r | openssl x509 -inform DER -outform PEM<cr>", "DER hex dump to PEM" },
 				["v"] = { "!openssl x509 -noout -text<cr>", "PEM text dump" },
-				["o"] = { ":<C-u>s/\\%V, /./g<cr>", "Comma separated integers to Oid" },
-				["O"] = { ":<C-u>s/\\%V\\./, /g<cr>", "Oid to comma separated integers" },
+				["o"] = { ":<C-u>s/\\%V, /./g<cr>", "Comma separated integers to OID" },
+				["O"] = { ":<C-u>s/\\%V\\./, /g<cr>", "OID to comma separated integers" },
 			},
 			['/'] = { function()
 				local text = util.get_visual_selection()
@@ -207,37 +204,33 @@ function M.setup()
 		["."] = { util.tcd_to_buf, "Change directory to buffer" },
 		[','] = { "<cmd>Telescope buffers show_all_buffers=true<cr>", "Switch buffer" },
 		["-"] = { "<cmd>noh<cr><cmd>lua vim.fn.setreg('/', '')<cr>", "Clear search highlight" },
-		['#'] = { util.goto_cursor_loc, "Go to line of code under cursor" },
-		['_'] = { "<cmd>Telescope workspaces<cr>", "Switch workspace" },
+		['#'] = { loc.goto_cursor_loc, "Go to line of code under cursor" },
+		['_'] = { "<cmd>Telescope workspaces<cr>", "Open workspace" },
 		['/'] = { util.live_grep, "Find pattern in files" },
 		["?"] = { util.find_buffer_relative_pattern, "Find pattern relative to buffer" },
 		['*'] = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Find in buffer" },
 		["'"] = { "<cmd>Telescope marks<cr>", "Find a mark" },
-		['%'] = { util.set_file_ignore_patterns({}), "Set find ignore pattern" },
-		--['%'] = { util.set_file_ignore_patterns({".*%.md",".*%.html",".*%.txt"}), "Set find ignore pattern" },
+		['%'] = { util.set_file_ignore_patterns({}), "Set file ignore pattern" },
 		[':'] = { "<cmd>Telescope command_history<cr>", "Command history" },
 		[';'] = { "<cmd>Telescope oldfiles show_all_buffers=true<cr>", "Find previously opened file" },
-		['<cr>'] = { "<cmd>split<cr><cmd>resize 24<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
+		['<cr>'] = { "<cmd>split<cr><cmd>resize 8<cr><cmd>term<cr><cmd>set winfixheight<cr>", "Open terminal below" },
 		[' '] = { util.find_files, "Find a file" },
 		["<tab>"] = { "<cmd>NvimTreeFindFile<cr>", "Open file tree on current buffer" },
-		["<S-tab>"] = { "<cmd>NvimTreeToggle<cr>", "Toggle the file tree" },
 		["<C-z>"] = { "<cmd>suspend<cr>", "Suspend process" },
 		b = {
 			name = "Buffers",
-			["D"] = { util.bd(true), "Delete buffer (force)" },
 			["Q"] = { "<cmd>bdelete!<cr>", "Delete current buffer and window" },
-			["R"] = { "<cmd>edit!<cr>", "Reload buffer from file and discard changes" },
+			['C'] = { util.close_all_invisible_buffers, "Close all invisible buffers" },
+			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
 			["d"] = { util.bd(false), "Delete buffer" },
 			["l"] = { "<cmd>buffers<cr>", "List buffers" },
 			["r"] = { "<cmd>edit<cr>", "Reload buffer from file" },
 			["w"] = { "<cmd>write<cr>", "Write buffer to file" },
-			['C'] = { util.close_all_invisible_buffers, "Close all invisible buffers" },
-			['O'] = { util.close_all_but_current_buffer, "Close all but the current buffer" },
 		},
 		c = {
 			name = "Config",
 			-- Appearance
-			["w"] = { "<cmd>set list!<cr>", "Toggle visible tabs and trailing whitespace" },
+			["w"] = { "<cmd>set list!<cr>", "Toggle visible whitespace" },
 			["n"] = { "<cmd>set number!<cr>", "Toggle line numbers" },
 			["l"] = { "<cmd>set cursorcolumn!<cr><cmd>set cursorline!<cr>", "Toggle cursor lines" },
 			["g"] = { "<cmd>Gitsigns toggle_linehl<cr>", "Toggle git line highlight" },
@@ -249,10 +242,10 @@ function M.setup()
 			["e"] = { util.set_env_var(), "Set environment variable" },
 
 			-- Actions
-			["R"] = { "<cmd>source $MYVIMRC<cr>", "Reload lua config" },
+			["R"] = { "<cmd>restart<cr>", "Restart Neovim (reload config)" },
 		},
 		d = {
-			name = "Debug",
+			name = "Diagnostics",
 			["d"] = { "<cmd>copen<cr>", "Open quickfix list" },
 			["n"] = { "<cmd>cn<cr>", "Next quickfix location" },
 			["p"] = { "<cmd>cp<cr>", "Previous quickfix location" },
@@ -260,7 +253,6 @@ function M.setup()
 			["l"] = { "<cmd>lopen<cr>", "Open location list" },
 			["["] = { util.goto_prev_err, "Go to previous error" },
 			["]"] = { util.goto_next_err, "Go to next error" },
-			["b"] = { "<cmd>DlvAddBreakpoint<cr>", "Set delve breakpoint" },
 		},
 		g = {
 			name = "Git",
@@ -272,10 +264,10 @@ function M.setup()
 			["c"] = { gitreview.comment_line, "Comment on the reviewed line" },
 			["d"] = { "<cmd>Git diff --staged<cr>", "Show staged diff" },
 			["F"] = { "<cmd>Git fetch<cr>", "Fetch updates" },
-			["g"] = { "<cmd>Telescope git_commits<cr>", "Switch to commit" },
+			["g"] = { "<cmd>Telescope git_commits<cr>", "Checkout commit" },
 			["l"] = { "<cmd>Git log<cr>", "View commit log" },
 			["P"] = { "<cmd>Git push<cr>", "Push changes" },
-			["r"] = { gitreview.select_branch, "Review against select branch" },
+			["r"] = { gitreview.select_branch, "Review against selected branch" },
 			["s"] = { "<cmd>Git<cr>", "Show status" },
 			["U"] = { "<cmd>Git pull<cr>", "Pull changes" },
 			["w"] = { "<cmd>Gwrite<cr>", "Stage file" },
@@ -288,16 +280,16 @@ function M.setup()
 			["k"] = { "<cmd>Telescope keymaps<cr>", "Search key maps" },
 			["m"] = { "<cmd>Telescope man_pages<cr>", "Search man pages" },
 			["o"] = { "<cmd>Telescope vim_options<cr>", "Search config options" },
-			["w"] = { "<cmd>WhichKey<cr>", "Show which key help" },
+			["w"] = { "<cmd>WhichKey<cr>", "Show which-key help" },
 		},
 		i = {
 			name = "Identifiers",
-			["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifer" },
-			["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifer" },
-			["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifer" },
-			["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifer" },
-			["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifer" },
-			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Document identifers" },
+			["c"] = { "<cmd>Telescope lsp_incoming_calls<cr>", "Incoming calls of identifier" },
+			["d"] = { "<cmd>Telescope lsp_definitions<cr>", "Definitions of identifier" },
+			["i"] = { "<cmd>Telescope lsp_implementations<cr>", "Implementations of identifier" },
+			["o"] = { "<cmd>Telescope lsp_outgoing_calls<cr>", "Outgoing calls of identifier" },
+			["r"] = { "<cmd>Telescope lsp_references<cr>", "References to the identifier" },
+			["s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Document identifiers" },
 			["t"] = { "<cmd>Telescope lsp_type_definitions<cr>", "Type of identifier" },
 			["w"] = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace identifiers" },
 		},
@@ -306,19 +298,18 @@ function M.setup()
 			["t"] = { "<cmd>set ft?<cr>", "Show current filetype" },
 			["j"] = { "<cmd>echo b:terminal_job_id<cr>", "Show terminal job ID" },
 			["b"] = { util.print_buf_name, "Show current buffer name" },
-			["i"] = { "<cmd>Inspect<cr>", "Inspect identifier" },
-			["k"] = { vim.lsp.buf.hover, "Show identifer information" },
+			["i"] = { "<cmd>Inspect<cr>", "Show highlight group" },
+			["k"] = { vim.lsp.buf.hover, "Show identifier information" },
 		},
 		l = {
 			name = "LSP",
 			-- LSP information and meta-control
 			["a"] = { util.toggle_autocomplete(true), "Toggle autocomplete (buffer)" },
-			["r"] = { lsp.restart, "Restart all active language servers" },
-			["x"] = { lsp.stop, "Stop LSP" },
-			["s"] = { lsp.start, "Start LSP" },
-			["i"] = { "<cmd>LspInfo<cr>", "Show language server status" },
+			["r"] = { lsp.restart, "Restart all language servers" },
+			["x"] = { lsp.stop, "Stop all language servers" },
+			["s"] = { "<cmd>LspInfo<cr>", "Show language server status" },
 			["l"] = { "<cmd>LspLog<cr>", "Show language server log" },
-			["G"] = { "<cmd>!ctags -R<cr>", "Generate tags files recursively" },
+			["G"] = { "<cmd>!ctags -R<cr>", "Generate ctags files recursively" },
 			["S"] = { "<cmd>SnippyReload<cr>", "Refresh the snippet cache" },
 			["m"] = { "<cmd>Mason<cr>", "Manage Mason packages" },
 		},
@@ -338,20 +329,15 @@ function M.setup()
 		},
 		p = {
 			name = "Plugins",
-			["u"] = { "<cmd>PackerUpdate<cr>", "Update plugins" },
-			["i"] = { "<cmd>PackerInstall<cr>", "Install plugins" },
-			["s"] = { "<cmd>PackerSnapshot backup<cr>", "Create plugin backup snapshot" },
-			["r"] = { "<cmd>PackerSnapshotRollback backup<cr>", "Rollback to plugin backup snapshot" },
-			["c"] = { "<cmd>PackerClean<cr>", "Clean plugins" },
-			["y"] = { "<cmd>PackerCompile<cr>", "Compile plugins" },
+			-- vim.pack.update shows the changes in a new tab: :write applies them, :quit discards them.
+			["u"] = { function() vim.pack.update() end, "Update plugins" },
+			["l"] = { function() vim.pack.update(nil, { offline = true }) end, "List installed plugins" },
+			["r"] = { function() vim.pack.update(nil, { target = "lockfile" }) end, "Revert plugins to the lockfile" },
 			['h'] = { "<cmd>checkhealth<cr>", "Check health" },
 		},
 		q = {
 			name = "Workspaces",
 			["Q"] = { "<cmd>qa<cr>", "Quit all" },
-			["d"] = { "<cmd>SessionsStop<cr>", "Stop session" },
-			["l"] = { "<cmd>SessionsLoad<cr>", "Load session" },
-			["s"] = { "<cmd>SessionsSave<cr>", "Save session" },
 			["A"] = { "<cmd>WorkspacesAddDir<cr>", "Add workspace directory" },
 			["R"] = { "<cmd>WorkspacesRemoveDir<cr>", "Remove workspace directory" },
 			["a"] = { "<cmd>WorkspacesAdd<cr>", "Add workspace" },
@@ -361,12 +347,12 @@ function M.setup()
 		},
 		r = {
 			name = "Refactor",
-			["a"] = { vim.lsp.buf.code_action, "Open action list" },
-			["n"] = { vim.lsp.buf.rename, "Rename symbol" },
+			["a"] = { vim.lsp.buf.code_action, "Show code actions" },
+			["n"] = { vim.lsp.buf.rename, "Rename identifier" },
 			["i"] = { "gg=G", "Re-indent buffer" },
 			["u"] = { ':%s/\\\\n/\\r/g<cr>', "Unescape newlines" },
 			["s"] = { "<cmd>%s/\\s\\+$//e<cr>", "Strip trailing whitespace" },
-			["f"] = { lsp.format_file, "Format buffer using LSP" },
+			["f"] = { lsp.format_file, "Format buffer" },
 		},
 		s = {
 			name = "Spelling",
@@ -378,50 +364,30 @@ function M.setup()
 			["z"] = { "z=", "Suggest spelling correction" },
 		},
 		t = {
-			name = "Tabs",
-			["["] = { "<cmd>-tabnext<cr>", "Go to the previous tab" },
-			["]"] = { "<cmd>+tabnext<cr>", "Go to the next tab" },
-			["<"] = { "<cmd>tabmove -1<cr>", "Move tab to the left" },
-			[">"] = { "<cmd>tabmove +1<cr>", "Move tab to the right" },
-			["O"] = { "<cmd>tabonly<cr>", "Close all other tabs" },
-			["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
-			["t"] = { "<cmd>tabnew<cr>", "Open a new tab" },
-			["s"] = { util.split_tab, "Split buffer to new tab" },
-		},
-		u = {
-			name = "Undo",
-			["u"] = { "u", "undo last change" },
-			["r"] = { "<C-r>", "redo last undo" },
-			["l"] = { "<cmd>undol<cr>", "Show undo list" },
-		},
-		w = {
-			name = "Windows",
-			["="] = { "<C-w>=", "Equalize window size" },
-			["Q"] = { "<C-w>q", "Close current split" },
-			["s"] = { "<C-w>s<cmd>set wfh<cr>", "Split horizontal" },
-			["t"] = { "<C-w>T", "Move window into a new tab" },
-			["v"] = { "<C-w>v", "Split vertical" },
-			["h"] = { "<C-w>h", "Switch to window on left" },
-			["j"] = { "<C-w>j", "Switch to window below" },
-			["k"] = { "<C-w>k", "Switch to window above" },
-			["l"] = { "<C-w>l", "Switch to window on right" },
-			["w"] = { "<C-w>w", "Cycle to next window" },
-			["x"] = { "<C-w>x", "Swap with other window" },
-			["a"] = { "<C-w>|", "Max out window width" },
-			["z"] = { "<C-w>_", "Max out window height" },
-		},
-		y = {
 			name = "Testing",
 			["a"] = { "<cmd>TestFile<cr>", "Run all tests in file" },
 			["c"] = { "<cmd>TestClass<cr>", "Run all tests for current class" },
-			["l"] = { "<cmd>TestLast<cr>", "Run last run test" },
+			["l"] = { "<cmd>TestLast<cr>", "Rerun last test" },
 			["n"] = { "<cmd>TestNearest<cr>", "Run test nearest to the cursor" },
 			["s"] = { "<cmd>TestSuite<cr>", "Run test suite" },
 			["v"] = { "<cmd>TestVisit<cr>", "Visit last test file" },
 		},
+		w = {
+			name = "Windows",
+			["="] = { "<C-w>=", "Equalize window size" },
+			["O"] = { "<cmd>tabonly<cr>", "Close all other tabs" },
+			["Q"] = { "<cmd>tabclose<cr>", "Close current tab" },
+			["s"] = { "<C-w>s", "Split horizontal" },
+			["t"] = { "<cmd>tabnew<cr>", "Open a new tab" },
+			["T"] = { "<C-w>T", "Move window into a new tab" },
+			["v"] = { "<C-w>v", "Split vertical" },
+			["x"] = { "<C-w>x", "Swap with other window" },
+			["a"] = { "<C-w>|", "Max out window width" },
+			["z"] = { "<C-w>_", "Max out window height" },
+		},
 		z = {
 			name = "Zettelkasten",
-			["."] = { zet.cd_to_current_collection, "Change dir to collection" },
+			["."] = { zet.cd_to_current_collection, "Change directory to collection" },
 			["p"] = { zet.search, "Find a pattern in a note" },
 			["f"] = { zet.find, "Find a note" },
 			["s"] = { zet.select, "Select space" },
@@ -430,7 +396,6 @@ function M.setup()
 			["z"] = { zet.new, "Create a new note" },
 			-- Diary specific bindings
 			["d"] = { zet.daily, "Open daily entry" },
-			["w"] = { zet.weekly, "Open weekly entry" },
 			["m"] = { zet.monthly, "Open monthly entry" },
 			["y"] = { zet.yearly, "Open yearly entry" },
 			["t"] = { zet.todo, "Open the TODO list" },

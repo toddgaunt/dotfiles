@@ -2,7 +2,6 @@ local M = {}
 
 local taskPattern = "(%s*)%- %[.]"
 local fullTaskPattern = taskPattern .."%s*~?([^~]+)~?%s*"
---local topTaskPattern = taskPattern .. "[^:]*:"
 local topTaskPattern = taskPattern .. ".-:\n"
 
 local function mark_task(symbol)
@@ -46,11 +45,12 @@ end
 -- insert_task inserts a task intelligently
 function M.insert_task(opts)
 	local line = vim.api.nvim_get_current_line()
+
 	-- case1 is for any task that ends with a ':' character.
-	-- This indicates that any indented following subtasks.
-	--
-	-- Newlines are appended to line to ensure that the patterns
-	-- can match until the end of the line.
+	-- This indicates that any tasks added after should be
+	-- indented as subtasks. The user can un-indent them
+	-- if they don't want the next task to be a subtask.
+	-- Newlines are appended to the patterns to match until the end of the line.
 	local _, _, case1 = string.find(line .. "\n", topTaskPattern)
 	local _, _, case2 = string.find(line .. "\n", taskPattern)
 	local task = '- [ ] '
